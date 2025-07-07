@@ -60,3 +60,56 @@ This project aligns with the **2025 MSA Phase 2 Theme: Networking**, by fosterin
 
 - [ ] ✅ Project introduction
 - [ ] ✅ Highlight of interes
+- [ ] ✅ Demo of UI and core features
+- [ ] ✅ Checklist of Advanced Features
+
+---
+
+## 🔧 How to Run Locally
+
+### 1. Backend
+
+```bash
+cd backend
+dotnet restore
+dotnet ef database update  # Creates local.db
+dotnet run
+```markdown
+
+### 2. Frontend
+
+```bash
+cd frontend
+npm install
+npm start
+```markdown
+
+> The frontend runs at http://localhost:3000 and connects to the backend API at http://localhost:5000 by default.
+
+
+## 🔧 Project Structure
+---
+/backend
+    /Controllers
+    /Models
+    /Data
+    AppDbContext.cs
+    Program.cs
+    Dockerfile
+
+/frontend
+    /src
+    /components
+    /features (Redux slices)
+    tailwind.config.js
+    package.json
+---
+## 🌐 How It Aligns With the Theme: Networking
+
+- This app promotes student and community networking by enabling users to:
+
+- Find like-minded people via shared events
+
+- Interact through participation and comments
+
+- Strengthen social ties through event-driven collaboration
