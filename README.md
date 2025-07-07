@@ -92,21 +92,23 @@ npm start
 
 ## 🔧 Project Structure
 
-/backend
-    /Controllers
-    /Models
-    /Data
-    AppDbContext.cs
-    Program.cs
-    Dockerfile
-
-/frontend
-    /src
-    /components
-    /features (Redux slices)
-    tailwind.config.js
-    package.json
-
+```plaintext
+project-root/
+├── backend/
+│   ├── Controllers/
+│   ├── Models/
+│   ├── Data/
+│   ├── AppDbContext.cs
+│   ├── Program.cs
+│   └── Dockerfile
+│
+├── frontend/
+│   ├── src/
+│   ├── components/
+│   ├── features/         # Redux slices
+│   ├── tailwind.config.js
+│   └── package.json
+```
 ---
 
 ## 🌐 How It Aligns With the Theme: Networking
