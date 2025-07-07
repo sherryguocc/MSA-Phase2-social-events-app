@@ -69,21 +69,22 @@ This project aligns with the **2025 MSA Phase 2 Theme: Networking**, by fosterin
 
 ### 1. Backend
 
-cd backend
+```cd backend
 dotnet restore
 dotnet ef database update  # Creates local.db
 dotnet run
+```
 
 
 ---
 
 ### 2. Frontend
 
-
+```
 cd frontend
 npm install
 npm start
-
+```
 
 > The frontend runs at http://localhost:3000 and connects to the backend API at http://localhost:5000 by default.
 
