@@ -76,6 +76,8 @@ dotnet ef database update  # Creates local.db
 dotnet run
 ```markdown
 
+---
+
 ### 2. Frontend
 
 ```bash
@@ -86,9 +88,10 @@ npm start
 
 > The frontend runs at http://localhost:3000 and connects to the backend API at http://localhost:5000 by default.
 
+---
 
 ## 🔧 Project Structure
----
+
 /backend
     /Controllers
     /Models
@@ -103,7 +106,7 @@ npm start
     /features (Redux slices)
     tailwind.config.js
     package.json
----
+
 ## 🌐 How It Aligns With the Theme: Networking
 
 - This app promotes student and community networking by enabling users to:
