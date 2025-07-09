@@ -27,12 +27,27 @@ const HomePage: React.FC = () => {
       .finally(() => setLoading(false));
   }, []);
 
+  const isLoggedIn = Boolean(localStorage.getItem("token"));
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.reload();
+  };
+
   return (
     <div className="max-w-3xl mx-auto mt-10 relative">
       <div className="absolute right-0 top-0 flex gap-2">
-        <Link to="/create-event" className="btn btn-success btn-sm">Create Event</Link>
-        <Link to="/register" className="btn btn-outline btn-sm">Register</Link>
-        <Link to="/login" className="btn btn-primary btn-sm">Login</Link>
+        {isLoggedIn ? (
+          <>
+            <Link to="/create-event" className="btn btn-success btn-sm">Create Event</Link>
+            <button className="btn btn-outline btn-sm" onClick={handleLogout}>Logout</button>
+          </>
+        ) : (
+          <>
+            <Link to="/register" className="btn btn-outline btn-sm">Register</Link>
+            <Link to="/login" className="btn btn-primary btn-sm">Login</Link>
+          </>
+        )}
       </div>
       <h2 className="text-3xl font-bold mb-6">All Events</h2>
       {loading && <div>Loading...</div>}
