@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 interface EventItem {
   id: number;
@@ -27,7 +28,11 @@ const HomePage: React.FC = () => {
   }, []);
 
   return (
-    <div className="max-w-3xl mx-auto mt-10">
+    <div className="max-w-3xl mx-auto mt-10 relative">
+      <div className="absolute right-0 top-0 flex gap-2">
+        <Link to="/register" className="btn btn-outline btn-sm">Register</Link>
+        <Link to="/login" className="btn btn-primary btn-sm">Login</Link>
+      </div>
       <h2 className="text-3xl font-bold mb-6">All Events</h2>
       {loading && <div>Loading...</div>}
       {error && <div className="text-red-500">{error}</div>}

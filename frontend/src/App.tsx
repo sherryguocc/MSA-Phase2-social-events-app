@@ -6,9 +6,10 @@ import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage';
 
 
+
 function App() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-base-200">
+    <div className="min-h-screen flex justify-center bg-base-200">
       <BrowserRouter>
         <Routes>
           {/* Home page route */}
