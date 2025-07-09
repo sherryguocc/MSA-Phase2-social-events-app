@@ -158,3 +158,12 @@ C:\Users\Sherry\MSA-Phase2-social-events-app\backend\obj\Debug\net8.0\refint\bac
 C:\Users\Sherry\MSA-Phase2-social-events-app\backend\obj\Debug\net8.0\backend.pdb
 C:\Users\Sherry\MSA-Phase2-social-events-app\backend\obj\Debug\net8.0\backend.genruntimeconfig.cache
 C:\Users\Sherry\MSA-Phase2-social-events-app\backend\obj\Debug\net8.0\ref\backend.dll
+C:\Users\Sherry\MSA-Phase2-social-events-app\backend\bin\Debug\net8.0\BCrypt.Net-Next.dll
+C:\Users\Sherry\MSA-Phase2-social-events-app\backend\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Sherry\MSA-Phase2-social-events-app\backend\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\Sherry\MSA-Phase2-social-events-app\backend\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\Sherry\MSA-Phase2-social-events-app\backend\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\Sherry\MSA-Phase2-social-events-app\backend\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\Sherry\MSA-Phase2-social-events-app\backend\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\Sherry\MSA-Phase2-social-events-app\backend\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\Sherry\MSA-Phase2-social-events-app\backend\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
