@@ -27,19 +27,28 @@ namespace backend.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
-            if (await _context.Users.AnyAsync(u => u.Username == request.Username))
+            try
             {
-                return BadRequest(new { message = "Username already exists" });
-            }
+                if (await _context.Users.AnyAsync(u => u.Username == request.Username))
+                {
+                    return BadRequest(new { message = "Username already exists" });
+                }
 
-            var user = new User
+                var user = new User
+                {
+                    Username = request.Username,
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password)
+                };
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+                return Ok(new { message = "Registration successful" });
+            }
+            catch (Exception ex)
             {
-                Username = request.Username,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password)
-            };
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-            return Ok(new { message = "Registration successful" });
+                // Log the error to the console for debugging
+                Console.WriteLine($"[Register] Exception: {ex.Message}\n{ex.StackTrace}");
+                return StatusCode(500, new { message = "Internal server error", error = ex.Message });
+            }
         }
 
         [HttpPost("login")]

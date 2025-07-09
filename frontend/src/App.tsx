@@ -1,13 +1,19 @@
 import './index.css';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import RegisterPage from './pages/RegisterPage';
+import LoginPage from './pages/LoginPage';
 
 function App() {
   return (
-    <div className="h-screen w-screen bg-green-500 flex items-center justify-center">
-      <h1 className="text-4xl font-bold text-white">
-        Tailwind + DaisyUI
-      </h1>
-      <button className="btn w-64 rounded-full">Button</button>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        {/* Register page route */}
+        <Route path="/register" element={<RegisterPage />} />
+        {/* Login page route */}
+        <Route path="/login" element={<LoginPage />} />
+        {/* You can add more routes here */}
+      </Routes>
+    </BrowserRouter>
   );
 }
 
