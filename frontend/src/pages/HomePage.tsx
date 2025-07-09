@@ -30,6 +30,7 @@ const HomePage: React.FC = () => {
   return (
     <div className="max-w-3xl mx-auto mt-10 relative">
       <div className="absolute right-0 top-0 flex gap-2">
+        <Link to="/create-event" className="btn btn-success btn-sm">Create Event</Link>
         <Link to="/register" className="btn btn-outline btn-sm">Register</Link>
         <Link to="/login" className="btn btn-primary btn-sm">Login</Link>
       </div>

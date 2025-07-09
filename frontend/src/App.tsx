@@ -3,7 +3,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
+
 import HomePage from './pages/HomePage';
+import CreateEventPage from './pages/CreateEventPage';
 
 
 
@@ -18,6 +20,8 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           {/* Login page route */}
           <Route path="/login" element={<LoginPage />} />
+          {/* Create event page route */}
+          <Route path="/create-event" element={<CreateEventPage />} />
         </Routes>
       </BrowserRouter>
     </div>
