@@ -9,6 +9,7 @@ interface EventItem {
   eventTime: string;
   minAttendees: number;
   maxAttendees: number;
+  imageUrl?: string;
 }
 
 const HomePage: React.FC = () => {
@@ -39,13 +40,13 @@ const HomePage: React.FC = () => {
       <div className="absolute right-0 top-0 flex gap-2">
         {isLoggedIn ? (
           <>
-            <Link to="/create-event" className="btn btn-success btn-sm">Create Event</Link>
+            <button className="btn btn-outline btn-sm" onClick={() => window.location.href = '/create-event'}>Create Event</button>
             <button className="btn btn-outline btn-sm" onClick={handleLogout}>Logout</button>
           </>
         ) : (
           <>
-            <Link to="/register" className="btn btn-outline btn-sm">Register</Link>
-            <Link to="/login" className="btn btn-primary btn-sm">Login</Link>
+            <button className="btn btn-outline btn-sm" onClick={() => window.location.href = '/register'}>Register</button>
+            <button className="btn btn-primary btn-sm" onClick={() => window.location.href = '/login'}>Login</button>
           </>
         )}
       </div>
@@ -55,6 +56,14 @@ const HomePage: React.FC = () => {
       <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
         {events.map(event => (
           <div key={event.id} className="card bg-base-100 shadow-xl break-words">
+            <figure>
+              <img
+                src={event.imageUrl && event.imageUrl.trim() !== '' ? event.imageUrl : '/default-event.jpg'}
+                alt={event.title}
+                className="w-full h-48 object-cover rounded-t"
+                onError={e => { e.currentTarget.onerror = null; e.currentTarget.src = '/default-event.jpg'; }}
+              />
+            </figure>
             <div className="card-body">
               <h3 className="card-title text-xl font-bold text-primary break-words whitespace-pre-line mb-2">{event.title}</h3>
               <p className="break-words whitespace-pre-line text-base mb-3 text-gray-800">{event.description}</p>

@@ -24,10 +24,29 @@ public class EventController : ControllerBase
     }
 
     [HttpPost]
+    [Microsoft.AspNetCore.Authorization.Authorize] // Only authenticated users can create events
     public IActionResult Create(Event newEvent)
     {
-        _context.Events.Add(newEvent);
-        _context.SaveChanges();
-        return CreatedAtAction(nameof(GetAll), new { id = newEvent.Id }, newEvent);
+        try
+        {
+            // Get user id from JWT token
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized("User ID not found in token.");
+            }
+            // Always set CreatedById from token, ignore any value from frontend
+            newEvent.CreatedById = int.Parse(userIdClaim.Value);
+
+            _context.Events.Add(newEvent);
+            _context.SaveChanges();
+            return CreatedAtAction(nameof(GetAll), new { id = newEvent.Id }, newEvent);
+        }
+        catch (Exception ex)
+        {
+            // Print detailed error info to console for debugging
+            Console.WriteLine($"[EventController.Create] Exception: {ex.Message}\n{ex.StackTrace}");
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
     }
 }

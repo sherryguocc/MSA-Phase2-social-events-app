@@ -8,6 +8,7 @@ const CreateEventPage: React.FC = () => {
   const [eventTime, setEventTime] = useState("");
   const [minAttendees, setMinAttendees] = useState(1);
   const [maxAttendees, setMaxAttendees] = useState(10);
+  const [imageUrl, setImageUrl] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -26,7 +27,7 @@ const CreateEventPage: React.FC = () => {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify({ title, description, location, eventTime, minAttendees, maxAttendees })
+        body: JSON.stringify({ title, description, location, eventTime, minAttendees, maxAttendees, imageUrl })
       });
       if (res.ok) {
         alert("Event created successfully!");
@@ -51,6 +52,13 @@ const CreateEventPage: React.FC = () => {
           value={title}
           onChange={e => setTitle(e.target.value)}
           required
+        />
+        <input
+          className="w-full mb-2 p-2 border rounded"
+          type="text"
+          placeholder="Image URL (optional)"
+          value={imageUrl}
+          onChange={e => setImageUrl(e.target.value)}
         />
         <textarea
           className="w-full mb-2 p-2 border rounded"
