@@ -54,14 +54,14 @@ const HomePage: React.FC = () => {
       {error && <div className="text-red-500">{error}</div>}
       <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
         {events.map(event => (
-          <div key={event.id} className="card bg-base-100 shadow-xl">
+          <div key={event.id} className="card bg-base-100 shadow-xl break-words">
             <div className="card-body">
-              <h3 className="card-title">{event.title}</h3>
-              <p>{event.description}</p>
-              <div className="text-sm text-gray-500 mb-2">
-                Location: {event.location}<br />
-                Time: {new Date(event.eventTime).toLocaleString()}<br />
-                Attendees: {event.minAttendees} - {event.maxAttendees}
+              <h3 className="card-title text-xl font-bold text-primary break-words whitespace-pre-line mb-2">{event.title}</h3>
+              <p className="break-words whitespace-pre-line text-base mb-3 text-gray-800">{event.description}</p>
+              <div className="flex flex-col gap-1 text-sm text-gray-600 mb-2">
+                <span><span className="font-semibold">Location:</span> {event.location}</span>
+                <span><span className="font-semibold">Time:</span> {new Date(event.eventTime).toLocaleString()}</span>
+                <span><span className="font-semibold">Attendees:</span> {event.minAttendees} - {event.maxAttendees}</span>
               </div>
             </div>
           </div>
