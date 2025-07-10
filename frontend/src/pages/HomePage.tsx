@@ -23,6 +23,10 @@ const HomePage: React.FC = () => {
   const token = useSelector((state: RootState) => state.user.token);
   const isLoggedIn = Boolean(token);
 
+
+  // Sorting state
+  const [sortType, setSortType] = useState<'time' | 'name' | 'maxAttendees'>('time');
+
   useEffect(() => {
     fetch("/api/event/dto")
       .then(res => {
@@ -33,6 +37,18 @@ const HomePage: React.FC = () => {
       .catch(err => setError(err.message))
       .finally(() => setLoading(false));
   }, []);
+
+  // Sort events based on sortType
+  const sortedEvents = [...events].sort((a, b) => {
+    if (sortType === 'time') {
+      return new Date(a.eventTime).getTime() - new Date(b.eventTime).getTime();
+    } else if (sortType === 'name') {
+      return a.title.localeCompare(b.title);
+    } else if (sortType === 'maxAttendees') {
+      return b.maxAttendees - a.maxAttendees;
+    }
+    return 0;
+  });
 
   const handleLogout = () => {
     dispatch(clearToken());
@@ -55,10 +71,16 @@ const HomePage: React.FC = () => {
         )}
       </div>
       <h2 className="text-3xl font-bold mb-6">All Events</h2>
+      <div className="mb-4 flex gap-2 items-center">
+        <span className="font-semibold">Sort by:</span>
+        <button className={`btn btn-xs ${sortType === 'time' ? 'btn-primary' : 'btn-outline'}`} onClick={() => setSortType('time')}>Time</button>
+        <button className={`btn btn-xs ${sortType === 'name' ? 'btn-primary' : 'btn-outline'}`} onClick={() => setSortType('name')}>Name</button>
+        <button className={`btn btn-xs ${sortType === 'maxAttendees' ? 'btn-primary' : 'btn-outline'}`} onClick={() => setSortType('maxAttendees')}>Max Attendees</button>
+      </div>
       {loading && <div>Loading...</div>}
       {error && <div className="text-red-500">{error}</div>}
       <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
-        {events.map(event => (
+        {sortedEvents.map(event => (
           <div key={event.id} className="card bg-base-100 p-6 shadow-xl break-words">
             <figure>
               <img
