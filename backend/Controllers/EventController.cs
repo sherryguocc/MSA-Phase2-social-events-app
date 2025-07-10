@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using backend.Data;
 using backend.Models;
+using backend.DTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Controllers;
 
@@ -16,10 +18,27 @@ public class EventController : ControllerBase
         _context = context;
     }
 
-    [HttpGet]
-    public IActionResult GetAll()
+
+    [HttpGet("dto")]
+    public async Task<ActionResult<IEnumerable<EventDTO>>> GetEvents()
     {
-        var events = _context.Events.ToList();
+        var events = await _context.Events
+            .Include(e => e.CreatedBy)
+            .Select(e => new EventDTO
+            {
+                Id = e.Id,
+                Title = e.Title,
+                Description = e.Description,
+                Location = e.Location,
+                EventTime = e.EventTime,
+                MinAttendees = e.MinAttendees,
+                MaxAttendees = e.MaxAttendees,
+                ImageUrl = e.ImageUrl,
+                CreatedById = e.CreatedById,
+                CreatedByUsername = e.CreatedBy != null ? e.CreatedBy.Username : "Unknown"
+            })
+            .ToListAsync();
+
         return Ok(events);
     }
 
@@ -40,7 +59,8 @@ public class EventController : ControllerBase
 
             _context.Events.Add(newEvent);
             _context.SaveChanges();
-            return CreatedAtAction(nameof(GetAll), new { id = newEvent.Id }, newEvent);
+            // Use GetEvents as the action name for CreatedAtAction, or just return Ok(newEvent)
+            return CreatedAtAction(nameof(GetEvents), new { id = newEvent.Id }, newEvent);
         }
         catch (Exception ex)
         {

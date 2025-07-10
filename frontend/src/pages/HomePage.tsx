@@ -12,6 +12,7 @@ interface EventItem {
   minAttendees: number;
   maxAttendees: number;
   imageUrl?: string;
+  createdByUsername: string;
 }
 
 const HomePage: React.FC = () => {
@@ -23,7 +24,7 @@ const HomePage: React.FC = () => {
   const isLoggedIn = Boolean(token);
 
   useEffect(() => {
-    fetch("/api/event")
+    fetch("/api/event/dto")
       .then(res => {
         if (!res.ok) throw new Error("Failed to fetch events");
         return res.json();
@@ -58,7 +59,7 @@ const HomePage: React.FC = () => {
       {error && <div className="text-red-500">{error}</div>}
       <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
         {events.map(event => (
-          <div key={event.id} className="card bg-base-100 shadow-xl break-words">
+          <div key={event.id} className="card bg-base-100 p-6 shadow-xl break-words">
             <figure>
               <img
                 src={event.imageUrl && event.imageUrl.trim() !== '' ? event.imageUrl : '/default-event.jpg'}
@@ -74,6 +75,11 @@ const HomePage: React.FC = () => {
                 <span><span className="font-semibold">Location:</span> {event.location}</span>
                 <span><span className="font-semibold">Time:</span> {new Date(event.eventTime).toLocaleString()}</span>
                 <span><span className="font-semibold">Attendees:</span> {event.minAttendees} - {event.maxAttendees}</span>
+                {/* Show event creator */}
+                <span>
+                  <span className="font-semibold">Organizer:</span>{" "}
+                  {event.createdByUsername || "Unknown"}
+                </span>
               </div>
             </div>
           </div>
