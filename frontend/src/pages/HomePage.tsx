@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
+import type { RootState } from '../store';
+import { clearToken } from '../store/userSlice';
 
 interface EventItem {
   id: number;
@@ -16,6 +18,9 @@ const HomePage: React.FC = () => {
   const [events, setEvents] = useState<EventItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const dispatch = useDispatch();
+  const token = useSelector((state: RootState) => state.user.token);
+  const isLoggedIn = Boolean(token);
 
   useEffect(() => {
     fetch("/api/event")
@@ -28,10 +33,8 @@ const HomePage: React.FC = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  const isLoggedIn = Boolean(localStorage.getItem("token"));
-
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    dispatch(clearToken());
     window.location.reload();
   };
 

@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { setToken } from '../store/userSlice';
+import { loginSuccess } from "../store/userSlice";
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,12 +20,13 @@ const LoginPage: React.FC = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
       });
-      const data = await res.json();
-      if (res.ok && data.token) {
-        localStorage.setItem("token", data.token);
-        alert("Login successful!");
+      if (res.ok) {
+        const data = await res.json();
+        dispatch(setToken(data.token));
+        dispatch(loginSuccess(data));
         navigate("/");
       } else {
+        const data = await res.json();
         setError(data.message || "Login failed");
       }
     } catch (err) {
