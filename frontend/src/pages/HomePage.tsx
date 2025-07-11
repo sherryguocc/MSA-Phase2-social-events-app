@@ -74,7 +74,7 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto mt-10 relative">
+    <div className="w-full max-w-7xl mx-auto mt-10 relative px-4">
       {/* Show Register/Login if not logged in */}
       {!isLoggedIn && (
         <div className="flex justify-end gap-2 mb-4">
@@ -91,7 +91,7 @@ const HomePage: React.FC = () => {
       </div>
       {loading && <div>Loading...</div>}
       {error && <div className="text-red-500">{error}</div>}
-      <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
+      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {sortedEvents.map(event => (
           <div key={event.id} className="card bg-base-100 p-6 shadow-xl break-words">
             <figure>
