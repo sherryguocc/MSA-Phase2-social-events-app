@@ -88,7 +88,7 @@ const MyEventPage: React.FC = () => {
               <p className="break-words whitespace-pre-line text-base mb-3 text-gray-800">{event.description}</p>
               <div className="flex flex-col gap-1 text-sm text-gray-600 mb-2">
                 <span><span className="font-semibold">Location:</span> {event.location}</span>
-                <span><span className="font-semibold">Time:</span> {new Date(event.eventTime).toLocaleString()}</span>
+                <span><span className="font-semibold">Time:</span> {new Date(event.eventTime).toLocaleString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false })}</span>
                 <span><span className="font-semibold">Attendees:</span> {event.minAttendees} - {event.maxAttendees}</span>
               </div>
               <button
