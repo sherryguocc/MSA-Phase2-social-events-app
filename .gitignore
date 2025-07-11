@@ -7,3 +7,7 @@ obj/
 .vscode/
 .env
 node_modules/
+# Ignore SQLite database files
+*.db
+*.db-shm
+*.db-wal
