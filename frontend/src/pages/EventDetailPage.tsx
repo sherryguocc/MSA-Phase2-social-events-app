@@ -103,7 +103,19 @@ const EventDetailPage: React.FC = () => {
       <div className="mb-2 text-gray-700"><span className="font-semibold">Location:</span> {event.location}</div>
       <div className="mb-2 text-gray-700"><span className="font-semibold">Time:</span> {new Date(event.eventTime).toLocaleString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false })}</div>
       <div className="mb-2 text-gray-700"><span className="font-semibold">Attendees:</span> {event.minAttendees} - {event.maxAttendees}</div>
-      <div className="mb-2 text-gray-700"><span className="font-semibold">Organizer:</span> {event.createdByUsername || "Unknown"}</div>
+      <div className="mb-2 text-gray-700">
+        <span className="font-semibold">Organizer:</span>{" "}
+        {event.createdById ? (
+          <span
+            className="text-primary cursor-pointer hover:underline"
+            onClick={() => navigate(`/profile/${event.createdById}`)}
+          >
+            {event.createdByUsername || "Unknown"}
+          </span>
+        ) : (
+          event.createdByUsername || "Unknown"
+        )}
+      </div>
       <div className="flex gap-2 my-4">
         <button className="btn btn-primary btn-sm" onClick={handleJoin} disabled={actionLoading}>
           Join ({participants.length})
@@ -119,15 +131,39 @@ const EventDetailPage: React.FC = () => {
       <div className="mt-6">
         <div className="mb-2 font-semibold">Joined Users ({participants.length}):</div>
         <div className="flex flex-wrap gap-2 mb-4">
-          {participants.map(u => <span key={u.id} className="badge badge-primary">{u.username}</span>)}
+          {participants.map(u => (
+            <span
+              key={u.id}
+              className="badge badge-primary cursor-pointer hover:underline"
+              onClick={() => navigate(`/profile/${u.id}`)}
+            >
+              {u.username}
+            </span>
+          ))}
         </div>
         <div className="mb-2 font-semibold">Interested Users ({interested.length}):</div>
         <div className="flex flex-wrap gap-2 mb-4">
-          {interested.map(u => <span key={u.id} className="badge badge-secondary">{u.username}</span>)}
+          {interested.map(u => (
+            <span
+              key={u.id}
+              className="badge badge-secondary cursor-pointer hover:underline"
+              onClick={() => navigate(`/profile/${u.id}`)}
+            >
+              {u.username}
+            </span>
+          ))}
         </div>
         <div className="mb-2 font-semibold">Waitlist ({waitlist.length}):</div>
         <div className="flex flex-wrap gap-2">
-          {waitlist.map(u => <span key={u.id} className="badge badge-outline">{u.username}</span>)}
+          {waitlist.map(u => (
+            <span
+              key={u.id}
+              className="badge badge-outline cursor-pointer hover:underline"
+              onClick={() => navigate(`/profile/${u.id}`)}
+            >
+              {u.username}
+            </span>
+          ))}
         </div>
       </div>
     </div>
