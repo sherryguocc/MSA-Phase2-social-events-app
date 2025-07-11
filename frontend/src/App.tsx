@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import RegisterPage from './pages/RegisterPage';
@@ -8,6 +7,7 @@ import CreateEventPage from './pages/CreateEventPage';
 import ProfilePage from './pages/ProfilePage';
 import MyEventPage from './pages/MyEventPage';
 import EditEventPage from './pages/EditEventPage';
+import EventDetailPage from './pages/EventDetailPage';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from './store';
 import { clearToken, loginSuccess } from './store/userSlice';
@@ -85,6 +85,8 @@ function App() {
             <Route path="/my-events" element={<MyEventPage />} />
             {/* Edit Event page route */}
             <Route path="/edit-event/:id" element={<EditEventPage />} />
+            {/* Event Detail page route */}
+            <Route path="/event/:id" element={<EventDetailPage />} />
           </Routes>
         </div>
       </BrowserRouter>

@@ -93,7 +93,11 @@ const HomePage: React.FC = () => {
       {error && <div className="text-red-500">{error}</div>}
       <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {sortedEvents.map(event => (
-          <div key={event.id} className="card bg-base-100 p-6 shadow-xl break-words">
+          <div
+            key={event.id}
+            className="card bg-base-100 p-6 shadow-xl break-words cursor-pointer hover:shadow-2xl transition-shadow"
+            onClick={() => navigate(`/event/${event.id}`)}
+          >
             <figure>
               <img
                 src={event.imageUrl && event.imageUrl.trim() !== '' ? event.imageUrl : '/default-event.jpg'}
@@ -123,7 +127,7 @@ const HomePage: React.FC = () => {
               {user && event.createdById === user.id && (
                 <button
                   className="btn btn-outline btn-xs mt-2"
-                  onClick={() => navigate(`/edit-event/${event.id}`)}
+                  onClick={e => { e.stopPropagation(); navigate(`/edit-event/${event.id}`); }}
                 >
                   Edit
                 </button>
