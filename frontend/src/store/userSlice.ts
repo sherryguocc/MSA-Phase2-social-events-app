@@ -10,7 +10,17 @@ interface UserState {
 
 const initialState: UserState = {
   token: localStorage.getItem('token'),
-  userInfo: null,
+  userInfo: (() => {
+    const stored = localStorage.getItem('userInfo');
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  })(),
 };
 
 const userSlice = createSlice({
@@ -23,11 +33,14 @@ const userSlice = createSlice({
     },
     clearToken(state) {
       state.token = null;
+      state.userInfo = null;
       localStorage.removeItem('token');
+      localStorage.removeItem('userInfo');
     },
     loginSuccess: (state, action: PayloadAction<UserData>) => {
       console.log('Redux loginSuccess triggered:', action.payload);
       state.userInfo = action.payload;
+      localStorage.setItem('userInfo', JSON.stringify(action.payload));
     },
   },
 });

@@ -1,3 +1,4 @@
+    
 // ASP.NET Core controller for CRUD operations on Event model using AppDbContext and EF Core.
 // ASP.NET Core controller for CRUD operations on Event model using AppDbContext and EF Core.
 using Microsoft.AspNetCore.Mvc;
@@ -77,7 +78,8 @@ public class EventController : ControllerBase
         var events = _context.Events
             .Where(e => e.CreatedById == userId)
             .Include(e => e.CreatedBy)
-            .Select(e => new EventDTO {
+            .Select(e => new EventDTO
+            {
                 Id = e.Id,
                 Title = e.Title,
                 Description = e.Description,
@@ -92,5 +94,49 @@ public class EventController : ControllerBase
             .ToList();
 
         return Ok(events);
+    }
+    
+    [Microsoft.AspNetCore.Authorization.Authorize]
+    [HttpPut("{id}")]
+    public IActionResult EditEvent(int id, [FromBody] EventDTO updateDto)
+    {
+
+        var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+        if (userIdClaim == null)
+        {
+            return Unauthorized("User ID not found in token.");
+        }
+        int userId = int.Parse(userIdClaim.Value);
+
+        var ev = _context.Events.FirstOrDefault(e => e.Id == id);
+        if (ev == null)
+            return NotFound(new { message = "Event not found." });
+
+        if (ev.CreatedById != userId)
+            return Forbid();
+
+        ev.Title = updateDto.Title;
+        ev.Description = updateDto.Description;
+        ev.Location = updateDto.Location;
+        ev.EventTime = updateDto.EventTime;
+        ev.MinAttendees = updateDto.MinAttendees;
+        ev.MaxAttendees = updateDto.MaxAttendees;
+        ev.ImageUrl = updateDto.ImageUrl;
+        _context.SaveChanges();
+
+        var result = new EventDTO
+        {
+            Id = ev.Id,
+            Title = ev.Title,
+            Description = ev.Description,
+            Location = ev.Location,
+            EventTime = ev.EventTime,
+            MinAttendees = ev.MinAttendees,
+            MaxAttendees = ev.MaxAttendees,
+            ImageUrl = ev.ImageUrl,
+            CreatedById = ev.CreatedById,
+            CreatedByUsername = _context.Users.FirstOrDefault(u => u.Id == ev.CreatedById)?.Username ?? "Unknown"
+        };
+        return Ok(result);
     }
 }

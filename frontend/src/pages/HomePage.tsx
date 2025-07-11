@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../store';
 import { clearToken } from '../store/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 interface EventItem {
   id: number;
@@ -13,6 +14,7 @@ interface EventItem {
   maxAttendees: number;
   imageUrl?: string;
   createdByUsername: string;
+  createdById: number;
 }
 
 const HomePage: React.FC = () => {
@@ -21,7 +23,23 @@ const HomePage: React.FC = () => {
   const [error, setError] = useState("");
   const dispatch = useDispatch();
   const token = useSelector((state: RootState) => state.user.token);
+  const reduxUser = useSelector((state: RootState) => state.user.userInfo);
+  const [user, setUser] = useState(reduxUser);
+  useEffect(() => {
+    if (!user && token) {
+      fetch("/api/user/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then(res => {
+          if (!res.ok) throw new Error("Failed to fetch user info");
+          return res.json();
+        })
+        .then(data => setUser(data))
+        .catch(() => {});
+    }
+  }, [token, reduxUser, user]);
   const isLoggedIn = Boolean(token);
+  const navigate = useNavigate();
 
 
   // Sorting state
@@ -57,19 +75,13 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="max-w-3xl mx-auto mt-10 relative">
-      <div className="absolute right-0 top-0 flex gap-2">
-        {isLoggedIn ? (
-          <>
-            <button className="btn btn-outline btn-sm" onClick={() => window.location.href = '/create-event'}>Create Event</button>
-            <button className="btn btn-outline btn-sm" onClick={handleLogout}>Logout</button>
-          </>
-        ) : (
-          <>
-            <button className="btn btn-outline btn-sm" onClick={() => window.location.href = '/register'}>Register</button>
-            <button className="btn btn-primary btn-sm" onClick={() => window.location.href = '/login'}>Login</button>
-          </>
-        )}
-      </div>
+      {/* Show Register/Login if not logged in */}
+      {!isLoggedIn && (
+        <div className="flex justify-end gap-2 mb-4">
+          <button className="btn btn-outline btn-sm" onClick={() => navigate('/register')}>Register</button>
+          <button className="btn btn-outline btn-sm" onClick={() => navigate('/login')}>Login</button>
+        </div>
+      )}
       <h2 className="text-3xl font-bold mb-6">All Events</h2>
       <div className="mb-4 flex gap-2 items-center">
         <span className="font-semibold">Sort by:</span>
@@ -97,12 +109,20 @@ const HomePage: React.FC = () => {
                 <span><span className="font-semibold">Location:</span> {event.location}</span>
                 <span><span className="font-semibold">Time:</span> {new Date(event.eventTime).toLocaleString()}</span>
                 <span><span className="font-semibold">Attendees:</span> {event.minAttendees} - {event.maxAttendees}</span>
-                {/* Show event creator */}
                 <span>
                   <span className="font-semibold">Organizer:</span>{" "}
                   {event.createdByUsername || "Unknown"}
                 </span>
               </div>
+              {/* Edit button for event creator */}
+              {user && event.createdById === user.id && (
+                <button
+                  className="btn btn-outline btn-xs mt-2"
+                  onClick={() => navigate(`/edit-event/${event.id}`)}
+                >
+                  Edit
+                </button>
+              )}
             </div>
           </div>
         ))}

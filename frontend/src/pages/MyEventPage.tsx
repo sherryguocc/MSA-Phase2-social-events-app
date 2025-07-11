@@ -91,6 +91,12 @@ const MyEventPage: React.FC = () => {
                 <span><span className="font-semibold">Time:</span> {new Date(event.eventTime).toLocaleString()}</span>
                 <span><span className="font-semibold">Attendees:</span> {event.minAttendees} - {event.maxAttendees}</span>
               </div>
+              <button
+                className="btn btn-outline btn-primary btn-sm mt-2"
+                onClick={() => navigate(`/edit-event/${event.id}`)}
+              >
+                Edit
+              </button>
             </div>
           </div>
         ))}
