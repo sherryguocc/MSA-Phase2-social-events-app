@@ -1,4 +1,5 @@
 // ASP.NET Core controller for CRUD operations on Event model using AppDbContext and EF Core.
+// ASP.NET Core controller for CRUD operations on Event model using AppDbContext and EF Core.
 using Microsoft.AspNetCore.Mvc;
 using backend.Data;
 using backend.Models;
@@ -68,5 +69,28 @@ public class EventController : ControllerBase
             Console.WriteLine($"[EventController.Create] Exception: {ex.Message}\n{ex.StackTrace}");
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
+    }
+
+    [HttpGet("by-user/{userId}")]
+    public IActionResult GetEventsByUser(int userId)
+    {
+        var events = _context.Events
+            .Where(e => e.CreatedById == userId)
+            .Include(e => e.CreatedBy)
+            .Select(e => new EventDTO {
+                Id = e.Id,
+                Title = e.Title,
+                Description = e.Description,
+                Location = e.Location,
+                EventTime = e.EventTime,
+                MinAttendees = e.MinAttendees,
+                MaxAttendees = e.MaxAttendees,
+                ImageUrl = e.ImageUrl,
+                CreatedById = e.CreatedById,
+                CreatedByUsername = e.CreatedBy != null ? e.CreatedBy.Username : "Unknown"
+            })
+            .ToList();
+
+        return Ok(events);
     }
 }

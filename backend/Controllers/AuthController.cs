@@ -1,4 +1,3 @@
-
 using backend.Models;
 using backend.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -61,7 +60,15 @@ namespace backend.Controllers
             }
 
             var token = GenerateJwtToken(user);
-            return Ok(new { token });
+            return Ok(new {
+                token,
+                user = new {
+                    user.Id,
+                    user.Username,
+                    user.Email,
+                    user.Bio
+                }
+            });
         }
 
         [Authorize]

@@ -24,6 +24,7 @@ const LoginPage: React.FC = () => {
         const data = await res.json();
         dispatch(setToken(data.token));
         dispatch(loginSuccess(data));
+        dispatch(loginSuccess(data.user));
         navigate("/");
       } else {
         const data = await res.json();
