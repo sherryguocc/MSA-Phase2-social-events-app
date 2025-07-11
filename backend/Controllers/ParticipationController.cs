@@ -127,4 +127,79 @@ public class ParticipationController : ControllerBase
         var users = ev.InterestedUsers.Select(u => new { u.Id, u.Username, u.Email, u.Bio }).ToList();
         return Ok(users);
     }
+
+    // Get all events a user has joined (as participant)
+    [HttpGet("/api/users/{userId}/joined")]
+    public IActionResult GetJoinedEvents(int userId)
+    {
+        var user = _context.Users
+            .Include(u => u.ParticipantsEvents) // This should match the navigation property in User.cs
+            .ThenInclude(e => e.CreatedBy)
+            .FirstOrDefault(u => u.Id == userId);
+        if (user == null) return NotFound("User not found");
+        var events = user.ParticipantsEvents
+            .Select(e => new {
+                e.Id,
+                e.Title,
+                e.Description,
+                e.Location,
+                e.EventTime,
+                e.MinAttendees,
+                e.MaxAttendees,
+                e.ImageUrl,
+                CreatedByUsername = e.CreatedBy != null ? e.CreatedBy.Username : null
+            })
+            .ToList();
+        return Ok(events);
+    }
+
+    // Get all events a user is interested in
+    [HttpGet("/api/users/{userId}/interested")]
+    public IActionResult GetInterestedEvents(int userId)
+    {
+        var user = _context.Users
+            .Include(u => u.InterestedEvents)
+            .ThenInclude(e => e.CreatedBy)
+            .FirstOrDefault(u => u.Id == userId);
+        if (user == null) return NotFound("User not found");
+        var events = user.InterestedEvents
+            .Select(e => new {
+                e.Id,
+                e.Title,
+                e.Description,
+                e.Location,
+                e.EventTime,
+                e.MinAttendees,
+                e.MaxAttendees,
+                e.ImageUrl,
+                CreatedByUsername = e.CreatedBy != null ? e.CreatedBy.Username : null
+            })
+            .ToList();
+        return Ok(events);
+    }
+
+    // Get all events a user is in waitlist for
+    [HttpGet("/api/users/{userId}/waitlist")]
+    public IActionResult GetWaitlistEvents(int userId)
+    {
+        var user = _context.Users
+            .Include(u => u.WaitlistEvents)
+            .ThenInclude(e => e.CreatedBy)
+            .FirstOrDefault(u => u.Id == userId);
+        if (user == null) return NotFound("User not found");
+        var events = user.WaitlistEvents
+            .Select(e => new {
+                e.Id,
+                e.Title,
+                e.Description,
+                e.Location,
+                e.EventTime,
+                e.MinAttendees,
+                e.MaxAttendees,
+                e.ImageUrl,
+                CreatedByUsername = e.CreatedBy != null ? e.CreatedBy.Username : null
+            })
+            .ToList();
+        return Ok(events);
+    }
 }

@@ -27,19 +27,22 @@ namespace backend.Data
                 .HasForeignKey(e => e.CreatedById)
                 .OnDelete(DeleteBehavior.Restrict);  // Prevent cascade delete to avoid deleting user when event is deleted
 
-            modelBuilder.Entity<Event>()
-                .HasMany(e => e.Participants)
-                .WithMany()
+            // Event <-> User (Joined)
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.ParticipantsEvents)
+                .WithMany(e => e.Participants)
                 .UsingEntity(j => j.ToTable("EventParticipants"));
 
-            modelBuilder.Entity<Event>()
-                .HasMany(e => e.InterestedUsers)
-                .WithMany()
+            // Event <-> User (Interested)
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.InterestedEvents)
+                .WithMany(e => e.InterestedUsers)
                 .UsingEntity(j => j.ToTable("EventInterestedUsers"));
 
-            modelBuilder.Entity<Event>()
-                .HasMany(e => e.Waitlist)
-                .WithMany()
+            // Event <-> User (Waitlist)
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.WaitlistEvents)
+                .WithMany(e => e.Waitlist)
                 .UsingEntity(j => j.ToTable("EventWaitlist"));
         }
 
