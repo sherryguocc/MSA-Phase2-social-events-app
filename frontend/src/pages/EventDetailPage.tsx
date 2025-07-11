@@ -117,8 +117,12 @@ const EventDetailPage: React.FC = () => {
         )}
       </div>
       <div className="flex gap-2 my-4">
-        <button className="btn btn-primary btn-sm" onClick={handleJoin} disabled={actionLoading}>
-          Join ({participants.length})
+        <button
+          className="btn btn-primary btn-sm"
+          onClick={handleJoin}
+          disabled={actionLoading || (!!reduxUser && participants.some(u => u.id === reduxUser.id))}
+        >
+          {reduxUser && participants.some(u => u.id === reduxUser.id) ? "Already Joined" : `Join (${participants.length})`}
         </button>
         <button className="btn btn-outline btn-sm" onClick={handleCancel} disabled={actionLoading}>
           Cancel
