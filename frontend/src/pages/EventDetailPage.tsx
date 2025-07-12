@@ -17,12 +17,14 @@ interface EventItem {
   maxAttendees: number;
   imageUrl?: string;
   createdByUsername: string;
+  createdByAvatarUrl?: string;
   createdById: number;
 }
 
 interface UserInfo {
   id: number;
   username: string;
+  avatarUrl?: string;
 }
 
 const EventDetailPage: React.FC = () => {
@@ -117,7 +119,7 @@ const EventDetailPage: React.FC = () => {
       <div className="mb-2 text-gray-700">
         <span className="font-semibold">Organizer:</span>{" "}
         {event.createdById ? (
-          <UserLink id={event.createdById} username={event.createdByUsername || "Unknown"} />
+          <UserLink id={event.createdById} username={event.createdByUsername || "Unknown"} avatarUrl={event.createdByAvatarUrl} />
         ) : (
           event.createdByUsername || "Unknown"
         )}
@@ -145,19 +147,19 @@ const EventDetailPage: React.FC = () => {
         <div className="mb-2 font-semibold">Joined Users ({participants.length}):</div>
         <div className="flex flex-wrap gap-2 mb-4">
           {participants.map(u => (
-            <UserLink key={u.id} id={u.id} username={u.username} className="badge badge-primary cursor-pointer hover:underline" />
+            <UserLink key={u.id} id={u.id} username={u.username} avatarUrl={u.avatarUrl} className="badge badge-primary cursor-pointer hover:underline" />
           ))}
         </div>
         <div className="mb-2 font-semibold">Interested Users ({interested.length}):</div>
         <div className="flex flex-wrap gap-2 mb-4">
           {interested.map(u => (
-            <UserLink key={u.id} id={u.id} username={u.username} className="badge badge-secondary cursor-pointer hover:underline" />
+            <UserLink key={u.id} id={u.id} username={u.username} avatarUrl={u.avatarUrl} className="badge badge-secondary cursor-pointer hover:underline" />
           ))}
         </div>
         <div className="mb-2 font-semibold">Waitlist ({waitlist.length}):</div>
         <div className="flex flex-wrap gap-2">
           {waitlist.map(u => (
-            <UserLink key={u.id} id={u.id} username={u.username} className="badge badge-outline cursor-pointer hover:underline" />
+            <UserLink key={u.id} id={u.id} username={u.username} avatarUrl={u.avatarUrl} className="badge badge-outline cursor-pointer hover:underline" />
           ))}
         </div>
       </div>

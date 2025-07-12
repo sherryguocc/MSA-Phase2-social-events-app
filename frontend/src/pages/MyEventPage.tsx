@@ -13,6 +13,7 @@ interface EventItem {
   maxAttendees: number;
   imageUrl?: string;
   createdByUsername: string;
+  createdByAvatarUrl?: string;
 }
 
 const MyEventPage: React.FC = () => {

@@ -10,7 +10,11 @@ namespace backend.Models
         public string? Email { get; set; } // Email can be null
         public string PasswordHash { get; set; } = "";
 
+
         public string? Bio { get; set; } // User self-introduction, can be null
+
+        // User avatar URL (can be null or empty, use default if not set)
+        public string? AvatarUrl { get; set; }
 
         // Navigation properties
         public List<Event> CreatedEvents { get; set; } = new List<Event>();

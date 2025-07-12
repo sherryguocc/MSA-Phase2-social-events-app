@@ -102,7 +102,7 @@ public class ParticipationController : ControllerBase
             .Include(e => e.Participants)
             .FirstOrDefault(e => e.Id == id);
         if (ev == null) return NotFound("Event not found");
-        var users = ev.Participants.Select(u => new { u.Id, u.Username, u.Email, u.Bio }).ToList();
+        var users = ev.Participants.Select(u => new { u.Id, u.Username, u.Email, u.Bio, u.AvatarUrl }).ToList();
         return Ok(users);
     }
 
@@ -113,7 +113,7 @@ public class ParticipationController : ControllerBase
             .Include(e => e.Waitlist)
             .FirstOrDefault(e => e.Id == id);
         if (ev == null) return NotFound("Event not found");
-        var users = ev.Waitlist.Select(u => new { u.Id, u.Username, u.Email, u.Bio }).ToList();
+        var users = ev.Waitlist.Select(u => new { u.Id, u.Username, u.Email, u.Bio, u.AvatarUrl }).ToList();
         return Ok(users);
     }
 
@@ -124,7 +124,7 @@ public class ParticipationController : ControllerBase
             .Include(e => e.InterestedUsers)
             .FirstOrDefault(e => e.Id == id);
         if (ev == null) return NotFound("Event not found");
-        var users = ev.InterestedUsers.Select(u => new { u.Id, u.Username, u.Email, u.Bio }).ToList();
+        var users = ev.InterestedUsers.Select(u => new { u.Id, u.Username, u.Email, u.Bio, u.AvatarUrl }).ToList();
         return Ok(users);
     }
 

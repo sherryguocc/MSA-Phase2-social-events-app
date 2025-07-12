@@ -35,13 +35,13 @@ namespace backend.Controllers
                 c.Content,
                 c.CreatedAt,
                 c.ParentCommentId,
-                User = c.User == null ? null : new { c.User.Id, c.User.Username },
+                User = c.User == null ? null : new { c.User.Id, c.User.Username, c.User.AvatarUrl },
                 Replies = (c.Replies ?? new List<Comment>()).OrderBy(r => r.CreatedAt).Select(r => new {
                     r.Id,
                     r.Content,
                     r.CreatedAt,
                     r.ParentCommentId,
-                    User = r.User == null ? null : new { r.User.Id, r.User.Username }
+                    User = r.User == null ? null : new { r.User.Id, r.User.Username, r.User.AvatarUrl }
                 })
             });
             return Ok(result);
@@ -73,7 +73,7 @@ namespace backend.Controllers
                     comment.Content,
                     comment.CreatedAt,
                     comment.ParentCommentId,
-                    User = comment.User == null ? null : new { comment.User.Id, comment.User.Username }
+                    User = comment.User == null ? null : new { comment.User.Id, comment.User.Username, comment.User.AvatarUrl }
                 };
                 return Ok(result);
             }

@@ -13,8 +13,8 @@ interface EventItem {
   maxAttendees: number;
   imageUrl?: string;
   createdByUsername: string;
+  createdByAvatarUrl?: string;
 }
-
 
 const ProfilePage: React.FC = () => {
   const token = useSelector((state: RootState) => state.user.token);
@@ -28,6 +28,15 @@ const ProfilePage: React.FC = () => {
   const [editEmail, setEditEmail] = useState("");
   const [editBio, setEditBio] = useState("");
   const [saving, setSaving] = useState(false);
+  const [editAvatar, setEditAvatar] = useState("");
+  // 预设头像图片
+  const presetAvatars = [
+    "/avatar1.png",
+    "/avatar2.png",
+    "/avatar3.png",
+    "/avatar4.png",
+    "/avatar5.png"
+  ];
   const navigate = useNavigate();
 
   // Determine if viewing own profile
@@ -53,6 +62,7 @@ const ProfilePage: React.FC = () => {
         setUser(data);
         setEditEmail(data.email || "");
         setEditBio(data.bio || "");
+        setEditAvatar(data.avatarUrl || "");
       })
       .catch(err => setError(err.message));
 
@@ -83,7 +93,14 @@ const ProfilePage: React.FC = () => {
     <div className="max-w-3xl mx-auto mt-10">
       <h2 className="text-3xl font-bold mb-4">{isOwnProfile ? "My Profile" : `${user?.username || "User"}'s Profile`}</h2>
       <div className="mb-6 p-4 bg-base-200 rounded">
-        <div><span className="font-semibold">Username:</span> {user?.username}</div>
+        <div className="flex items-center gap-4 mb-2">
+          <img
+            src={user?.avatarUrl && user.avatarUrl.trim() !== '' ? user.avatarUrl : "/default-avatar.png"}
+            alt="avatar"
+            className="w-20 h-20 rounded-full border-2 border-blue-300 object-cover bg-white"
+          />
+          <div><span className="font-semibold">Username:</span> {user?.username}</div>
+        </div>
         {isOwnProfile && editMode ? (
           <>
             <div>
@@ -106,6 +123,30 @@ const ProfilePage: React.FC = () => {
                 disabled={saving}
               />
             </div>
+            <div className="mt-2">
+              <span className="font-semibold">Avatar:</span>
+              <div className="flex gap-2 mt-1 flex-wrap">
+                {presetAvatars.map(url => (
+                  <img
+                    key={url}
+                    src={url}
+                    alt="avatar"
+                    className={`w-12 h-12 rounded-full border-2 cursor-pointer object-cover ${editAvatar === url ? "border-blue-500 ring-2 ring-blue-400" : "border-gray-300"}`}
+                    onClick={() => setEditAvatar(url)}
+                  />
+                ))}
+                <input
+                  className="input input-bordered input-sm ml-2"
+                  type="url"
+                  placeholder="Paste avatar image URL"
+                  value={editAvatar && !presetAvatars.includes(editAvatar) ? editAvatar : ""}
+                  onChange={e => setEditAvatar(e.target.value)}
+                  disabled={saving}
+                  style={{ width: 180 }}
+                />
+              </div>
+              <div className="text-xs text-gray-400 mt-1">You can select a preset avatar or paste an image URL.</div>
+            </div>
             <div className="mt-2 flex gap-2">
               <button className="btn btn-primary btn-sm" disabled={saving} onClick={async () => {
                 setSaving(true);
@@ -117,7 +158,7 @@ const ProfilePage: React.FC = () => {
                       "Content-Type": "application/json",
                       Authorization: `Bearer ${token}`,
                     },
-                    body: JSON.stringify({ email: editEmail, bio: editBio }),
+                    body: JSON.stringify({ email: editEmail, bio: editBio, avatarUrl: editAvatar }),
                   });
                   if (!res.ok) throw new Error("Failed to update user info");
                   const updated = await res.json();
@@ -132,6 +173,7 @@ const ProfilePage: React.FC = () => {
               <button className="btn btn-outline btn-sm" disabled={saving} onClick={() => {
                 setEditEmail(user?.email || "");
                 setEditBio(user?.bio || "");
+                setEditAvatar(user?.avatarUrl || "");
                 setEditMode(false);
               }}>Cancel</button>
             </div>

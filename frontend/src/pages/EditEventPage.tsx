@@ -14,6 +14,7 @@ interface EventItem {
   imageUrl?: string;
   createdById: number;
   createdByUsername: string;
+  createdByAvatarUrl?: string;
 }
 
 const EditEventPage: React.FC = () => {

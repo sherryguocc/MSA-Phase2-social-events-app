@@ -13,4 +13,5 @@ public class EventDTO
     public string ImageUrl { get; set; } = "";
     public int CreatedById { get; set; }
     public string CreatedByUsername { get; set; } = "";
+    public string? CreatedByAvatarUrl { get; set; }
 }

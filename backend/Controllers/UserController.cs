@@ -26,7 +26,8 @@ public class UserController : ControllerBase
                 Id = u.Id,
                 Username = u.Username,
                 Email = u.Email ?? string.Empty,
-                Bio = u.Bio ?? string.Empty
+                Bio = u.Bio ?? string.Empty,
+                AvatarUrl = u.AvatarUrl ?? string.Empty
             })
             .ToList();
 
@@ -49,7 +50,8 @@ public class UserController : ControllerBase
                 Id = u.Id,
                 Username = u.Username,
                 Email = u.Email ?? string.Empty,
-                Bio = u.Bio ?? string.Empty
+                Bio = u.Bio ?? string.Empty,
+                AvatarUrl = u.AvatarUrl ?? string.Empty
             })
             .FirstOrDefault();
 
@@ -69,7 +71,8 @@ public class UserController : ControllerBase
                 Id = u.Id,
                 Username = u.Username,
                 Email = u.Email ?? string.Empty,
-                Bio = u.Bio ?? string.Empty
+                Bio = u.Bio ?? string.Empty,
+                AvatarUrl = u.AvatarUrl ?? string.Empty
             })
             .FirstOrDefault();
 
@@ -103,6 +106,7 @@ public class UserController : ControllerBase
         }
         user.Email = updateDto.Email;
         user.Bio = updateDto.Bio;
+        user.AvatarUrl = updateDto.AvatarUrl;
         _context.SaveChanges();
 
         // Return updated user info
@@ -111,7 +115,8 @@ public class UserController : ControllerBase
             Id = user.Id,
             Username = user.Username,
             Email = user.Email,
-            Bio = user.Bio
+            Bio = user.Bio,
+            AvatarUrl = user.AvatarUrl
         };
         return Ok(result);
     }

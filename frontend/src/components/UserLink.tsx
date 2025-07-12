@@ -4,10 +4,11 @@ import { useNavigate } from "react-router-dom";
 interface UserLinkProps {
   id: number;
   username: string;
+  avatarUrl?: string;
   className?: string;
 }
 
-const UserLink: React.FC<UserLinkProps> = ({ id, username, className }) => {
+const UserLink: React.FC<UserLinkProps> = ({ id, username, avatarUrl, className }) => {
   const navigate = useNavigate();
   return (
     <span
@@ -19,7 +20,34 @@ const UserLink: React.FC<UserLinkProps> = ({ id, username, className }) => {
       onClick={() => navigate(`/profile/${id}`)}
       style={{ userSelect: "text" }}
     >
-      <svg width="16" height="16" fill="currentColor" className="inline-block opacity-80" viewBox="0 0 20 20"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm0 2c-4.418 0-8 1.79-8 4v2h16v-2c0-2.21-3.582-4-8-4z"/></svg>
+      <span
+        style={{
+          display: "inline-block",
+          width: 40, // enlarge avatar size
+          height: 40,
+          borderRadius: "50%",
+          background: "linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)",
+          padding: 2,
+          boxShadow: "0 2px 8px rgba(160,120,220,0.12)",
+          // border: "2.5px solid #fff", // remove outer white border
+          marginRight: 8, // increase spacing
+        }}
+      >
+        <img
+          src={avatarUrl && avatarUrl.trim() !== '' ? avatarUrl : "/default-avatar.png"}
+          alt="avatar"
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            borderRadius: "50%",
+            display: "block",
+            // border: "2.5px solid #7f53ac", // remove inner purple border
+            boxSizing: "border-box",
+            background: "#fff"
+          }}
+        />
+      </span>
       {username}
     </span>
   );

@@ -37,7 +37,8 @@ public class EventController : ControllerBase
                 MaxAttendees = e.MaxAttendees,
                 ImageUrl = e.ImageUrl,
                 CreatedById = e.CreatedById,
-                CreatedByUsername = e.CreatedBy != null ? e.CreatedBy.Username : "Unknown"
+                CreatedByUsername = e.CreatedBy != null ? e.CreatedBy.Username : "Unknown",
+                CreatedByAvatarUrl = e.CreatedBy != null ? e.CreatedBy.AvatarUrl : null
             })
             .ToListAsync();
 
@@ -89,7 +90,8 @@ public class EventController : ControllerBase
                 MaxAttendees = e.MaxAttendees,
                 ImageUrl = e.ImageUrl,
                 CreatedById = e.CreatedById,
-                CreatedByUsername = e.CreatedBy != null ? e.CreatedBy.Username : "Unknown"
+                CreatedByUsername = e.CreatedBy != null ? e.CreatedBy.Username : "Unknown",
+                CreatedByAvatarUrl = e.CreatedBy != null ? e.CreatedBy.AvatarUrl : null
             })
             .ToList();
 
@@ -124,6 +126,7 @@ public class EventController : ControllerBase
         ev.ImageUrl = updateDto.ImageUrl;
         _context.SaveChanges();
 
+        var createdBy = _context.Users.FirstOrDefault(u => u.Id == ev.CreatedById);
         var result = new EventDTO
         {
             Id = ev.Id,
@@ -135,7 +138,8 @@ public class EventController : ControllerBase
             MaxAttendees = ev.MaxAttendees,
             ImageUrl = ev.ImageUrl,
             CreatedById = ev.CreatedById,
-            CreatedByUsername = _context.Users.FirstOrDefault(u => u.Id == ev.CreatedById)?.Username ?? "Unknown"
+            CreatedByUsername = createdBy?.Username ?? "Unknown",
+            CreatedByAvatarUrl = createdBy?.AvatarUrl
         };
         return Ok(result);
     }

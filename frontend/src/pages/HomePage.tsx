@@ -15,6 +15,7 @@ interface EventItem {
   maxAttendees: number;
   imageUrl?: string;
   createdByUsername: string;
+  createdByAvatarUrl?: string;
   createdById: number;
 }
 
