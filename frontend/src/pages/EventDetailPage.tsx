@@ -91,6 +91,9 @@ const EventDetailPage: React.FC = () => {
   if (loading) return <div>Loading...</div>;
   if (error || !event) return <div className="text-red-500">{error || "Event not found"}</div>;
 
+  // Check if the event is over
+  const isEventOver = new Date(event.eventTime).getTime() < Date.now();
+
   return (
     <>
       <div className="max-w-2xl mx-auto mt-10 p-6 bg-base-200 rounded shadow">
@@ -123,17 +126,20 @@ const EventDetailPage: React.FC = () => {
         <button
           className="btn btn-primary btn-sm"
           onClick={handleJoin}
-          disabled={actionLoading || (!!reduxUser && participants.some(u => u.id === reduxUser.id))}
+          disabled={isEventOver || actionLoading || (!!reduxUser && participants.some(u => u.id === reduxUser.id))}
         >
           {reduxUser && participants.some(u => u.id === reduxUser.id) ? "Already Joined" : `Join (${participants.length})`}
         </button>
-        <button className="btn btn-outline btn-sm" onClick={handleCancel} disabled={actionLoading}>
+        <button className="btn btn-outline btn-sm" onClick={handleCancel} disabled={isEventOver || actionLoading}>
           Cancel
         </button>
-        <button className="btn btn-secondary btn-sm" onClick={handleInterest} disabled={actionLoading}>
+        <button className="btn btn-secondary btn-sm" onClick={handleInterest} disabled={isEventOver || actionLoading}>
           Interested ({interested.length})
         </button>
       </div>
+      {isEventOver && (
+        <div className="text-sm text-gray-500 mb-2">This event has ended. Participation and interest are closed.</div>
+      )}
       {actionError && <div className="text-red-500 mb-2">{actionError}</div>}
       <div className="mt-6">
         <div className="mb-2 font-semibold">Joined Users ({participants.length}):</div>
