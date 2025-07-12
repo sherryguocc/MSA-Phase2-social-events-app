@@ -19,6 +19,8 @@ namespace backend.Models
         public List<Event> ParticipantsEvents { get; set; } = new List<Event>(); // Events the user joined
         public List<Event> InterestedEvents { get; set; } = new List<Event>();   // Events the user is interested in
         public List<Event> WaitlistEvents { get; set; } = new List<Event>();     // Events the user is in waitlist for
-        // public List<Participation> Participations { get; set; }
+
+        // Navigation property: comments
+        public List<Comment> Comments { get; set; } = new();
     }
 }

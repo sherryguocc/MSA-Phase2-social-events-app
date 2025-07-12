@@ -32,4 +32,7 @@ public class Event
 
     // Users on the waitlist
     public List<User> Waitlist { get; set; } = new();
+
+    // Navigation property: comments
+    public List<Comment> Comments { get; set; } = new();
 }
