@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
+import CommentSection from "../components/CommentSection";
+import ScrollToTopButton from "../components/ScrollToTopButton";
 import { useParams, useNavigate } from "react-router-dom";
+import UserLink from "../components/UserLink";
+import EventEditButton from "../components/EventEditButton";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store";
 
@@ -88,8 +92,12 @@ const EventDetailPage: React.FC = () => {
   if (error || !event) return <div className="text-red-500">{error || "Event not found"}</div>;
 
   return (
-    <div className="max-w-2xl mx-auto mt-10 p-6 bg-base-200 rounded shadow">
-      <h2 className="text-3xl font-bold mb-4">{event.title}</h2>
+    <>
+      <div className="max-w-2xl mx-auto mt-10 p-6 bg-base-200 rounded shadow">
+      <h2 className="text-3xl font-bold mb-4 flex items-center">
+        {event.title}
+        <EventEditButton eventId={event.id} createdById={event.createdById} />
+      </h2>
       <img
         src={event.imageUrl && event.imageUrl.trim() !== '' ? event.imageUrl : '/default-event.jpg'}
         alt={event.title}
@@ -106,12 +114,7 @@ const EventDetailPage: React.FC = () => {
       <div className="mb-2 text-gray-700">
         <span className="font-semibold">Organizer:</span>{" "}
         {event.createdById ? (
-          <span
-            className="text-primary cursor-pointer hover:underline"
-            onClick={() => navigate(`/profile/${event.createdById}`)}
-          >
-            {event.createdByUsername || "Unknown"}
-          </span>
+          <UserLink id={event.createdById} username={event.createdByUsername || "Unknown"} />
         ) : (
           event.createdByUsername || "Unknown"
         )}
@@ -136,41 +139,27 @@ const EventDetailPage: React.FC = () => {
         <div className="mb-2 font-semibold">Joined Users ({participants.length}):</div>
         <div className="flex flex-wrap gap-2 mb-4">
           {participants.map(u => (
-            <span
-              key={u.id}
-              className="badge badge-primary cursor-pointer hover:underline"
-              onClick={() => navigate(`/profile/${u.id}`)}
-            >
-              {u.username}
-            </span>
+            <UserLink key={u.id} id={u.id} username={u.username} className="badge badge-primary cursor-pointer hover:underline" />
           ))}
         </div>
         <div className="mb-2 font-semibold">Interested Users ({interested.length}):</div>
         <div className="flex flex-wrap gap-2 mb-4">
           {interested.map(u => (
-            <span
-              key={u.id}
-              className="badge badge-secondary cursor-pointer hover:underline"
-              onClick={() => navigate(`/profile/${u.id}`)}
-            >
-              {u.username}
-            </span>
+            <UserLink key={u.id} id={u.id} username={u.username} className="badge badge-secondary cursor-pointer hover:underline" />
           ))}
         </div>
         <div className="mb-2 font-semibold">Waitlist ({waitlist.length}):</div>
         <div className="flex flex-wrap gap-2">
           {waitlist.map(u => (
-            <span
-              key={u.id}
-              className="badge badge-outline cursor-pointer hover:underline"
-              onClick={() => navigate(`/profile/${u.id}`)}
-            >
-              {u.username}
-            </span>
+            <UserLink key={u.id} id={u.id} username={u.username} className="badge badge-outline cursor-pointer hover:underline" />
           ))}
         </div>
       </div>
-    </div>
+      {/* comments section */}
+        <CommentSection eventId={event.id} />
+      </div>
+      <ScrollToTopButton />
+    </>
   );
 };
 

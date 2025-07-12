@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../store';
 import { clearToken } from '../store/userSlice';
 import { useNavigate } from 'react-router-dom';
+import EventEditButton from '../components/EventEditButton';
 
 interface EventItem {
   id: number;
@@ -124,14 +125,12 @@ const HomePage: React.FC = () => {
                 </span>
               </div>
               {/* Edit button for event creator */}
-              {user && event.createdById === user.id && (
-                <button
-                  className="btn btn-outline btn-xs mt-2"
-                  onClick={e => { e.stopPropagation(); navigate(`/edit-event/${event.id}`); }}
-                >
-                  Edit
-                </button>
-              )}
+              <EventEditButton
+                eventId={event.id}
+                createdById={event.createdById}
+                className="btn btn-outline btn-xs mt-2"
+                onClick={e => e.stopPropagation()}
+              />
             </div>
           </div>
         ))}
