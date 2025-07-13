@@ -68,7 +68,9 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
-Console.WriteLine("Connection String (start): " + builder.Configuration.GetConnectionString("DefaultConnection")?.Substring(0, 30));
+var connStr = builder.Configuration.GetConnectionString("DefaultConnection") ?? "(no connection string)";
+Console.WriteLine("Connection String (start): " + connStr.Substring(0, Math.Min(connStr.Length, 30)));
+
 
 var app = builder.Build();
 
