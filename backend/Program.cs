@@ -7,6 +7,8 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+Console.WriteLine("EF is using: " + builder.Configuration.GetConnectionString("DefaultConnection"));
+Console.WriteLine("Using DB: " + builder.Configuration.GetConnectionString("DefaultConnection"));
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(
@@ -19,7 +21,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
                 errorNumbersToAdd: null
             );
         }));
-        
+
 // Configure JWT authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -79,7 +81,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 var connStr = builder.Configuration.GetConnectionString("DefaultConnection") ?? "(no connection string)";
-Console.WriteLine("Connection String (start): " + connStr.Substring(0, Math.Min(connStr.Length, 30)));
+    Console.WriteLine("Connection String (start): " + connStr.Substring(0, Math.Min(connStr.Length, 30)));
 
 
 var app = builder.Build();
