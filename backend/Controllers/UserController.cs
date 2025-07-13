@@ -27,7 +27,10 @@ public class UserController : ControllerBase
                 Username = u.Username,
                 Email = u.Email ?? string.Empty,
                 Bio = u.Bio ?? string.Empty,
-                AvatarUrl = u.AvatarUrl ?? string.Empty
+                AvatarUrl = u.AvatarUrl ?? string.Empty,
+                Name = u.Name ?? string.Empty,
+                Hobby = u.Hobby ?? string.Empty,
+                ContactInfo = u.ContactInfo ?? string.Empty
             })
             .ToList();
 
@@ -51,7 +54,10 @@ public class UserController : ControllerBase
                 Username = u.Username,
                 Email = u.Email ?? string.Empty,
                 Bio = u.Bio ?? string.Empty,
-                AvatarUrl = u.AvatarUrl ?? string.Empty
+                AvatarUrl = u.AvatarUrl ?? string.Empty,
+                Name = u.Name ?? string.Empty,
+                Hobby = u.Hobby ?? string.Empty,
+                ContactInfo = u.ContactInfo ?? string.Empty
             })
             .FirstOrDefault();
 
@@ -72,7 +78,10 @@ public class UserController : ControllerBase
                 Username = u.Username,
                 Email = u.Email ?? string.Empty,
                 Bio = u.Bio ?? string.Empty,
-                AvatarUrl = u.AvatarUrl ?? string.Empty
+                AvatarUrl = u.AvatarUrl ?? string.Empty,
+                Name = u.Name ?? string.Empty,
+                Hobby = u.Hobby ?? string.Empty,
+                ContactInfo = u.ContactInfo ?? string.Empty
             })
             .FirstOrDefault();
 
@@ -99,7 +108,7 @@ public class UserController : ControllerBase
         if (user == null)
             return NotFound(new { message = "User not found." });
 
-        // Only allow updating Email and Bio, forbid username change
+        // Only allow updating Email, Bio, AvatarUrl, Name, Hobby, ContactInfo; forbid username change
         if (updateDto.Username != null && updateDto.Username != user.Username)
         {
             return BadRequest(new { message = "Username cannot be changed." });
@@ -107,6 +116,9 @@ public class UserController : ControllerBase
         user.Email = updateDto.Email;
         user.Bio = updateDto.Bio;
         user.AvatarUrl = updateDto.AvatarUrl;
+        user.Name = updateDto.Name;
+        user.Hobby = updateDto.Hobby;
+        user.ContactInfo = updateDto.ContactInfo;
         _context.SaveChanges();
 
         // Return updated user info
@@ -116,7 +128,10 @@ public class UserController : ControllerBase
             Username = user.Username,
             Email = user.Email,
             Bio = user.Bio,
-            AvatarUrl = user.AvatarUrl
+            AvatarUrl = user.AvatarUrl,
+            Name = user.Name,
+            Hobby = user.Hobby,
+            ContactInfo = user.ContactInfo
         };
         return Ok(result);
     }

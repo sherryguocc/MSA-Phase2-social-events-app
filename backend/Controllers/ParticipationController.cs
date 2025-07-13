@@ -117,7 +117,7 @@ public class ParticipationController : ControllerBase
     {
         var users = _context.Participations
             .Where(p => p.EventId == id && p.Status == "joined")
-            .Join(_context.Users, p => p.UserId, u => u.Id, (p, u) => new { u.Id, u.Username, u.Email, u.Bio, u.AvatarUrl })
+            .Join(_context.Users, p => p.UserId, u => u.Id, (p, u) => new { u.Id, u.Username, u.Name, u.Email, u.Bio, u.AvatarUrl })
             .ToList();
         return Ok(users);
     }
@@ -126,7 +126,7 @@ public class ParticipationController : ControllerBase
     {
         var users = _context.Participations
             .Where(p => p.EventId == id && p.Status == "waitlist")
-            .Join(_context.Users, p => p.UserId, u => u.Id, (p, u) => new { u.Id, u.Username, u.Email, u.Bio, u.AvatarUrl })
+            .Join(_context.Users, p => p.UserId, u => u.Id, (p, u) => new { u.Id, u.Username, u.Name, u.Email, u.Bio, u.AvatarUrl })
             .ToList();
         return Ok(users);
     }
@@ -135,7 +135,7 @@ public class ParticipationController : ControllerBase
     {
         var users = _context.Participations
             .Where(p => p.EventId == id && p.Status == "interested")
-            .Join(_context.Users, p => p.UserId, u => u.Id, (p, u) => new { u.Id, u.Username, u.Email, u.Bio, u.AvatarUrl })
+            .Join(_context.Users, p => p.UserId, u => u.Id, (p, u) => new { u.Id, u.Username, u.Name, u.Email, u.Bio, u.AvatarUrl })
             .ToList();
         return Ok(users);
     }
@@ -155,7 +155,10 @@ public class ParticipationController : ControllerBase
                 e.MinAttendees,
                 e.MaxAttendees,
                 e.ImageUrl,
-                CreatedByUsername = e.CreatedBy != null ? e.CreatedBy.Username : null
+                CreatedById = e.CreatedById,
+                CreatedByUsername = e.CreatedBy != null ? e.CreatedBy.Username : null,
+                CreatedByName = e.CreatedBy != null ? e.CreatedBy.Name : null,
+                CreatedByAvatarUrl = e.CreatedBy != null ? e.CreatedBy.AvatarUrl : null
             })
             .ToList();
         return Ok(events);
@@ -174,7 +177,10 @@ public class ParticipationController : ControllerBase
                 e.MinAttendees,
                 e.MaxAttendees,
                 e.ImageUrl,
-                CreatedByUsername = e.CreatedBy != null ? e.CreatedBy.Username : null
+                CreatedById = e.CreatedById,
+                CreatedByUsername = e.CreatedBy != null ? e.CreatedBy.Username : null,
+                CreatedByName = e.CreatedBy != null ? e.CreatedBy.Name : null,
+                CreatedByAvatarUrl = e.CreatedBy != null ? e.CreatedBy.AvatarUrl : null
             })
             .ToList();
         return Ok(events);
@@ -193,7 +199,10 @@ public class ParticipationController : ControllerBase
                 e.MinAttendees,
                 e.MaxAttendees,
                 e.ImageUrl,
-                CreatedByUsername = e.CreatedBy != null ? e.CreatedBy.Username : null
+                CreatedById = e.CreatedById,
+                CreatedByUsername = e.CreatedBy != null ? e.CreatedBy.Username : null,
+                CreatedByName = e.CreatedBy != null ? e.CreatedBy.Name : null,
+                CreatedByAvatarUrl = e.CreatedBy != null ? e.CreatedBy.AvatarUrl : null
             })
             .ToList();
         return Ok(events);

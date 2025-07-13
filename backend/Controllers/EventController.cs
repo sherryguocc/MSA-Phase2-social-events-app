@@ -5,7 +5,6 @@ using backend.Data;
 using backend.Models;
 using backend.DTOs;
 using Microsoft.EntityFrameworkCore;
-using backend.Models; // Add this line to recognize Participation type
 
 namespace backend.Controllers;
 

@@ -16,6 +16,11 @@ namespace backend.Models
         // User avatar URL (can be null or empty, use default if not set)
         public string? AvatarUrl { get; set; }
 
+        // New fields
+        public string? Name { get; set; } // Real name, can be null
+        public string? Hobby { get; set; } // User hobby, can be null
+        public string? ContactInfo { get; set; } // Contact info, can be null
+
         // Navigation properties
         public List<Event> CreatedEvents { get; set; } = new List<Event>();
 
