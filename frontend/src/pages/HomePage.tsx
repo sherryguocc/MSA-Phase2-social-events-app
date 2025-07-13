@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import type { RootState } from '../store';
-import { clearToken } from '../store/userSlice';
-import { useNavigate } from 'react-router-dom';
-import EventEditButton from '../components/EventEditButton';
 import EventList from '../components/EventList';
 
 interface EventItem {
@@ -25,7 +22,6 @@ const HomePage: React.FC = () => {
   const [events, setEvents] = useState<EventItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const dispatch = useDispatch();
   const token = useSelector((state: RootState) => state.user.token);
   const reduxUser = useSelector((state: RootState) => state.user.userInfo);
   const [user, setUser] = useState(reduxUser);
@@ -42,9 +38,6 @@ const HomePage: React.FC = () => {
         .catch(() => {});
     }
   }, [token, reduxUser, user]);
-  const isLoggedIn = Boolean(token);
-  const navigate = useNavigate();
-
 
   // Sorting state
   const [sortType, setSortType] = useState<'time' | 'name' | 'maxAttendees'>('time');
