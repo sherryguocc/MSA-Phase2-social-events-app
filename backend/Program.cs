@@ -36,7 +36,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddControllers();
 
-// 全局允许任意来源的 CORS（生产环境可按需限制域名）
+// Enable CORS for the frontend application
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
