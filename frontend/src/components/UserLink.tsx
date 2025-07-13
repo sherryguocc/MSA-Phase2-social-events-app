@@ -4,12 +4,20 @@ import { useNavigate } from "react-router-dom";
 interface UserLinkProps {
   id: number;
   username: string;
+  name?: string;
   avatarUrl?: string;
   className?: string;
 }
 
-const UserLink: React.FC<UserLinkProps> = ({ id, username, avatarUrl, className }) => {
+const UserLink: React.FC<UserLinkProps> = ({ id, username, name, avatarUrl, className }) => {
   const navigate = useNavigate();
+  let displayName = username;
+  if (typeof name === 'string' && name.replace(/\s/g, '') !== '') {
+    displayName = name;
+  }
+  // 调试：输出传入的 name、username、最终显示名
+  // eslint-disable-next-line no-console
+  console.log({ name, username, displayName });
   return (
     <span
       className={
@@ -48,7 +56,7 @@ const UserLink: React.FC<UserLinkProps> = ({ id, username, avatarUrl, className 
           }}
         />
       </span>
-      {username}
+      {displayName}
     </span>
   );
 };

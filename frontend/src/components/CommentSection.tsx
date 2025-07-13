@@ -6,6 +6,7 @@ import type { RootState } from "../store";
 interface UserInfo {
   id: number;
   username: string;
+  name?: string;
   avatarUrl?: string;
 }
 
@@ -118,7 +119,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ eventId }) => {
       {list.map((c) => (
         <div key={c.id} className="bg-base-100 p-3 rounded shadow-sm">
           <div className="flex items-center gap-2 mb-1">
-            <UserLink id={c.user.id} username={c.user.username} avatarUrl={c.user.avatarUrl} />
+            <UserLink id={c.user.id} username={c.user.username} name={c.user.name} avatarUrl={c.user.avatarUrl} />
             <span className="text-xs text-gray-400">{new Date(c.createdAt).toLocaleString()}</span>
             {reduxUser && c.user.id === reduxUser.id && (
               <button className="btn btn-xs btn-outline btn-error ml-2" onClick={() => handleDelete(c.id)}>Delete</button>
