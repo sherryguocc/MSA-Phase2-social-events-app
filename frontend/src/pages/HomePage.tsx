@@ -88,20 +88,9 @@ const HomePage: React.FC = () => {
     return 0;
   });
 
-  const handleLogout = () => {
-    dispatch(clearToken());
-    window.location.reload();
-  };
 
   return (
     <div className="w-full max-w-7xl mx-auto mt-10 relative px-4">
-      {/* Show Register/Login if not logged in */}
-      {!isLoggedIn && (
-        <div className="flex justify-end gap-2 mb-4">
-          <button className="btn btn-outline btn-sm" onClick={() => navigate('/register')}>Register</button>
-          <button className="btn btn-outline btn-sm" onClick={() => navigate('/login')}>Login</button>
-        </div>
-      )}
       <h2 className="text-3xl font-bold mb-6">All Events</h2>
       <div className="mb-4 flex gap-2 items-center">
         <span className="font-semibold">Sort by:</span>
