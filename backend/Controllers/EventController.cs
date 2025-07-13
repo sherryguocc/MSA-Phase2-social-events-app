@@ -46,7 +46,7 @@ public class EventController : ControllerBase
 
     [HttpPost]
     [Microsoft.AspNetCore.Authorization.Authorize] // Only authenticated users can create events
-    public IActionResult Create(Event newEvent)
+    public IActionResult Create([FromBody] EventDTO eventDto)
     {
         try
         {
@@ -56,20 +56,45 @@ public class EventController : ControllerBase
             {
                 return Unauthorized("User ID not found in token.");
             }
-            // Always set CreatedById from token, ignore any value from frontend
-            newEvent.CreatedById = int.Parse(userIdClaim.Value);
-
+            var userId = int.Parse(userIdClaim.Value);
+            // 手动映射DTO到Event实体
+            var newEvent = new Event
+            {
+                Title = eventDto.Title ?? string.Empty,
+                Description = eventDto.Description ?? string.Empty,
+                Location = eventDto.Location ?? string.Empty,
+                EventTime = eventDto.EventTime,
+                MinAttendees = eventDto.MinAttendees,
+                MaxAttendees = eventDto.MaxAttendees,
+                ImageUrl = eventDto.ImageUrl ?? string.Empty,
+                CreatedById = userId
+            };
             _context.Events.Add(newEvent);
             _context.SaveChanges();
-            // Use GetEvents as the action name for CreatedAtAction, or just return Ok(newEvent)
-            return CreatedAtAction(nameof(GetEvents), new { id = newEvent.Id }, newEvent);
+            // 返回DTO
+            var createdBy = _context.Users.FirstOrDefault(u => u.Id == userId);
+            var result = new EventDTO
+            {
+                Id = newEvent.Id,
+                Title = newEvent.Title,
+                Description = newEvent.Description,
+                Location = newEvent.Location,
+                EventTime = newEvent.EventTime,
+                MinAttendees = newEvent.MinAttendees,
+                MaxAttendees = newEvent.MaxAttendees,
+                ImageUrl = newEvent.ImageUrl,
+                CreatedById = userId,
+                CreatedByUsername = createdBy?.Username ?? "",
+                CreatedByAvatarUrl = createdBy?.AvatarUrl
+            };
+            return Ok(result);
         }
         catch (Exception ex)
         {
-            // Print detailed error info to console for debugging
-            Console.WriteLine($"[EventController.Create] Exception: {ex.Message}\n{ex.StackTrace}");
-            return StatusCode(500, $"Internal server error: {ex.Message}");
+            // 返回详细错误信息，便于线上排查
+            return BadRequest(new { message = ex.Message, stack = ex.StackTrace });
         }
+    }
     }
 
     [HttpGet("by-user/{userId}")]
