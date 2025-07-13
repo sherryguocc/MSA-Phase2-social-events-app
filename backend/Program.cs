@@ -33,7 +33,7 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.AllowAnyOrigin()
+        policy.WithOrigins("https://sociallink-frontend.onrender.com")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
