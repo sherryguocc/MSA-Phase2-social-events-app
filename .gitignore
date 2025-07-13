@@ -11,3 +11,9 @@ node_modules/
 *.db
 *.db-shm
 *.db-wal
+# .NET build artifacts
+bin/
+obj/
+*.user
+*.cache
+*.suo
