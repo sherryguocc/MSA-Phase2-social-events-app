@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../store";
 import { useNavigate, useParams } from "react-router-dom";
 import EventList from "../components/EventList";
+import { loginSuccess } from "../store/userSlice";
 
 interface EventItem {
   id: number;
@@ -42,6 +43,7 @@ const ProfilePage: React.FC = () => {
     "/avatar5.png"
   ];
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // Determine if viewing own profile
   const isOwnProfile = !userId || (reduxUser && userId && String(reduxUser.id) === userId);
@@ -99,7 +101,7 @@ const ProfilePage: React.FC = () => {
         .catch(err => setError(err.message))
         .finally(() => setLoading(false));
       // Fetch joined events
-      fetch(`/api/event/joined/${fetchEventsUserId}`, {
+      fetch(`/api/users/${fetchEventsUserId}/joined`, {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then(res => {
@@ -123,7 +125,7 @@ const ProfilePage: React.FC = () => {
         })
         .catch(() => {});
       // Fetch interested events
-      fetch(`/api/event/interested/${fetchEventsUserId}`, {
+      fetch(`/api/users/${fetchEventsUserId}/interested`, {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then(res => {
@@ -157,141 +159,144 @@ const ProfilePage: React.FC = () => {
   if (!token) return null;
 
   return (
-    <div className="max-w-3xl mx-auto mt-10">
-      <h2 className="text-3xl font-bold mb-4">{isOwnProfile ? "My Profile" : `${user?.username || "User"}'s Profile`}</h2>
-      <div className="mb-6 p-4 bg-base-200 rounded">
-        <div className="flex items-center gap-4 mb-2">
-          <img
-            src={user?.avatarUrl && user.avatarUrl.trim() !== '' ? user.avatarUrl : "/default-avatar.png"}
-            alt="avatar"
-            className="w-20 h-20 rounded-full border-2 border-blue-300 object-cover bg-white"
-          />
-          <div><span className="font-semibold">Username:</span> {user?.username}</div>
-        </div>
-        {isOwnProfile && editMode ? (
-          <>
-            <div>
-              <span className="font-semibold">Email:</span>
-              <input
-                className="input input-bordered ml-2"
-                type="email"
-                value={editEmail}
-                onChange={e => setEditEmail(e.target.value)}
-                disabled={saving}
-              />
-            </div>
-            <div>
-              <span className="font-semibold">Bio:</span>
-              <input
-                className="input input-bordered ml-2"
-                type="text"
-                value={editBio}
-                onChange={e => setEditBio(e.target.value)}
-                disabled={saving}
-              />
-            </div>
-            <div className="mt-2">
-              <span className="font-semibold">Avatar:</span>
-              <div className="flex gap-2 mt-1 flex-wrap">
-                {presetAvatars.map(url => (
-                  <img
-                    key={url}
-                    src={url}
-                    alt="avatar"
-                    className={`w-12 h-12 rounded-full border-2 cursor-pointer object-cover ${editAvatar === url ? "border-blue-500 ring-2 ring-blue-400" : "border-gray-300"}`}
-                    onClick={() => setEditAvatar(url)}
-                  />
-                ))}
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="max-w-3xl w-full mx-auto mt-10">
+        <h2 className="text-3xl font-bold mb-4">{isOwnProfile ? "My Profile" : `${user?.username || "User"}'s Profile`}</h2>
+        <div className="mb-6 p-4 bg-base-200 rounded">
+          <div className="flex items-center gap-4 mb-2">
+            <img
+              src={user?.avatarUrl && user.avatarUrl.trim() !== '' ? user.avatarUrl : "/default-avatar.png"}
+              alt="avatar"
+              className="w-20 h-20 rounded-full border-2 border-blue-300 object-cover bg-white"
+            />
+            <div><span className="font-semibold">Username:</span> {user?.username}</div>
+          </div>
+          {isOwnProfile && editMode ? (
+            <>
+              <div>
+                <span className="font-semibold">Email:</span>
                 <input
-                  className="input input-bordered input-sm ml-2"
-                  type="url"
-                  placeholder="Paste avatar image URL"
-                  value={editAvatar && !presetAvatars.includes(editAvatar) ? editAvatar : ""}
-                  onChange={e => setEditAvatar(e.target.value)}
+                  className="input input-bordered ml-2"
+                  type="email"
+                  value={editEmail}
+                  onChange={e => setEditEmail(e.target.value)}
                   disabled={saving}
-                  style={{ width: 180 }}
                 />
               </div>
-              <div className="text-xs text-gray-400 mt-1">You can select a preset avatar or paste an image URL.</div>
-            </div>
-            <div className="mt-2 flex gap-2">
-              <button className="btn btn-primary btn-sm" disabled={saving} onClick={async () => {
-                setSaving(true);
-                setError("");
-                try {
-                  const res = await fetch(`/api/user/${user.id}`, {
-                    method: "PUT",
-                    headers: {
-                      "Content-Type": "application/json",
-                      Authorization: `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({ email: editEmail, bio: editBio, avatarUrl: editAvatar }),
-                  });
-                  if (!res.ok) throw new Error("Failed to update user info");
-                  const updated = await res.json();
-                  setUser(updated);
+              <div>
+                <span className="font-semibold">Bio:</span>
+                <input
+                  className="input input-bordered ml-2"
+                  type="text"
+                  value={editBio}
+                  onChange={e => setEditBio(e.target.value)}
+                  disabled={saving}
+                />
+              </div>
+              <div className="mt-2">
+                <span className="font-semibold">Avatar:</span>
+                <div className="flex gap-2 mt-1 flex-wrap">
+                  {presetAvatars.map(url => (
+                    <img
+                      key={url}
+                      src={url}
+                      alt="avatar"
+                      className={`w-12 h-12 rounded-full border-2 cursor-pointer object-cover ${editAvatar === url ? "border-blue-500 ring-2 ring-blue-400" : "border-gray-300"}`}
+                      onClick={() => setEditAvatar(url)}
+                    />
+                  ))}
+                  <input
+                    className="input input-bordered input-sm ml-2"
+                    type="url"
+                    placeholder="Paste avatar image URL"
+                    value={editAvatar && !presetAvatars.includes(editAvatar) ? editAvatar : ""}
+                    onChange={e => setEditAvatar(e.target.value)}
+                    disabled={saving}
+                    style={{ width: 180 }}
+                  />
+                </div>
+                <div className="text-xs text-gray-400 mt-1">You can select a preset avatar or paste an image URL.</div>
+              </div>
+              <div className="mt-2 flex gap-2">
+                <button className="btn btn-primary btn-sm" disabled={saving} onClick={async () => {
+                  setSaving(true);
+                  setError("");
+                  try {
+                    const res = await fetch(`/api/user/${user.id}`, {
+                      method: "PUT",
+                      headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                      },
+                      body: JSON.stringify({ email: editEmail, bio: editBio, avatarUrl: editAvatar }),
+                    });
+                    if (!res.ok) throw new Error("Failed to update user info");
+                    const updated = await res.json();
+                    setUser(updated);
+                    dispatch(loginSuccess(updated)); // Sync redux userInfo after updating profile
+                    setEditMode(false);
+                  } catch (err: any) {
+                    setError(err.message || "Update failed");
+                  } finally {
+                    setSaving(false);
+                  }
+                }}>Save</button>
+                <button className="btn btn-outline btn-sm" disabled={saving} onClick={() => {
+                  setEditEmail(user?.email || "");
+                  setEditBio(user?.bio || "");
+                  setEditAvatar(user?.avatarUrl || "");
                   setEditMode(false);
-                } catch (err: any) {
-                  setError(err.message || "Update failed");
-                } finally {
-                  setSaving(false);
-                }
-              }}>Save</button>
-              <button className="btn btn-outline btn-sm" disabled={saving} onClick={() => {
-                setEditEmail(user?.email || "");
-                setEditBio(user?.bio || "");
-                setEditAvatar(user?.avatarUrl || "");
-                setEditMode(false);
-              }}>Cancel</button>
-            </div>
-          </>
-        ) : (
+                }}>Cancel</button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div><span className="font-semibold">Email:</span> {user?.email || "-"}</div>
+              <div><span className="font-semibold">Bio:</span> {user?.bio || "-"}</div>
+              {isOwnProfile && (
+                <button className="btn btn-outline btn-sm mt-2" onClick={() => setEditMode(true)}>Edit</button>
+              )}
+            </>
+          )}
+        </div>
+        {/* Created Events Section - only show for other users */}
+        {!isOwnProfile && (
           <>
-            <div><span className="font-semibold">Email:</span> {user?.email || "-"}</div>
-            <div><span className="font-semibold">Bio:</span> {user?.bio || "-"}</div>
-            {isOwnProfile && (
-              <button className="btn btn-outline btn-sm mt-2" onClick={() => setEditMode(true)}>Edit</button>
-            )}
+            <div className="mt-8">
+              <h3 className="text-2xl font-semibold mb-4">Events created by {user?.username || "this user"}</h3>
+              {loading ? (
+                <div className="text-center text-gray-500">Loading...</div>
+              ) : error ? (
+                <div className="text-center text-red-500">{error}</div>
+              ) : myEvents.length === 0 ? (
+                <div className="text-center text-gray-400">No events</div>
+              ) : (
+                <EventList events={myEvents} showEditButton={false} />
+              )}
+            </div>
+            <div className="mt-8">
+              <h3 className="text-2xl font-semibold mb-4">Events joined by {user?.username || "this user"}</h3>
+              {loading ? (
+                <div className="text-center text-gray-500">Loading...</div>
+              ) : joinedEvents.length === 0 ? (
+                <div className="text-center text-gray-400">No joined events</div>
+              ) : (
+                <EventList events={joinedEvents} showEditButton={false} />
+              )}
+            </div>
+            <div className="mt-8">
+              <h3 className="text-2xl font-semibold mb-4">Events interested by {user?.username || "this user"}</h3>
+              {loading ? (
+                <div className="text-center text-gray-500">Loading...</div>
+              ) : interestedEvents.length === 0 ? (
+                <div className="text-center text-gray-400">No interested events</div>
+              ) : (
+                <EventList events={interestedEvents} showEditButton={false} />
+              )}
+            </div>
           </>
         )}
       </div>
-      {/* Created Events Section - only show for other users */}
-      {!isOwnProfile && (
-        <>
-          <div className="mt-8">
-            <h3 className="text-2xl font-semibold mb-4">Events created by {user?.username || "this user"}</h3>
-            {loading ? (
-              <div className="text-center text-gray-500">Loading...</div>
-            ) : error ? (
-              <div className="text-center text-red-500">{error}</div>
-            ) : myEvents.length === 0 ? (
-              <div className="text-center text-gray-400">No events</div>
-            ) : (
-              <EventList events={myEvents} showEditButton={false} />
-            )}
-          </div>
-          <div className="mt-8">
-            <h3 className="text-2xl font-semibold mb-4">Events joined by {user?.username || "this user"}</h3>
-            {loading ? (
-              <div className="text-center text-gray-500">Loading...</div>
-            ) : joinedEvents.length === 0 ? (
-              <div className="text-center text-gray-400">No joined events</div>
-            ) : (
-              <EventList events={joinedEvents} showEditButton={false} />
-            )}
-          </div>
-          <div className="mt-8">
-            <h3 className="text-2xl font-semibold mb-4">Events interested by {user?.username || "this user"}</h3>
-            {loading ? (
-              <div className="text-center text-gray-500">Loading...</div>
-            ) : interestedEvents.length === 0 ? (
-              <div className="text-center text-gray-400">No interested events</div>
-            ) : (
-              <EventList events={interestedEvents} showEditButton={false} />
-            )}
-          </div>
-        </>
-      )}
     </div>
   );
 };

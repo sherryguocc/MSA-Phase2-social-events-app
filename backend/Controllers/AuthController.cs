@@ -40,7 +40,16 @@ namespace backend.Controllers
                 };
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
-                return Ok(new { message = "Registration successful" });
+                return Ok(new {
+                    message = "Registration successful",
+                    user = new {
+                        user.Id,
+                        user.Username,
+                        user.Email,
+                        user.Bio,
+                        avatarUrl = user.AvatarUrl
+                    }
+                });
             }
             catch (Exception ex)
             {
@@ -66,7 +75,8 @@ namespace backend.Controllers
                     user.Id,
                     user.Username,
                     user.Email,
-                    user.Bio
+                    user.Bio,
+                    avatarUrl = user.AvatarUrl
                 }
             });
         }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
@@ -16,33 +16,13 @@ function AppContent() {
   const dispatch = useDispatch();
   const token = useSelector((state: RootState) => state.user.token);
   const reduxUser = useSelector((state: RootState) => state.user.userInfo);
-  const [user, setUser] = useState(reduxUser);
   const navigate = useNavigate();
-  useEffect(() => {
-    setUser(reduxUser);
-  }, [reduxUser]);
-
-  useEffect(() => {
-    if (!reduxUser && token) {
-      fetch("/api/user/me", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-        .then(res => {
-          if (!res.ok) throw new Error("Failed to fetch user info");
-          return res.json();
-        })
-        .then(data => {
-          setUser(data);
-          dispatch(loginSuccess(data));
-        })
-        .catch(() => {});
-    }
-  }, [token, reduxUser, dispatch]);
   const isLoggedIn = Boolean(token);
   const handleLogout = () => {
     dispatch(clearToken());
     navigate("/");
   };
+  console.log('reduxUser:', reduxUser);
   return (
     <>
       {/* Navigation Bar */}
@@ -55,13 +35,27 @@ function AppContent() {
           {/* Right: User info and buttons */}
           <div className="flex flex-col items-end gap-1">
             <div className="flex items-center gap-2">
-              {user && (
-                <span className="text-base font-semibold text-primary">Hi, {user.username}!</span>
+              {reduxUser && (
+                <div className="flex items-center gap-2 relative">
+                  <span className="text-base font-semibold text-primary">Hi, {reduxUser.username}!</span>
+                  <div className="relative group">
+                    <img
+                      src={reduxUser?.avatarUrl && reduxUser.avatarUrl.trim() !== '' ? reduxUser.avatarUrl : '/default-avatar.png'}
+                      alt="avatar"
+                      className="w-8 h-8 rounded-full ml-2 border border-gray-300 cursor-pointer transition-transform duration-150 group-hover:scale-105"
+                      onClick={() => navigate('/profile')}
+                    />
+                    {/* Profile hover card: only one line */}
+                    <div className="absolute right-0 top-10 z-20 hidden group-hover:flex items-center bg-white shadow-lg rounded px-3 py-1 border border-gray-200 animate-fade-in text-sm text-primary font-semibold">
+                      Profile
+                    </div>
+                  </div>
+                </div>
               )}
               <button className="btn btn-outline btn-sm" onClick={handleLogout}>Logout</button>
             </div>
             <div className="flex gap-2">
-              <button className="btn btn-outline btn-sm" onClick={() => navigate('/profile')}>My Profile</button>
+              {/* Removed My Profile button */}
               <button className="btn btn-outline btn-sm" onClick={() => navigate('/my-events')}>My Events</button>
               <button className="btn btn-outline btn-sm" onClick={() => navigate('/create-event')}>Create Event</button>
             </div>
