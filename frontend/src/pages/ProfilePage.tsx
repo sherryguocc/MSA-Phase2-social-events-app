@@ -40,13 +40,7 @@ const ProfilePage: React.FC = () => {
     }
     // Fetch user info
     const fetchUrl = userId ? `/api/user/${userId}` : "/api/user/me";
-    fetch(fetchUrl, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then(res => {
-        if (!res.ok) throw new Error("Failed to fetch user info");
-        return res.json();
-      })
+    apiGet(fetchUrl, { headers: { Authorization: `Bearer ${token}` } })
       .then(data => {
         setUser(data);
         setEditEmail(data.email || "");
