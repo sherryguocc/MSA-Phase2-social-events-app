@@ -1,4 +1,3 @@
-    
 // ASP.NET Core controller for CRUD operations on Event model using AppDbContext and EF Core.
 // ASP.NET Core controller for CRUD operations on Event model using AppDbContext and EF Core.
 using Microsoft.AspNetCore.Mvc;
@@ -6,6 +5,7 @@ using backend.Data;
 using backend.Models;
 using backend.DTOs;
 using Microsoft.EntityFrameworkCore;
+using backend.Models; // Add this line to recognize Participation type
 
 namespace backend.Controllers;
 
@@ -141,6 +141,36 @@ public class EventController : ControllerBase
             CreatedByUsername = createdBy?.Username ?? "Unknown",
             CreatedByAvatarUrl = createdBy?.AvatarUrl
         };
+        return Ok(result);
+    }
+
+    // Get joined count for a specific event
+    [HttpGet("{id}/joined-count")]
+    public IActionResult GetJoinedCount(int id)
+    {
+        var eventExists = _context.Events.Any(e => e.Id == id);
+        if (!eventExists)
+            return NotFound(new { message = "Event not found." });
+        var joinedCount = _context.Set<Participation>().Count(p => p.EventId == id && p.Status == "joined");
+        return Ok(new { joinedCount });
+    }
+
+    // Batch get joined counts for multiple events
+    [HttpPost("joined-counts")]
+    public IActionResult GetJoinedCounts([FromBody] List<int> eventIds)
+    {
+        if (eventIds == null || eventIds.Count == 0)
+            return BadRequest(new { message = "No eventIds provided." });
+        var counts = _context.Participations
+            .Where(p => eventIds.Contains(p.EventId) && p.Status == "joined")
+            .GroupBy(p => p.EventId)
+            .Select(g => new { EventId = g.Key, JoinedCount = g.Count() })
+            .ToList();
+        // Build result dictionary: eventId => joinedCount
+        var result = eventIds.ToDictionary(
+            id => id,
+            id => counts.FirstOrDefault(c => c.EventId == id)?.JoinedCount ?? 0
+        );
         return Ok(result);
     }
 }

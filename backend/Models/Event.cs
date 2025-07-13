@@ -24,15 +24,6 @@ public class Event
     [ForeignKey("CreatedById")]
     public User? CreatedBy { get; set; }
 
-    // Participants: users who have joined the event
-    public List<User> Participants { get; set; } = new();
-
-    // Users who are interested but not joined yet
-    public List<User> InterestedUsers { get; set; } = new();
-
-    // Users on the waitlist
-    public List<User> Waitlist { get; set; } = new();
-
     // Navigation property: comments
     public List<Comment> Comments { get; set; } = new();
 }

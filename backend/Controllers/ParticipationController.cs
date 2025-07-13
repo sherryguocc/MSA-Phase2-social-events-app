@@ -7,6 +7,7 @@ using backend.Data;
 using backend.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using System.Linq;
 
 namespace backend.Controllers;
 
@@ -20,6 +21,7 @@ public class ParticipationController : ControllerBase
         _context = context;
     }
 
+    // 用户加入活动（含waitlist逻辑）
     [HttpPost("/api/events/{id}/join")]
     [Authorize]
     public IActionResult JoinEvent(int id)
@@ -29,25 +31,33 @@ public class ParticipationController : ControllerBase
         int userId = int.Parse(userIdClaim.Value);
         var user = _context.Users.FirstOrDefault(u => u.Id == userId);
         if (user == null) return NotFound("User not found");
-        var ev = _context.Events
-            .Include(e => e.Participants)
-            .Include(e => e.Waitlist)
-            .FirstOrDefault(e => e.Id == id);
+        var ev = _context.Events.FirstOrDefault(e => e.Id == id);
         if (ev == null) return NotFound("Event not found");
-        if (ev.Participants.Any(u => u.Id == userId)) return BadRequest("Already joined");
-        if (ev.Waitlist.Any(u => u.Id == userId)) return BadRequest("Already in waitlist");
-        if (ev.Participants.Count < ev.MaxAttendees)
+        // 检查是否已存在参与记录
+        var existing = _context.Participations.FirstOrDefault(p => p.EventId == id && p.UserId == userId);
+        if (existing != null && existing.Status == "joined") return BadRequest("Already joined");
+        if (existing != null && existing.Status == "waitlist") return BadRequest("Already in waitlist");
+        // 当前 joined 人数
+        int joinedCount = _context.Participations.Count(p => p.EventId == id && p.Status == "joined");
+        if (joinedCount < ev.MaxAttendees)
         {
-            ev.Participants.Add(user);
+            if (existing != null)
+                existing.Status = "joined";
+            else
+                _context.Participations.Add(new Participation { EventId = id, UserId = userId, Status = "joined" });
         }
         else
         {
-            ev.Waitlist.Add(user);
+            if (existing != null)
+                existing.Status = "waitlist";
+            else
+                _context.Participations.Add(new Participation { EventId = id, UserId = userId, Status = "waitlist" });
         }
         _context.SaveChanges();
-        return Ok(new { joined = ev.Participants.Any(u => u.Id == userId), waitlist = ev.Waitlist.Any(u => u.Id == userId) });
+        return Ok(new { joined = true });
     }
 
+    // 用户取消参与
     [HttpPost("/api/events/{id}/cancel")]
     [Authorize]
     public IActionResult CancelParticipation(int id)
@@ -55,27 +65,31 @@ public class ParticipationController : ControllerBase
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
         if (userIdClaim == null) return Unauthorized("User not logged in");
         int userId = int.Parse(userIdClaim.Value);
-        var user = _context.Users.FirstOrDefault(u => u.Id == userId);
-        if (user == null) return NotFound("User not found");
-        var ev = _context.Events
-            .Include(e => e.Participants)
-            .Include(e => e.Waitlist)
-            .FirstOrDefault(e => e.Id == id);
-        if (ev == null) return NotFound("Event not found");
-        bool wasParticipant = ev.Participants.RemoveAll(u => u.Id == userId) > 0;
-        bool wasWaitlist = ev.Waitlist.RemoveAll(u => u.Id == userId) > 0;
-        // waitlist logic: if user was a participant, promote next waitlist user
-        if (wasParticipant && ev.Waitlist.Count > 0)
-        {
-            var next = ev.Waitlist.First();
-            ev.Waitlist.RemoveAt(0);
-            ev.Participants.Add(next);
-        }
+        var part = _context.Participations.FirstOrDefault(p => p.EventId == id && p.UserId == userId);
+        if (part == null) return NotFound("Participation not found");
+        bool wasJoined = part.Status == "joined";
+        _context.Participations.Remove(part);
         _context.SaveChanges();
-        return Ok(new { cancelled = wasParticipant || wasWaitlist });
+        // waitlist晋升逻辑
+        if (wasJoined)
+        {
+            var ev = _context.Events.FirstOrDefault(e => e.Id == id);
+            if (ev != null)
+            {
+                var nextWaitlist = _context.Participations
+                    .Where(p => p.EventId == id && p.Status == "waitlist")
+                    .OrderBy(p => p.Id).FirstOrDefault();
+                if (nextWaitlist != null)
+                {
+                    nextWaitlist.Status = "joined";
+                    _context.SaveChanges();
+                }
+            }
+        }
+        return Ok(new { cancelled = true });
     }
 
-
+    // 标记感兴趣
     [HttpPost("/api/events/{id}/interest")]
     [Authorize]
     public IActionResult MarkInterest(int id)
@@ -85,60 +99,54 @@ public class ParticipationController : ControllerBase
         int userId = int.Parse(userIdClaim.Value);
         var user = _context.Users.FirstOrDefault(u => u.Id == userId);
         if (user == null) return NotFound("User not found");
-        var ev = _context.Events
-            .Include(e => e.InterestedUsers)
-            .FirstOrDefault(e => e.Id == id);
+        var ev = _context.Events.FirstOrDefault(e => e.Id == id);
         if (ev == null) return NotFound("Event not found");
-        if (ev.InterestedUsers.Any(u => u.Id == userId)) return BadRequest("Already interested");
-        ev.InterestedUsers.Add(user);
+        var existing = _context.Participations.FirstOrDefault(p => p.EventId == id && p.UserId == userId);
+        if (existing != null && existing.Status == "interested") return BadRequest("Already interested");
+        if (existing != null)
+            existing.Status = "interested";
+        else
+            _context.Participations.Add(new Participation { EventId = id, UserId = userId, Status = "interested" });
         _context.SaveChanges();
         return Ok(new { interested = true });
     }
 
+    // 查询参与/感兴趣/候补用户
     [HttpGet("/api/events/{id}/participants")]
     public IActionResult GetParticipants(int id)
     {
-        var ev = _context.Events
-            .Include(e => e.Participants)
-            .FirstOrDefault(e => e.Id == id);
-        if (ev == null) return NotFound("Event not found");
-        var users = ev.Participants.Select(u => new { u.Id, u.Username, u.Email, u.Bio, u.AvatarUrl }).ToList();
+        var users = _context.Participations
+            .Where(p => p.EventId == id && p.Status == "joined")
+            .Join(_context.Users, p => p.UserId, u => u.Id, (p, u) => new { u.Id, u.Username, u.Email, u.Bio, u.AvatarUrl })
+            .ToList();
         return Ok(users);
     }
-
     [HttpGet("/api/events/{id}/waitlist")]
     public IActionResult GetWaitlist(int id)
     {
-        var ev = _context.Events
-            .Include(e => e.Waitlist)
-            .FirstOrDefault(e => e.Id == id);
-        if (ev == null) return NotFound("Event not found");
-        var users = ev.Waitlist.Select(u => new { u.Id, u.Username, u.Email, u.Bio, u.AvatarUrl }).ToList();
+        var users = _context.Participations
+            .Where(p => p.EventId == id && p.Status == "waitlist")
+            .Join(_context.Users, p => p.UserId, u => u.Id, (p, u) => new { u.Id, u.Username, u.Email, u.Bio, u.AvatarUrl })
+            .ToList();
         return Ok(users);
     }
-
     [HttpGet("/api/events/{id}/interested")]
     public IActionResult GetInterestedUsers(int id)
     {
-        var ev = _context.Events
-            .Include(e => e.InterestedUsers)
-            .FirstOrDefault(e => e.Id == id);
-        if (ev == null) return NotFound("Event not found");
-        var users = ev.InterestedUsers.Select(u => new { u.Id, u.Username, u.Email, u.Bio, u.AvatarUrl }).ToList();
+        var users = _context.Participations
+            .Where(p => p.EventId == id && p.Status == "interested")
+            .Join(_context.Users, p => p.UserId, u => u.Id, (p, u) => new { u.Id, u.Username, u.Email, u.Bio, u.AvatarUrl })
+            .ToList();
         return Ok(users);
     }
 
-    // Get all events a user has joined (as participant)
+    // 查询用户参与/感兴趣/候补的所有活动
     [HttpGet("/api/users/{userId}/joined")]
     public IActionResult GetJoinedEvents(int userId)
     {
-        var user = _context.Users
-            .Include(u => u.ParticipantsEvents) // This should match the navigation property in User.cs
-            .ThenInclude(e => e.CreatedBy)
-            .FirstOrDefault(u => u.Id == userId);
-        if (user == null) return NotFound("User not found");
-        var events = user.ParticipantsEvents
-            .Select(e => new {
+        var events = _context.Participations
+            .Where(p => p.UserId == userId && p.Status == "joined")
+            .Join(_context.Events.Include(e => e.CreatedBy), p => p.EventId, e => e.Id, (p, e) => new {
                 e.Id,
                 e.Title,
                 e.Description,
@@ -152,18 +160,12 @@ public class ParticipationController : ControllerBase
             .ToList();
         return Ok(events);
     }
-
-    // Get all events a user is interested in
     [HttpGet("/api/users/{userId}/interested")]
     public IActionResult GetInterestedEvents(int userId)
     {
-        var user = _context.Users
-            .Include(u => u.InterestedEvents)
-            .ThenInclude(e => e.CreatedBy)
-            .FirstOrDefault(u => u.Id == userId);
-        if (user == null) return NotFound("User not found");
-        var events = user.InterestedEvents
-            .Select(e => new {
+        var events = _context.Participations
+            .Where(p => p.UserId == userId && p.Status == "interested")
+            .Join(_context.Events.Include(e => e.CreatedBy), p => p.EventId, e => e.Id, (p, e) => new {
                 e.Id,
                 e.Title,
                 e.Description,
@@ -177,18 +179,12 @@ public class ParticipationController : ControllerBase
             .ToList();
         return Ok(events);
     }
-
-    // Get all events a user is in waitlist for
     [HttpGet("/api/users/{userId}/waitlist")]
     public IActionResult GetWaitlistEvents(int userId)
     {
-        var user = _context.Users
-            .Include(u => u.WaitlistEvents)
-            .ThenInclude(e => e.CreatedBy)
-            .FirstOrDefault(u => u.Id == userId);
-        if (user == null) return NotFound("User not found");
-        var events = user.WaitlistEvents
-            .Select(e => new {
+        var events = _context.Participations
+            .Where(p => p.UserId == userId && p.Status == "waitlist")
+            .Join(_context.Events.Include(e => e.CreatedBy), p => p.EventId, e => e.Id, (p, e) => new {
                 e.Id,
                 e.Title,
                 e.Description,

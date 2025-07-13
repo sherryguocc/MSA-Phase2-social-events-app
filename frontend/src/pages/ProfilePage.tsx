@@ -16,6 +16,7 @@ interface EventItem {
   createdByUsername: string;
   createdByAvatarUrl?: string;
   createdById: number;
+  joinedCount?: number;
 }
 
 const ProfilePage: React.FC = () => {
@@ -79,8 +80,21 @@ const ProfilePage: React.FC = () => {
           if (!res.ok) throw new Error("Failed to fetch events");
           return res.json();
         })
-        .then(data => {
-          setMyEvents(data);
+        .then(async data => {
+          // 批量获取 joinedCount
+          const ids = data.map((e: any) => e.id);
+          let joinedCounts: Record<number, number> = {};
+          if (ids.length > 0) {
+            const res = await fetch("/api/event/joined-counts", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(ids)
+            });
+            if (res.ok) {
+              joinedCounts = await res.json();
+            }
+          }
+          setMyEvents(data.map((e: any) => ({ ...e, joinedCount: joinedCounts[e.id] ?? 0 })));
         })
         .catch(err => setError(err.message))
         .finally(() => setLoading(false));
@@ -92,8 +106,20 @@ const ProfilePage: React.FC = () => {
           if (!res.ok) throw new Error("Failed to fetch joined events");
           return res.json();
         })
-        .then(data => {
-          setJoinedEvents(data);
+        .then(async data => {
+          const ids = data.map((e: any) => e.id);
+          let joinedCounts: Record<number, number> = {};
+          if (ids.length > 0) {
+            const res = await fetch("/api/event/joined-counts", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(ids)
+            });
+            if (res.ok) {
+              joinedCounts = await res.json();
+            }
+          }
+          setJoinedEvents(data.map((e: any) => ({ ...e, joinedCount: joinedCounts[e.id] ?? 0 })));
         })
         .catch(() => {});
       // Fetch interested events
@@ -104,8 +130,20 @@ const ProfilePage: React.FC = () => {
           if (!res.ok) throw new Error("Failed to fetch interested events");
           return res.json();
         })
-        .then(data => {
-          setInterestedEvents(data);
+        .then(async data => {
+          const ids = data.map((e: any) => e.id);
+          let joinedCounts: Record<number, number> = {};
+          if (ids.length > 0) {
+            const res = await fetch("/api/event/joined-counts", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(ids)
+            });
+            if (res.ok) {
+              joinedCounts = await res.json();
+            }
+          }
+          setInterestedEvents(data.map((e: any) => ({ ...e, joinedCount: joinedCounts[e.id] ?? 0 })));
         })
         .catch(() => {});
     } else {

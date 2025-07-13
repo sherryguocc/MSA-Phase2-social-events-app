@@ -15,7 +15,7 @@ namespace backend.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Event> Events { get; set; }
-        // public DbSet<Participation> Participations { get; set; }
+        public DbSet<Participation> Participations { get; set; }
         public DbSet<Comment> Comments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -24,27 +24,12 @@ namespace backend.Data
 
             modelBuilder.Entity<Event>()
                 .HasOne(e => e.CreatedBy)
-                .WithMany(u => u.CreatedEvents)  // One-to-many relationship: one user can create many event
+                .WithMany(u => u.CreatedEvents)
                 .HasForeignKey(e => e.CreatedById)
-                .OnDelete(DeleteBehavior.Restrict);  // Prevent cascade delete to avoid deleting user when event is deleted
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // Event <-> User (Joined)
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.ParticipantsEvents)
-                .WithMany(e => e.Participants)
-                .UsingEntity(j => j.ToTable("EventParticipants"));
+            // 移除所有 Event <-> User 多对多参与映射，全部用 Participation 表管理
 
-            // Event <-> User (Interested)
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.InterestedEvents)
-                .WithMany(e => e.InterestedUsers)
-                .UsingEntity(j => j.ToTable("EventInterestedUsers"));
-
-            // Event <-> User (Waitlist)
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.WaitlistEvents)
-                .WithMany(e => e.Waitlist)
-                .UsingEntity(j => j.ToTable("EventWaitlist"));
             // 评论自引用（父子评论）
             modelBuilder.Entity<Comment>()
                 .HasOne(c => c.ParentComment)

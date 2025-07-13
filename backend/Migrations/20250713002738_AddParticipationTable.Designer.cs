@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using backend.Data;
 
@@ -10,12 +11,59 @@ using backend.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250713002738_AddParticipationTable")]
+    partial class AddParticipationTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.6");
+
+            modelBuilder.Entity("EventUser", b =>
+                {
+                    b.Property<int>("ParticipantsEventsId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ParticipantsId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ParticipantsEventsId", "ParticipantsId");
+
+                    b.HasIndex("ParticipantsId");
+
+                    b.ToTable("EventParticipants", (string)null);
+                });
+
+            modelBuilder.Entity("EventUser1", b =>
+                {
+                    b.Property<int>("InterestedEventsId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("InterestedUsersId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("InterestedEventsId", "InterestedUsersId");
+
+                    b.HasIndex("InterestedUsersId");
+
+                    b.ToTable("EventInterestedUsers", (string)null);
+                });
+
+            modelBuilder.Entity("EventUser2", b =>
+                {
+                    b.Property<int>("WaitlistEventsId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("WaitlistId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("WaitlistEventsId", "WaitlistId");
+
+                    b.HasIndex("WaitlistId");
+
+                    b.ToTable("EventWaitlist", (string)null);
+                });
 
             modelBuilder.Entity("backend.Models.Comment", b =>
                 {
@@ -142,6 +190,51 @@ namespace backend.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("EventUser", b =>
+                {
+                    b.HasOne("backend.Models.Event", null)
+                        .WithMany()
+                        .HasForeignKey("ParticipantsEventsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("backend.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("ParticipantsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("EventUser1", b =>
+                {
+                    b.HasOne("backend.Models.Event", null)
+                        .WithMany()
+                        .HasForeignKey("InterestedEventsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("backend.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("InterestedUsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("EventUser2", b =>
+                {
+                    b.HasOne("backend.Models.Event", null)
+                        .WithMany()
+                        .HasForeignKey("WaitlistEventsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("backend.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("WaitlistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("backend.Models.Comment", b =>

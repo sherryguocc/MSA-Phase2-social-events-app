@@ -19,11 +19,6 @@ namespace backend.Models
         // Navigation properties
         public List<Event> CreatedEvents { get; set; } = new List<Event>();
 
-        // Many-to-many navigation properties for event participation
-        public List<Event> ParticipantsEvents { get; set; } = new List<Event>(); // Events the user joined
-        public List<Event> InterestedEvents { get; set; } = new List<Event>();   // Events the user is interested in
-        public List<Event> WaitlistEvents { get; set; } = new List<Event>();     // Events the user is in waitlist for
-
         // Navigation property: comments
         public List<Comment> Comments { get; set; } = new();
     }

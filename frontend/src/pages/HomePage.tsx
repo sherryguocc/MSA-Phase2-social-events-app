@@ -18,6 +18,7 @@ interface EventItem {
   createdByUsername: string;
   createdByAvatarUrl?: string;
   createdById: number;
+  joinedCount?: number;
 }
 
 const HomePage: React.FC = () => {
@@ -54,7 +55,23 @@ const HomePage: React.FC = () => {
         if (!res.ok) throw new Error("Failed to fetch events");
         return res.json();
       })
-      .then(data => setEvents(data))
+      .then(async data => {
+        // 批量获取 joinedCount
+        const ids = data.map((e: any) => e.id);
+        let joinedCounts: Record<number, number> = {};
+        if (ids.length > 0) {
+          const res = await fetch("/api/event/joined-counts", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(ids)
+          });
+          if (res.ok) {
+            joinedCounts = await res.json();
+          }
+        }
+        // 合并 joinedCount 到 events
+        setEvents(data.map((e: any) => ({ ...e, joinedCount: joinedCounts[e.id] ?? 0 })));
+      })
       .catch(err => setError(err.message))
       .finally(() => setLoading(false));
   }, []);

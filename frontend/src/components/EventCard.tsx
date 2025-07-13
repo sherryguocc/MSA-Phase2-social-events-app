@@ -16,6 +16,7 @@ export interface EventCardProps {
     createdByUsername: string;
     createdByAvatarUrl?: string;
     createdById: number;
+    joinedCount?: number; // Number of users who have joined
   };
   showEditButton?: boolean;
 }
@@ -60,6 +61,14 @@ const EventCard: React.FC<EventCardProps> = ({ event, showEditButton = true }) =
             <span className="font-semibold text-gray-500">Attendees:</span>
             <span className="ml-1 text-gray-800">{event.minAttendees} - {event.maxAttendees}</span>
           </span>
+          {typeof event.joinedCount === 'number' && (
+            <span className="flex items-center ml-6 text-xs text-gray-500">
+              <span className="mr-1">Joined:</span>
+              <span className="font-semibold text-primary">{event.joinedCount ?? 0}</span>
+              <span className="mx-1">/</span>
+              <span>{event.maxAttendees}</span>
+            </span>
+          )}
           <span className="flex items-center mt-1">
             <FaUserCircle className="text-primary mr-1" />
             <span className="font-semibold text-gray-500 mr-1">Organizer:</span>

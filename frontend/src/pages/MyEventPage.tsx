@@ -16,6 +16,7 @@ interface EventItem {
   createdByUsername: string;
   createdByAvatarUrl?: string;
   createdById: number;
+  joinedCount?: number;
 }
 
 const MyEventPage: React.FC = () => {
@@ -66,8 +67,22 @@ const MyEventPage: React.FC = () => {
         if (!res.ok) throw new Error("Failed to fetch events");
         return res.json();
       })
-      .then(data => setMyEvents(data))
-      // .catch(err => setError(err.message))
+      .then(async data => {
+        // 批量获取 joinedCount
+        const ids = data.map((e: any) => e.id);
+        let joinedCounts: Record<number, number> = {};
+        if (ids.length > 0) {
+          const res = await fetch("/api/event/joined-counts", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(ids)
+          });
+          if (res.ok) {
+            joinedCounts = await res.json();
+          }
+        }
+        setMyEvents(data.map((e: any) => ({ ...e, joinedCount: joinedCounts[e.id] ?? 0 })));
+      })
       .catch(() => {})
       .finally(() => setLoading(false));
   }, [token, user, navigate]);
@@ -75,26 +90,62 @@ const MyEventPage: React.FC = () => {
   // Fetch joined, interested, and waitlist events
   useEffect(() => {
     if (!token || !user?.id) return;
-    // Fetch all events
-    fetch(`/api/event/dto`, { headers: { Authorization: `Bearer ${token}` } })
-      .then(res => res.json())
-      .then((allEvents: any[]) => {
-        setMyEvents(allEvents.filter(e => e.createdById === user.id));
-      });
     // Fetch joined events
     fetch(`/api/users/${user.id}/joined`, { headers: { Authorization: `Bearer ${token}` } })
       .then(res => res.json())
-      .then(setJoinedEvents)
+      .then(async (data: any[]) => {
+        const ids = data.map(e => e.id);
+        let joinedCounts: Record<number, number> = {};
+        if (ids.length > 0) {
+          const res = await fetch("/api/event/joined-counts", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(ids)
+          });
+          if (res.ok) {
+            joinedCounts = await res.json();
+          }
+        }
+        setJoinedEvents(data.map(e => ({ ...e, joinedCount: joinedCounts[e.id] ?? 0 })));
+      })
       .catch(() => {});
     // Fetch interested events
     fetch(`/api/users/${user.id}/interested`, { headers: { Authorization: `Bearer ${token}` } })
       .then(res => res.json())
-      .then(setInterestedEvents)
+      .then(async (data: any[]) => {
+        const ids = data.map(e => e.id);
+        let joinedCounts: Record<number, number> = {};
+        if (ids.length > 0) {
+          const res = await fetch("/api/event/joined-counts", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(ids)
+          });
+          if (res.ok) {
+            joinedCounts = await res.json();
+          }
+        }
+        setInterestedEvents(data.map(e => ({ ...e, joinedCount: joinedCounts[e.id] ?? 0 })));
+      })
       .catch(() => {});
     // Fetch waitlist events
     fetch(`/api/users/${user.id}/waitlist`, { headers: { Authorization: `Bearer ${token}` } })
       .then(res => res.json())
-      .then(setWaitlistEvents)
+      .then(async (data: any[]) => {
+        const ids = data.map(e => e.id);
+        let joinedCounts: Record<number, number> = {};
+        if (ids.length > 0) {
+          const res = await fetch("/api/event/joined-counts", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(ids)
+          });
+          if (res.ok) {
+            joinedCounts = await res.json();
+          }
+        }
+        setWaitlistEvents(data.map(e => ({ ...e, joinedCount: joinedCounts[e.id] ?? 0 })));
+      })
       .catch(() => {});
   }, [token, user]);
 
