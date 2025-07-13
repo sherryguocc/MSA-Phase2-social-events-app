@@ -49,7 +49,6 @@ const HomePage: React.FC = () => {
         return res.json();
       })
       .then(async data => {
-        // 批量获取 joinedCount
         const ids = data.map((e: any) => e.id);
         let joinedCounts: Record<number, number> = {};
         if (ids.length > 0) {
