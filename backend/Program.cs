@@ -72,7 +72,8 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// 启动时自动执行数据库迁移，确保表结构最新
+// data migration after the app is built
+// This ensures that the database is created and migrations are applied before the app starts serving requests.
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
