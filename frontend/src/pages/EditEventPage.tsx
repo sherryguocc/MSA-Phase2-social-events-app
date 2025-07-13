@@ -1,7 +1,9 @@
+
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store";
+import { apiGet, apiPut } from "../utils/apiClient";
 
 interface EventItem {
   id: number;
@@ -36,6 +38,7 @@ const EditEventPage: React.FC = () => {
   const [maxAttendees, setMaxAttendees] = useState(10);
   const [imageUrl, setImageUrl] = useState("");
 
+
 useEffect(() => {
   if (!token) {
     navigate("/login");
@@ -45,11 +48,7 @@ useEffect(() => {
     // 等待 userInfo 加载，不跳转
     return;
   }
-  fetch(`/api/event/dto`)
-    .then(res => {
-      if (!res.ok) throw new Error("Failed to fetch event");
-      return res.json();
-    })
+  apiGet(`/event/dto`, { headers: { Authorization: `Bearer ${token}` } })
     .then((data: EventItem[]) => {
       const found = data.find(e => e.id === Number(id));
       if (!found) throw new Error("Event not found");
@@ -67,18 +66,15 @@ useEffect(() => {
     .finally(() => setLoading(false));
 }, [id, token, user, navigate]);
 
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
     setError("");
     try {
-      const res = await fetch(`/api/event/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
+      await apiPut(
+        `/event/${id}`,
+        {
           id: Number(id),
           title,
           description,
@@ -89,9 +85,9 @@ useEffect(() => {
           imageUrl,
           createdById: user?.id,
           createdByUsername: user?.username,
-        }),
-      });
-      if (!res.ok) throw new Error("Failed to update event");
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       alert("Event updated!");
       navigate("/my-events");
     } catch (err: any) {

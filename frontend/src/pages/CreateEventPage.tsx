@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store";
+import { apiPost } from '../utils/apiClient';
 
 const CreateEventPage: React.FC = () => {
   const token = useSelector((state: RootState) => state.user.token);
@@ -26,31 +27,21 @@ const CreateEventPage: React.FC = () => {
     e.preventDefault();
     setError("");
     try {
-      const res = await fetch("/api/event", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          title,
-          description,
-          location,
-          eventTime,
-          minAttendees,
-          maxAttendees,
-          imageUrl,
-        }),
+      await apiPost("/api/event", {
+        title,
+        description,
+        location,
+        eventTime,
+        minAttendees,
+        maxAttendees,
+        imageUrl,
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
       });
-      if (res.ok) {
-        alert("Event created!");
-        navigate("/");
-      } else {
-        const data = await res.json();
-        setError(data.message || "Failed to create event");
-      }
-    } catch (err) {
-      setError("Network error");
+      alert("Event created!");
+      navigate("/");
+    } catch (err: any) {
+      setError(err.message || "Failed to create event");
     }
   };
 

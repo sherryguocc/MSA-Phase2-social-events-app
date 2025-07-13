@@ -4,6 +4,7 @@ import type { RootState } from "../store";
 import { useNavigate, useParams } from "react-router-dom";
 import UserEventsPanel from "../components/UserEventsPanel";
 import { loginSuccess } from "../store/userSlice";
+import { apiGet, apiPut } from "../utils/apiClient";
 
 
 const ProfilePage: React.FC = () => {
@@ -193,23 +194,17 @@ const ProfilePage: React.FC = () => {
                   setSaving(true);
                   setError("");
                   try {
-                    const res = await fetch(`/api/user/${user.id}`, {
-                      method: "PUT",
-                      headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                      },
-                      body: JSON.stringify({
+                    const updated = await apiPut(`/api/user/${user.id}`,
+                      {
                         email: editEmail,
                         bio: editBio,
                         avatarUrl: editAvatar,
                         name: editName,
                         hobby: editHobby,
                         contactInfo: editContactInfo
-                      }),
-                    });
-                    if (!res.ok) throw new Error("Failed to update user info");
-                    const updated = await res.json();
+                      },
+                      { headers: { Authorization: `Bearer ${token}` } }
+                    );
                     setUser(updated);
                     dispatch(loginSuccess(updated)); // Sync redux userInfo after updating profile
                     setEditMode(false);

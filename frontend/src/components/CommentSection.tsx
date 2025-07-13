@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import UserLink from "./UserLink";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store";
+import { apiGet, apiPost, apiDelete } from "../utils/apiClient";
 
 interface UserInfo {
   id: number;
@@ -38,9 +39,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ eventId }) => {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(`/api/comment/event/${eventId}`);
-      if (!res.ok) throw new Error("Failed to fetch comments");
-      const data = await res.json();
+      const data = await apiGet(`/api/comment/event/${eventId}`);
       setComments(data);
     } catch (err: any) {
       setError(err.message || "Failed to fetch comments");
@@ -58,15 +57,11 @@ const CommentSection: React.FC<CommentSectionProps> = ({ eventId }) => {
     if (!token || !newComment.trim()) return;
     setPosting(true);
     try {
-      const res = await fetch("/api/comment", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ content: newComment, eventId }),
-      });
-      if (!res.ok) throw new Error("Failed to post comment");
+      await apiPost(
+        "/api/comment",
+        { content: newComment, eventId },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       setNewComment("");
       fetchComments();
     } catch (err: any) {
@@ -80,15 +75,11 @@ const CommentSection: React.FC<CommentSectionProps> = ({ eventId }) => {
     if (!token || !replyContent.trim()) return;
     setPosting(true);
     try {
-      const res = await fetch("/api/comment", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ content: replyContent, eventId, parentCommentId: parentId }),
-      });
-      if (!res.ok) throw new Error("Failed to post reply");
+      await apiPost(
+        "/api/comment",
+        { content: replyContent, eventId, parentCommentId: parentId },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       setReplyContent("");
       setReplyTo(null);
       fetchComments();
@@ -103,11 +94,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ eventId }) => {
     if (!token) return;
     if (!window.confirm("Delete this comment?")) return;
     try {
-      const res = await fetch(`/api/comment/${commentId}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!res.ok) throw new Error("Failed to delete comment");
+      await apiDelete(`/api/comment/${commentId}`, { headers: { Authorization: `Bearer ${token}` } });
       fetchComments();
     } catch (err: any) {
       setError(err.message || "Failed to delete comment");

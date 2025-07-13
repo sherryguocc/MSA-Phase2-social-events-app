@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import EventList from "./EventList";
+import { apiGet, apiPost } from "../utils/apiClient";
 
 interface EventItem {
   id: number;
@@ -37,75 +38,36 @@ const UserEventsPanel: React.FC<UserEventsPanelProps> = ({ userId, username, nam
     setLoading(true);
     setError("");
     // Created events
-    fetch(`/api/event/by-user/${userId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then(res => {
-        if (!res.ok) throw new Error("Failed to fetch events");
-        return res.json();
-      })
+    apiGet(`/api/event/by-user/${userId}`, { headers: { Authorization: `Bearer ${token}` } })
       .then(async data => {
         const ids = data.map((e: any) => e.id);
         let joinedCounts: Record<number, number> = {};
         if (ids.length > 0) {
-          const res = await fetch("/api/event/joined-counts", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(ids)
-          });
-          if (res.ok) {
-            joinedCounts = await res.json();
-          }
+          joinedCounts = await apiPost("/api/event/joined-counts", ids);
         }
         setMyEvents(data.map((e: any) => ({ ...e, joinedCount: joinedCounts[e.id] ?? 0 })));
       })
       .catch(err => setError(err.message));
 
     // Joined events
-    fetch(`/api/users/${userId}/joined`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then(res => {
-        if (!res.ok) throw new Error("Failed to fetch joined events");
-        return res.json();
-      })
+    apiGet(`/api/users/${userId}/joined`, { headers: { Authorization: `Bearer ${token}` } })
       .then(async data => {
         const ids = data.map((e: any) => e.id);
         let joinedCounts: Record<number, number> = {};
         if (ids.length > 0) {
-          const res = await fetch("/api/event/joined-counts", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(ids)
-          });
-          if (res.ok) {
-            joinedCounts = await res.json();
-          }
+          joinedCounts = await apiPost("/api/event/joined-counts", ids);
         }
         setJoinedEvents(data.map((e: any) => ({ ...e, joinedCount: joinedCounts[e.id] ?? 0 })));
       })
       .catch(() => {});
 
     // Interested events
-    fetch(`/api/users/${userId}/interested`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then(res => {
-        if (!res.ok) throw new Error("Failed to fetch interested events");
-        return res.json();
-      })
+    apiGet(`/api/users/${userId}/interested`, { headers: { Authorization: `Bearer ${token}` } })
       .then(async data => {
         const ids = data.map((e: any) => e.id);
         let joinedCounts: Record<number, number> = {};
         if (ids.length > 0) {
-          const res = await fetch("/api/event/joined-counts", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(ids)
-          });
-          if (res.ok) {
-            joinedCounts = await res.json();
-          }
+          joinedCounts = await apiPost("/api/event/joined-counts", ids);
         }
         setInterestedEvents(data.map((e: any) => ({ ...e, joinedCount: joinedCounts[e.id] ?? 0 })));
       })
@@ -113,25 +75,12 @@ const UserEventsPanel: React.FC<UserEventsPanelProps> = ({ userId, username, nam
 
     // Waitlist events only current user
     if (String(userId) === String(currentUserId)) {
-      fetch(`/api/users/${userId}/waitlist`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-        .then(res => {
-          if (!res.ok) throw new Error("Failed to fetch waitlist events");
-          return res.json();
-        })
+      apiGet(`/api/users/${userId}/waitlist`, { headers: { Authorization: `Bearer ${token}` } })
         .then(async data => {
           const ids = data.map((e: any) => e.id);
           let joinedCounts: Record<number, number> = {};
           if (ids.length > 0) {
-            const res = await fetch("/api/event/joined-counts", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(ids)
-            });
-            if (res.ok) {
-              joinedCounts = await res.json();
-            }
+            joinedCounts = await apiPost("/api/event/joined-counts", ids);
           }
           setWaitlistEvents(data.map((e: any) => ({ ...e, joinedCount: joinedCounts[e.id] ?? 0 })));
         })

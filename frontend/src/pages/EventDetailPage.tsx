@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { apiGet, apiPost } from "../utils/apiClient";
 import CommentSection from "../components/CommentSection";
 import ScrollToTopButton from "../components/ScrollToTopButton";
 import { useParams, useNavigate } from "react-router-dom";
@@ -46,8 +47,7 @@ const EventDetailPage: React.FC = () => {
   useEffect(() => {
     if (!id) return;
     setLoading(true);
-    fetch(`/api/event/dto`)
-      .then(res => res.json())
+    apiGet(`/api/event/dto`)
       .then((data: EventItem[]) => {
         const found = data.find(e => e.id === Number(id));
         if (!found) throw new Error("Event not found");
@@ -59,17 +59,16 @@ const EventDetailPage: React.FC = () => {
 
   useEffect(() => {
     if (!id) return;
-    fetch(`/api/events/${id}/participants`).then(res => res.json()).then(setParticipants);
-    fetch(`/api/events/${id}/waitlist`).then(res => res.json()).then(setWaitlist);
-    fetch(`/api/events/${id}/interested`).then(res => res.json()).then(setInterested);
+    apiGet(`/api/events/${id}/participants`).then(setParticipants);
+    apiGet(`/api/events/${id}/waitlist`).then(setWaitlist);
+    apiGet(`/api/events/${id}/interested`).then(setInterested);
   }, [id, actionLoading]);
 
   const handleJoin = async () => {
     if (!token) { navigate("/login"); return; }
     setActionLoading(true); setActionError("");
     try {
-      const res = await fetch(`/api/events/${id}/join`, { method: "POST", headers: { Authorization: `Bearer ${token}` } });
-      if (!res.ok) throw new Error((await res.json()).message || "Join failed");
+      await apiPost(`/api/events/${id}/join`, {}, { headers: { Authorization: `Bearer ${token}` } });
     } catch (err: any) { setActionError(err.message || "Join failed"); }
     setActionLoading(false);
   };
@@ -77,8 +76,7 @@ const EventDetailPage: React.FC = () => {
     if (!token) { navigate("/login"); return; }
     setActionLoading(true); setActionError("");
     try {
-      const res = await fetch(`/api/events/${id}/cancel`, { method: "POST", headers: { Authorization: `Bearer ${token}` } });
-      if (!res.ok) throw new Error((await res.json()).message || "Cancel failed");
+      await apiPost(`/api/events/${id}/cancel`, {}, { headers: { Authorization: `Bearer ${token}` } });
     } catch (err: any) { setActionError(err.message || "Cancel failed"); }
     setActionLoading(false);
   };
@@ -86,8 +84,7 @@ const EventDetailPage: React.FC = () => {
     if (!token) { navigate("/login"); return; }
     setActionLoading(true); setActionError("");
     try {
-      const res = await fetch(`/api/events/${id}/interest`, { method: "POST", headers: { Authorization: `Bearer ${token}` } });
-      if (!res.ok) throw new Error((await res.json()).message || "Interest failed");
+      await apiPost(`/api/events/${id}/interest`, {}, { headers: { Authorization: `Bearer ${token}` } });
     } catch (err: any) { setActionError(err.message || "Interest failed"); }
     setActionLoading(false);
   };

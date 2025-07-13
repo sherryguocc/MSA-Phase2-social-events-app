@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from 'react-redux';
 import type { RootState } from '../store';
 import EventList from '../components/EventList';
+import { apiGet, apiPost } from '../utils/apiClient';
 
 interface EventItem {
   id: number;
@@ -27,15 +28,13 @@ const HomePage: React.FC = () => {
   const [user, setUser] = useState(reduxUser);
   useEffect(() => {
     if (!user && token) {
-      fetch("/api/user/me", {
+      apiGet("/api/user/me", {
         headers: { Authorization: `Bearer ${token}` },
       })
-        .then(res => {
-          if (!res.ok) throw new Error("Failed to fetch user info");
-          return res.json();
-        })
         .then(data => setUser(data))
-        .catch(() => {});
+        .catch(err => {
+          console.error("Failed to fetch user info", err);
+        });
     }
   }, [token, reduxUser, user]);
 
@@ -43,25 +42,13 @@ const HomePage: React.FC = () => {
   const [sortType, setSortType] = useState<'time' | 'name' | 'maxAttendees'>('time');
 
   useEffect(() => {
-    fetch("/api/event/dto")
-      .then(res => {
-        if (!res.ok) throw new Error("Failed to fetch events");
-        return res.json();
-      })
+    apiGet("/api/event/dto")
       .then(async data => {
         const ids = data.map((e: any) => e.id);
         let joinedCounts: Record<number, number> = {};
         if (ids.length > 0) {
-          const res = await fetch("/api/event/joined-counts", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(ids)
-          });
-          if (res.ok) {
-            joinedCounts = await res.json();
-          }
+          joinedCounts = await apiPost("/api/event/joined-counts", ids);
         }
-        // 合并 joinedCount 到 events
         setEvents(data.map((e: any) => ({ ...e, joinedCount: joinedCounts[e.id] ?? 0 })));
       })
       .catch(err => setError(err.message))

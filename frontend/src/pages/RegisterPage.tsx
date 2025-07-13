@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { apiPost } from "../utils/apiClient";
 
 const RegisterPage: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -11,18 +12,9 @@ const RegisterPage: React.FC = () => {
     e.preventDefault();
     setError("");
     try {
-      const res = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
-      if (res.ok) {
-        alert("Registration successful! Please login.");
-        navigate("/login");
-      } else {
-        const data = await res.json();
-        setError(data.message || "Registration failed");
-      }
+      await apiPost("/api/auth/register", { username, password });
+      alert("Registration successful! Please login.");
+      navigate("/login");
     } catch (err) {
       setError("Network error");
     }

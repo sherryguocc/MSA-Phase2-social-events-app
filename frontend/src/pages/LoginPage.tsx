@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
-import { setToken } from '../store/userSlice';
-import { loginSuccess } from "../store/userSlice";
+import { setToken, loginSuccess } from '../store/userSlice';
+import { apiPost } from '../utils/apiClient';
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -15,23 +15,12 @@ const LoginPage: React.FC = () => {
     e.preventDefault();
     setError("");
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        dispatch(setToken(data.token));
-        dispatch(loginSuccess(data));
-        dispatch(loginSuccess(data.user));
-        navigate("/");
-      } else {
-        const data = await res.json();
-        setError(data.message || "Login failed");
-      }
-    } catch (err) {
-      setError("Network error");
+      const data = await apiPost("/api/auth/login", { username, password });
+      dispatch(setToken(data.token));
+      dispatch(loginSuccess(data.user));
+      navigate("/");
+    } catch (err: any) {
+      setError(err.message || "Login failed");
     }
   };
 
