@@ -9,9 +9,9 @@ export async function apiGet(path: string, options: RequestInit = {}) {
 export async function apiPost(path: string, data: any, options: RequestInit = {}) {
   const res = await fetch(`${baseUrl}${path}`, {
     method: "POST",
+    ...options,
     headers: { "Content-Type": "application/json", ...(options.headers || {}) },
     body: JSON.stringify(data),
-    ...options,
   });
   if (!res.ok) throw new Error("API Error");
   return res.json();
@@ -21,9 +21,9 @@ export async function apiPost(path: string, data: any, options: RequestInit = {}
 export async function apiPut(path: string, data: any, options: RequestInit = {}) {
   const res = await fetch(`${baseUrl}${path}`, {
     method: "PUT",
+    ...options,
     headers: { "Content-Type": "application/json", ...(options.headers || {}) },
     body: JSON.stringify(data),
-    ...options,
   });
   if (!res.ok) throw new Error("PUT request failed");
   return res.json();
