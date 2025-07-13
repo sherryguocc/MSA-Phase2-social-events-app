@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store";
 import { useNavigate, useParams } from "react-router-dom";
+import EventList from "../components/EventList";
 
 interface EventItem {
   id: number;
@@ -14,6 +15,7 @@ interface EventItem {
   imageUrl?: string;
   createdByUsername: string;
   createdByAvatarUrl?: string;
+  createdById: number;
 }
 
 const ProfilePage: React.FC = () => {
@@ -199,33 +201,7 @@ const ProfilePage: React.FC = () => {
           ) : myEvents.length === 0 ? (
             <div className="text-center text-gray-400">No events</div>
           ) : (
-            <div className="grid gap-4 md:grid-cols-2">
-              {myEvents.map(event => (
-                <div
-                  key={event.id}
-                  className="card bg-base-100 shadow hover:shadow-lg cursor-pointer transition-all h-full"
-                  onClick={() => navigate(`/event/${event.id}`)}
-                >
-                  <figure className="h-40 overflow-hidden bg-base-200">
-                    <img
-                      src={event.imageUrl ? event.imageUrl : "/default-event.jpg"}
-                      alt={event.title}
-                      className="object-cover w-full h-full"
-                    />
-                  </figure>
-                  <div className="card-body p-4">
-                    <h4 className="card-title text-lg font-bold mb-1 line-clamp-1">{event.title}</h4>
-                    <div className="text-sm text-gray-500 mb-1 line-clamp-3">{event.description}</div>
-                    <div className="flex flex-wrap gap-2 text-xs text-gray-400 mt-2">
-                      <span>Location: {event.location}</span>
-                      <span>Time: {event.eventTime?.slice(0,16).replace('T',' ')}</span>
-                      <span>Attendees: {event.minAttendees}-{event.maxAttendees}</span>
-                    </div>
-                    <div className="mt-2 text-xs text-gray-500">Host: <span className="underline hover:text-blue-600" onClick={e => {e.stopPropagation(); navigate(`/profile/${event.createdByUsername}`);}}>{event.createdByUsername}</span></div>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <EventList events={myEvents} showEditButton={false} />
           )}
         </div>
       )}

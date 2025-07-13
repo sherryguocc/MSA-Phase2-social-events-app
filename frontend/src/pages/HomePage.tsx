@@ -4,6 +4,7 @@ import type { RootState } from '../store';
 import { clearToken } from '../store/userSlice';
 import { useNavigate } from 'react-router-dom';
 import EventEditButton from '../components/EventEditButton';
+import EventList from '../components/EventList';
 
 interface EventItem {
   id: number;
@@ -93,49 +94,7 @@ const HomePage: React.FC = () => {
       </div>
       {loading && <div>Loading...</div>}
       {error && <div className="text-red-500">{error}</div>}
-      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-        {sortedEvents.map(event => (
-          <div
-            key={event.id}
-            className="card bg-base-100 p-6 shadow-xl break-words cursor-pointer hover:shadow-2xl transition-shadow"
-            onClick={() => navigate(`/event/${event.id}`)}
-          >
-            <figure>
-              <img
-                src={event.imageUrl && event.imageUrl.trim() !== '' ? event.imageUrl : '/default-event.jpg'}
-                alt={event.title}
-                className="w-full h-48 object-cover rounded-t"
-                onError={e => { e.currentTarget.onerror = null; e.currentTarget.src = '/default-event.jpg'; }}
-              />
-            </figure>
-            <div className="card-body">
-              <h3 className="card-title text-xl font-bold text-primary break-words whitespace-pre-line mb-2">{event.title}</h3>
-              <p
-                className="break-words whitespace-pre-line text-base mb-3 text-gray-800 line-clamp-3"
-                style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
-              >
-                {event.description}
-              </p>
-              <div className="flex flex-col gap-1 text-sm text-gray-600 mb-2">
-                <span><span className="font-semibold">Location:</span> {event.location}</span>
-                <span><span className="font-semibold">Time:</span> {new Date(event.eventTime).toLocaleString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false })}</span>
-                <span><span className="font-semibold">Attendees:</span> {event.minAttendees} - {event.maxAttendees}</span>
-                <span>
-                  <span className="font-semibold">Organizer:</span>{" "}
-                  {event.createdByUsername || "Unknown"}
-                </span>
-              </div>
-              {/* Edit button for event creator */}
-              <EventEditButton
-                eventId={event.id}
-                createdById={event.createdById}
-                className="btn btn-outline btn-xs mt-2"
-                onClick={e => e.stopPropagation()}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
+      <EventList events={sortedEvents} showEditButton={true} />
     </div>
   );
 };

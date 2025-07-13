@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store";
 import { useNavigate } from "react-router-dom";
+import EventList from "../components/EventList";
 
 interface EventItem {
   id: number;
@@ -14,6 +15,7 @@ interface EventItem {
   imageUrl?: string;
   createdByUsername: string;
   createdByAvatarUrl?: string;
+  createdById: number;
 }
 
 const MyEventPage: React.FC = () => {
@@ -117,156 +119,23 @@ const MyEventPage: React.FC = () => {
       </div>
       <section id="created">
         <h3 className="text-xl font-bold mb-2">Created Events</h3>
-        <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
-          {myEvents.map(event => (
-            <div
-              key={event.id}
-              className="card bg-base-100 p-6 shadow-xl break-words cursor-pointer hover:shadow-2xl transition-shadow"
-              onClick={() => navigate(`/event/${event.id}`)}
-            >
-              <figure>
-                <img
-                  src={event.imageUrl && event.imageUrl.trim() !== '' ? event.imageUrl : '/default-event.jpg'}
-                  alt={event.title}
-                  className="w-full h-48 object-cover rounded-t"
-                  onError={e => { (e.currentTarget as HTMLImageElement).onerror = null; (e.currentTarget as HTMLImageElement).src = '/default-event.jpg'; }}
-                />
-              </figure>
-              <div className="card-body">
-                <h3 className="card-title text-xl font-bold text-primary break-words whitespace-pre-line mb-2">{event.title}</h3>
-                <p
-                  className="break-words whitespace-pre-line text-base mb-3 text-gray-800 line-clamp-3"
-                  style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
-                >
-                  {event.description}
-                </p>
-                <div className="flex flex-col gap-1 text-sm text-gray-600 mb-2">
-                  <span><span className="font-semibold">Location:</span> {event.location}</span>
-                  <span><span className="font-semibold">Time:</span> {new Date(event.eventTime).toLocaleString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false })}</span>
-                  <span><span className="font-semibold">Attendees:</span> {event.minAttendees} - {event.maxAttendees}</span>
-                </div>
-                <button
-                  className="btn btn-outline btn-primary btn-sm mt-2"
-                  onClick={e => {
-                    e.stopPropagation();
-                    navigate(`/edit-event/${event.id}`);
-                  }}
-                >
-                  Edit
-                </button>
-              </div>
-            </div>
-          ))}
-          {(!loading && myEvents.length === 0) && <div className="col-span-2 text-gray-500">No events created yet.</div>}
-        </div>
+        <EventList events={myEvents} showEditButton={true} />
+        {(!loading && myEvents.length === 0) && <div className="col-span-2 text-gray-500">No events created yet.</div>}
       </section>
       <section id="joined" className="mt-10">
         <h3 className="text-xl font-bold mb-2">Joined Events</h3>
-        <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
-          {joinedEvents.map(event => (
-            <div
-              key={event.id}
-              className="card bg-base-100 p-6 shadow-xl break-words cursor-pointer hover:shadow-2xl transition-shadow"
-              onClick={() => navigate(`/event/${event.id}`)}
-            >
-              <figure>
-                <img
-                  src={event.imageUrl && event.imageUrl.trim() !== '' ? event.imageUrl : '/default-event.jpg'}
-                  alt={event.title}
-                  className="w-full h-48 object-cover rounded-t"
-                  onError={e => { (e.currentTarget as HTMLImageElement).onerror = null; (e.currentTarget as HTMLImageElement).src = '/default-event.jpg'; }}
-                />
-              </figure>
-              <div className="card-body">
-                <h3 className="card-title text-xl font-bold text-primary break-words whitespace-pre-line mb-2">{event.title}</h3>
-                <p
-                  className="break-words whitespace-pre-line text-base mb-3 text-gray-800 line-clamp-3"
-                  style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
-                >
-                  {event.description}
-                </p>
-                <div className="flex flex-col gap-1 text-sm text-gray-600 mb-2">
-                  <span><span className="font-semibold">Location:</span> {event.location}</span>
-                  <span><span className="font-semibold">Time:</span> {new Date(event.eventTime).toLocaleString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false })}</span>
-                  <span><span className="font-semibold">Attendees:</span> {event.minAttendees} - {event.maxAttendees}</span>
-                </div>
-              </div>
-            </div>
-          ))}
-          {(!loading && joinedEvents.length === 0) && <div className="col-span-2 text-gray-500">No joined events.</div>}
-        </div>
+        <EventList events={joinedEvents} showEditButton={false} />
+        {(!loading && joinedEvents.length === 0) && <div className="col-span-2 text-gray-500">No joined events.</div>}
       </section>
       <section id="interested" className="mt-10">
         <h3 className="text-xl font-bold mb-2">Interested Events</h3>
-        <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
-          {interestedEvents.map(event => (
-            <div
-              key={event.id}
-              className="card bg-base-100 p-6 shadow-xl break-words cursor-pointer hover:shadow-2xl transition-shadow"
-              onClick={() => navigate(`/event/${event.id}`)}
-            >
-              <figure>
-                <img
-                  src={event.imageUrl && event.imageUrl.trim() !== '' ? event.imageUrl : '/default-event.jpg'}
-                  alt={event.title}
-                  className="w-full h-48 object-cover rounded-t"
-                  onError={e => { (e.currentTarget as HTMLImageElement).onerror = null; (e.currentTarget as HTMLImageElement).src = '/default-event.jpg'; }}
-                />
-              </figure>
-              <div className="card-body">
-                <h3 className="card-title text-xl font-bold text-primary break-words whitespace-pre-line mb-2">{event.title}</h3>
-                <p
-                  className="break-words whitespace-pre-line text-base mb-3 text-gray-800 line-clamp-3"
-                  style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
-                >
-                  {event.description}
-                </p>
-                <div className="flex flex-col gap-1 text-sm text-gray-600 mb-2">
-                  <span><span className="font-semibold">Location:</span> {event.location}</span>
-                  <span><span className="font-semibold">Time:</span> {new Date(event.eventTime).toLocaleString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false })}</span>
-                  <span><span className="font-semibold">Attendees:</span> {event.minAttendees} - {event.maxAttendees}</span>
-                </div>
-              </div>
-            </div>
-          ))}
-          {(!loading && interestedEvents.length === 0) && <div className="col-span-2 text-gray-500">No interested events.</div>}
-        </div>
+        <EventList events={interestedEvents} showEditButton={false} />
+        {(!loading && interestedEvents.length === 0) && <div className="col-span-2 text-gray-500">No interested events.</div>}
       </section>
       <section id="waitlist" className="mt-10">
-        <h3 className="text-xl font-bold mb-2">Waitlist Events</h3>
-        <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
-          {waitlistEvents.map(event => (
-            <div
-              key={event.id}
-              className="card bg-base-100 p-6 shadow-xl break-words cursor-pointer hover:shadow-2xl transition-shadow"
-              onClick={() => navigate(`/event/${event.id}`)}
-            >
-              <figure>
-                <img
-                  src={event.imageUrl && event.imageUrl.trim() !== '' ? event.imageUrl : '/default-event.jpg'}
-                  alt={event.title}
-                  className="w-full h-48 object-cover rounded-t"
-                  onError={e => { (e.currentTarget as HTMLImageElement).onerror = null; (e.currentTarget as HTMLImageElement).src = '/default-event.jpg'; }}
-                />
-              </figure>
-              <div className="card-body">
-                <h3 className="card-title text-xl font-bold text-primary break-words whitespace-pre-line mb-2">{event.title}</h3>
-                <p
-                  className="break-words whitespace-pre-line text-base mb-3 text-gray-800 line-clamp-3"
-                  style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
-                >
-                  {event.description}
-                </p>
-                <div className="flex flex-col gap-1 text-sm text-gray-600 mb-2">
-                  <span><span className="font-semibold">Location:</span> {event.location}</span>
-                  <span><span className="font-semibold">Time:</span> {new Date(event.eventTime).toLocaleString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false })}</span>
-                  <span><span className="font-semibold">Attendees:</span> {event.minAttendees} - {event.maxAttendees}</span>
-                </div>
-              </div>
-            </div>
-          ))}
-          {(!loading && waitlistEvents.length === 0) && <div className="col-span-2 text-gray-500">No waitlist events.</div>}
-        </div>
+        <h3 className="text-xl font-bold mb-2">Events I have been in the waitlist</h3>
+        <EventList events={waitlistEvents} showEditButton={false} />
+        {(!loading && waitlistEvents.length === 0) && <div className="col-span-2 text-gray-500">Not in any event waitlist.</div>}
       </section>
     </div>
   );
