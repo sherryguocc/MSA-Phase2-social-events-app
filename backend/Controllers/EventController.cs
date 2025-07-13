@@ -19,7 +19,6 @@ public class EventController : ControllerBase
         _context = context;
     }
 
-
     [HttpGet("dto")]
     public async Task<ActionResult<IEnumerable<EventDTO>>> GetEvents()
     {
@@ -57,7 +56,7 @@ public class EventController : ControllerBase
                 return Unauthorized("User ID not found in token.");
             }
             var userId = int.Parse(userIdClaim.Value);
-            // 手动映射DTO到Event实体
+            // Validate the event DTO
             var newEvent = new Event
             {
                 Title = eventDto.Title ?? string.Empty,
@@ -71,7 +70,6 @@ public class EventController : ControllerBase
             };
             _context.Events.Add(newEvent);
             _context.SaveChanges();
-            // 返回DTO
             var createdBy = _context.Users.FirstOrDefault(u => u.Id == userId);
             var result = new EventDTO
             {
@@ -91,11 +89,10 @@ public class EventController : ControllerBase
         }
         catch (Exception ex)
         {
-            // 返回详细错误信息，便于线上排查
             return BadRequest(new { message = ex.Message, stack = ex.StackTrace });
         }
     }
-    }
+    
 
     [HttpGet("by-user/{userId}")]
     public IActionResult GetEventsByUser(int userId)
