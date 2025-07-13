@@ -24,6 +24,8 @@ const ProfilePage: React.FC = () => {
   const { userId } = useParams<{ userId?: string }>();
   const [user, setUser] = useState<any>(null);
   const [myEvents, setMyEvents] = useState<EventItem[]>([]);
+  const [joinedEvents, setJoinedEvents] = useState<EventItem[]>([]);
+  const [interestedEvents, setInterestedEvents] = useState<EventItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [editMode, setEditMode] = useState(false);
@@ -31,7 +33,6 @@ const ProfilePage: React.FC = () => {
   const [editBio, setEditBio] = useState("");
   const [saving, setSaving] = useState(false);
   const [editAvatar, setEditAvatar] = useState("");
-  // 预设头像图片
   const presetAvatars = [
     "/avatar1.png",
     "/avatar2.png",
@@ -83,8 +84,34 @@ const ProfilePage: React.FC = () => {
         })
         .catch(err => setError(err.message))
         .finally(() => setLoading(false));
+      // Fetch joined events
+      fetch(`/api/event/joined/${fetchEventsUserId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then(res => {
+          if (!res.ok) throw new Error("Failed to fetch joined events");
+          return res.json();
+        })
+        .then(data => {
+          setJoinedEvents(data);
+        })
+        .catch(() => {});
+      // Fetch interested events
+      fetch(`/api/event/interested/${fetchEventsUserId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then(res => {
+          if (!res.ok) throw new Error("Failed to fetch interested events");
+          return res.json();
+        })
+        .then(data => {
+          setInterestedEvents(data);
+        })
+        .catch(() => {});
     } else {
       setMyEvents([]);
+      setJoinedEvents([]);
+      setInterestedEvents([]);
       setLoading(false);
     }
   }, [token, userId, reduxUser?.id, navigate]);
@@ -192,18 +219,40 @@ const ProfilePage: React.FC = () => {
       </div>
       {/* Created Events Section - only show for other users */}
       {!isOwnProfile && (
-        <div className="mt-8">
-          <h3 className="text-2xl font-semibold mb-4">Events created by {user?.username || "this user"}</h3>
-          {loading ? (
-            <div className="text-center text-gray-500">Loading...</div>
-          ) : error ? (
-            <div className="text-center text-red-500">{error}</div>
-          ) : myEvents.length === 0 ? (
-            <div className="text-center text-gray-400">No events</div>
-          ) : (
-            <EventList events={myEvents} showEditButton={false} />
-          )}
-        </div>
+        <>
+          <div className="mt-8">
+            <h3 className="text-2xl font-semibold mb-4">Events created by {user?.username || "this user"}</h3>
+            {loading ? (
+              <div className="text-center text-gray-500">Loading...</div>
+            ) : error ? (
+              <div className="text-center text-red-500">{error}</div>
+            ) : myEvents.length === 0 ? (
+              <div className="text-center text-gray-400">No events</div>
+            ) : (
+              <EventList events={myEvents} showEditButton={false} />
+            )}
+          </div>
+          <div className="mt-8">
+            <h3 className="text-2xl font-semibold mb-4">Events joined by {user?.username || "this user"}</h3>
+            {loading ? (
+              <div className="text-center text-gray-500">Loading...</div>
+            ) : joinedEvents.length === 0 ? (
+              <div className="text-center text-gray-400">No joined events</div>
+            ) : (
+              <EventList events={joinedEvents} showEditButton={false} />
+            )}
+          </div>
+          <div className="mt-8">
+            <h3 className="text-2xl font-semibold mb-4">Events interested by {user?.username || "this user"}</h3>
+            {loading ? (
+              <div className="text-center text-gray-500">Loading...</div>
+            ) : interestedEvents.length === 0 ? (
+              <div className="text-center text-gray-400">No interested events</div>
+            ) : (
+              <EventList events={interestedEvents} showEditButton={false} />
+            )}
+          </div>
+        </>
       )}
     </div>
   );
