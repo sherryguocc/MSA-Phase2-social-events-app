@@ -11,7 +11,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:5256',
+        target: 'https://sociallink-backend-ujwt.onrender.com/',
         changeOrigin: true,
         secure: false
       }
