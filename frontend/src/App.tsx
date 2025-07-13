@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
@@ -10,7 +10,7 @@ import EditEventPage from './pages/EditEventPage';
 import EventDetailPage from './pages/EventDetailPage';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from './store';
-import { clearToken, loginSuccess } from './store/userSlice';
+import { clearToken } from './store/userSlice';
 
 function AppContent() {
   const dispatch = useDispatch();
@@ -22,7 +22,6 @@ function AppContent() {
     dispatch(clearToken());
     navigate("/");
   };
-  console.log('reduxUser:', reduxUser);
   return (
     <>
       {/* Navigation Bar: always show logo and title, right侧内容根据登录状态切换 */}
