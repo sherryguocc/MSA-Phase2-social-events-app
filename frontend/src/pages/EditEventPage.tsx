@@ -45,7 +45,6 @@ useEffect(() => {
     return;
   }
   if (!user) {
-    // 等待 userInfo 加载，不跳转
     return;
   }
   apiGet(`/event/dto`, { headers: { Authorization: `Bearer ${token}` } })

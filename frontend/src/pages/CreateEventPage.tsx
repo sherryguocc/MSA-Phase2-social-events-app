@@ -46,14 +46,7 @@ const CreateEventPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow relative">
-      <div className="absolute right-0 top-0 flex gap-2">
-        <button className="btn btn-outline btn-sm" onClick={() => navigate('/')}>Home</button>
-        <button className="btn btn-outline btn-sm" onClick={() => {
-          localStorage.removeItem('token');
-          window.location.reload();
-        }}>Logout</button>
-      </div>
+    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
       <h2 className="text-2xl font-bold mb-4">Create Event</h2>
       <form onSubmit={handleSubmit}>
         <input
