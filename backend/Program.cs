@@ -10,17 +10,31 @@ var builder = WebApplication.CreateBuilder(args);
 Console.WriteLine("EF is using: " + builder.Configuration.GetConnectionString("DefaultConnection"));
 Console.WriteLine("Using DB: " + builder.Configuration.GetConnectionString("DefaultConnection"));
 
+// Configure database based on environment
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        sqlOptions =>
-        {
-            sqlOptions.EnableRetryOnFailure(
-                maxRetryCount: 5,
-                maxRetryDelay: TimeSpan.FromSeconds(10),
-                errorNumbersToAdd: null
-            );
-        }));
+{
+    if (builder.Environment.IsDevelopment())
+    {
+        // Use SQLite for development environment
+        options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+        Console.WriteLine("Using SQLite for Development");
+    }
+    else
+    {
+        // Use SQL Server for production environment (connection string from Render environment variables)
+        options.UseSqlServer(
+            builder.Configuration.GetConnectionString("DefaultConnection"),
+            sqlOptions =>
+            {
+                sqlOptions.EnableRetryOnFailure(
+                    maxRetryCount: 5,
+                    maxRetryDelay: TimeSpan.FromSeconds(10),
+                    errorNumbersToAdd: null
+                );
+            });
+        Console.WriteLine("Using SQL Server for Production");
+    }
+});
 
 // Configure JWT authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -86,7 +100,7 @@ var connStr = builder.Configuration.GetConnectionString("DefaultConnection") ?? 
 
 var app = builder.Build();
 
-// data migration after the app is built
+// Apply database migrations after the app is built
 // This ensures that the database is created and migrations are applied before the app starts serving requests.
 using (var scope = app.Services.CreateScope())
 {
@@ -104,7 +118,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
-app.UseCors(); // CORS 放在认证和授权之间
+app.UseCors(); // CORS placed between authentication and authorization
 app.UseAuthorization();
 
 app.MapControllers();

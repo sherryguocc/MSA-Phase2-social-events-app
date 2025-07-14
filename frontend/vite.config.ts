@@ -3,18 +3,17 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
-export default defineConfig({
-  plugins: [
-    react(),
-    tailwindcss()
-  ],
+export default defineConfig(({ mode }) => ({
+  plugins: [react(), tailwindcss()],
   server: {
     proxy: {
       '/api': {
-        target: 'https://sociallink-backend-ujwt.onrender.com/',
+        target: mode === 'production' 
+          ? 'https://sociallink-backend-ujwt.onrender.com/' 
+          : 'http://localhost:5000',
         changeOrigin: true,
         secure: false
       }
     }
   }
-})
+}))
