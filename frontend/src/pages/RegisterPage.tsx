@@ -7,9 +7,10 @@ const RegisterPage: React.FC = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  // 密码强度检测函数
+  // Password strength detection function
   const getPasswordStrength = (password: string) => {
     let strength = 0;
     const hasLetters = /[a-zA-Z]/.test(password);
@@ -28,7 +29,7 @@ const RegisterPage: React.FC = () => {
 
   const passwordStrength = getPasswordStrength(password);
   const passwordsMatch = password === confirmPassword;
-  const isFormValid = username.trim() && password && confirmPassword && passwordsMatch;
+  const isFormValid = username.trim() && password && confirmPassword && passwordsMatch && !isLoading;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,12 +40,15 @@ const RegisterPage: React.FC = () => {
       return;
     }
     
+    setIsLoading(true);
     try {
       await apiPost("/api/auth/register", { username, password });
       alert("Registration successful! Please login.");
       navigate("/login");
     } catch (err) {
       setError("Network error");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -70,12 +74,12 @@ const RegisterPage: React.FC = () => {
             required
           />
           <div className="text-sm text-gray-600 mt-1">
-            建议字母+数字+特殊符号二选一
+            Recommended: letters + numbers + special characters (choose at least two)
           </div>
           {password && (
             <div className="mt-2">
               <div className="text-sm">
-                密码强度: 
+                Password strength: 
                 <span className={`ml-1 font-medium ${
                   passwordStrength === 'weak' ? 'text-red-500' :
                   passwordStrength === 'medium' ? 'text-yellow-500' :
@@ -100,12 +104,21 @@ const RegisterPage: React.FC = () => {
           <div className="text-red-500 text-sm mb-2">Passwords do not match</div>
         )}
         {error && <div className="text-red-500 mb-2">{error}</div>}
+        {isLoading && (
+          <div className="text-blue-500 text-sm mb-2 flex items-center">
+            <svg className="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Creating account, please wait...
+          </div>
+        )}
         <button 
           className={`btn w-full ${isFormValid ? 'btn-primary' : 'btn-disabled'}`} 
           type="submit"
           disabled={!isFormValid}
         >
-          Register
+          {isLoading ? 'Creating Account...' : 'Register'}
         </button>
       </form>
     </div>

@@ -1,4 +1,5 @@
-const baseUrl = import.meta.env.VITE_API_BASE;
+// Use environment variable for API base URL, fallback to empty for local proxy
+const baseUrl = import.meta.env.VITE_API_BASE || "";
 
 export async function apiGet(path: string, options: RequestInit = {}) {
   const res = await fetch(`${baseUrl}${path}`, options);

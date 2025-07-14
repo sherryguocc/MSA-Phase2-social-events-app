@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => ({
       '/api': {
         target: mode === 'production' 
           ? 'https://sociallink-backend-ujwt.onrender.com/' 
-          : 'http://localhost:5000',
+          : 'http://localhost:5256',
         changeOrigin: true,
         secure: false
       }
