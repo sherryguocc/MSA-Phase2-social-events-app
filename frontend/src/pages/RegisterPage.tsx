@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { setToken, loginSuccess } from '../store/userSlice';
 import { apiPost } from "../utils/apiClient";
 
 const RegisterPage: React.FC = () => {
@@ -9,6 +11,7 @@ const RegisterPage: React.FC = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // Password strength detection function
   const getPasswordStrength = (password: string) => {
@@ -42,11 +45,20 @@ const RegisterPage: React.FC = () => {
     
     setIsLoading(true);
     try {
+      // Register the user
       await apiPost("/api/auth/register", { username, password });
-      alert("Registration successful! Please login.");
-      navigate("/login");
+      
+      // Automatically login after successful registration
+      const loginData = await apiPost("/api/auth/login", { username, password });
+      
+      // Store token and user info in Redux
+      dispatch(setToken(loginData.token));
+      dispatch(loginSuccess(loginData.user));
+      
+      alert("Registration successful! Welcome!");
+      navigate("/");
     } catch (err) {
-      setError("Network error");
+      setError("Registration failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
