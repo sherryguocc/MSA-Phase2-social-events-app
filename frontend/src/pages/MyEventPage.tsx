@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store";
 import { useNavigate } from "react-router-dom";
-import EventList from "../components/EventList";
+import HorizontalEventList from "../components/HorizontalEventList";
 import { apiGet, apiPost } from "../utils/apiClient";
 
 interface EventItem {
@@ -38,7 +38,6 @@ const MyEventPage: React.FC = () => {
   const [joinedEvents, setJoinedEvents] = useState<EventItem[]>([]);
   const [interestedEvents, setInterestedEvents] = useState<EventItem[]>([]);
   const [waitlistEvents, setWaitlistEvents] = useState<EventItem[]>([]);
-  const [loading, setLoading] = useState(true);
   // const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -57,7 +56,7 @@ const MyEventPage: React.FC = () => {
     // Fetch events created by me
     apiGet(`/api/event/by-user/${user.id}`, { headers: { Authorization: `Bearer ${token}` } })
       .then(async data => {
-        // 批量获取 joinedCount
+        // Batch fetch joinedCount
         const ids = data.map((e: any) => e.id);
         let joinedCounts: Record<number, number> = {};
         if (ids.length > 0) {
@@ -65,8 +64,7 @@ const MyEventPage: React.FC = () => {
         }
         setMyEvents(data.map((e: any) => ({ ...e, joinedCount: joinedCounts[e.id] ?? 0 })));
       })
-      .catch(() => {})
-      .finally(() => setLoading(false));
+      .catch(() => {});
   }, [token, user, navigate]);
 
   // Fetch joined, interested, and waitlist events
@@ -115,37 +113,78 @@ const MyEventPage: React.FC = () => {
   };
 
   if (!token) return null;
-  if (!user) return <div>Loading user info...</div>;
+  if (!user) return <div className="text-center p-4">Loading user info...</div>;
 
   return (
-    <div className="max-w-3xl mx-auto mt-10">
-      <h2 className="text-3xl font-bold mb-4">My Events</h2>
-      <div className="flex gap-2 mb-6 sticky top-0 bg-base-200 z-10 p-2 rounded shadow">
-        <button className="btn btn-sm btn-outline" onClick={() => scrollToSection('created')}>Created</button>
-        <button className="btn btn-sm btn-outline" onClick={() => scrollToSection('joined')}>Joined</button>
-        <button className="btn btn-sm btn-outline" onClick={() => scrollToSection('interested')}>Interested</button>
-        <button className="btn btn-sm btn-outline" onClick={() => scrollToSection('waitlist')}>Waitlist</button>
+    <div className="max-w-7xl mx-auto mt-4 sm:mt-10 px-2 sm:px-4">
+      {/* Header */}
+      <div className="mb-6 sm:mb-8">
+        <h2 className="text-2xl sm:text-4xl font-bold text-gray-800 mb-2 text-center sm:text-left">My Events Dashboard</h2>
+        <p className="text-sm sm:text-base text-gray-600 text-center sm:text-left">Manage and view all your events in one place</p>
       </div>
-      <section id="created">
-        <h3 className="text-xl font-bold mb-2">Created Events</h3>
-        <EventList events={myEvents} showEditButton={true} />
-        {(!loading && myEvents.length === 0) && <div className="col-span-2 text-gray-500">No events created yet.</div>}
-      </section>
-      <section id="joined" className="mt-10">
-        <h3 className="text-xl font-bold mb-2">Joined Events</h3>
-        <EventList events={joinedEvents} showEditButton={false} />
-        {(!loading && joinedEvents.length === 0) && <div className="col-span-2 text-gray-500">No joined events.</div>}
-      </section>
-      <section id="interested" className="mt-10">
-        <h3 className="text-xl font-bold mb-2">Interested Events</h3>
-        <EventList events={interestedEvents} showEditButton={false} />
-        {(!loading && interestedEvents.length === 0) && <div className="col-span-2 text-gray-500">No interested events.</div>}
-      </section>
-      <section id="waitlist" className="mt-10">
-        <h3 className="text-xl font-bold mb-2">Events I have been in the waitlist</h3>
-        <EventList events={waitlistEvents} showEditButton={false} />
-        {(!loading && waitlistEvents.length === 0) && <div className="col-span-2 text-gray-500">Not in any event waitlist.</div>}
-      </section>
+      
+      {/* Navigation Pills */}
+      <div className="flex flex-wrap gap-2 sm:gap-3 mb-6 sm:mb-8 p-3 sm:p-4 bg-white rounded-xl shadow-sm border border-gray-200">
+        <button 
+          className="px-3 sm:px-4 py-2 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition-colors font-medium text-sm sm:text-base"
+          onClick={() => scrollToSection('created')}
+        >
+          📝 Created ({myEvents.length})
+        </button>
+        <button 
+          className="px-3 sm:px-4 py-2 bg-green-100 text-green-800 rounded-lg hover:bg-green-200 transition-colors font-medium text-sm sm:text-base"
+          onClick={() => scrollToSection('joined')}
+        >
+          ✅ Joined ({joinedEvents.length})
+        </button>
+        <button 
+          className="px-3 sm:px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg hover:bg-yellow-200 transition-colors font-medium text-sm sm:text-base"
+          onClick={() => scrollToSection('interested')}
+        >
+          ⭐ Interested ({interestedEvents.length})
+        </button>
+        <button 
+          className="px-3 sm:px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors font-medium text-sm sm:text-base"
+          onClick={() => scrollToSection('waitlist')}
+        >
+          ⏳ Waitlist ({waitlistEvents.length})
+        </button>
+      </div>
+
+      {/* Events Sections */}
+      <div className="space-y-8 sm:space-y-12">
+        <section id="created" className="bg-white p-3 sm:p-6 rounded-xl shadow-sm border border-gray-200">
+          <HorizontalEventList 
+            events={myEvents} 
+            showEditButton={true} 
+            title="📝 Created Events"
+          />
+        </section>
+
+        <section id="joined" className="bg-white p-3 sm:p-6 rounded-xl shadow-sm border border-gray-200">
+          <HorizontalEventList 
+            events={joinedEvents} 
+            showEditButton={false} 
+            title="✅ Joined Events"
+          />
+        </section>
+
+        <section id="interested" className="bg-white p-3 sm:p-6 rounded-xl shadow-sm border border-gray-200">
+          <HorizontalEventList 
+            events={interestedEvents} 
+            showEditButton={false} 
+            title="⭐ Interested Events"
+          />
+        </section>
+
+        <section id="waitlist" className="bg-white p-3 sm:p-6 rounded-xl shadow-sm border border-gray-200">
+          <HorizontalEventList 
+            events={waitlistEvents} 
+            showEditButton={false} 
+            title="⏳ Waitlist Events"
+          />
+        </section>
+      </div>
     </div>
   );
 };

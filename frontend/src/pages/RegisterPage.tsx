@@ -32,7 +32,8 @@ const RegisterPage: React.FC = () => {
 
   const passwordStrength = getPasswordStrength(password);
   const passwordsMatch = password === confirmPassword;
-  const isFormValid = username.trim() && password && confirmPassword && passwordsMatch && !isLoading;
+  const isPasswordStrong = passwordStrength === "medium" || passwordStrength === "strong";
+  const isFormValid = username.trim() && password && confirmPassword && passwordsMatch && isPasswordStrong && !isLoading;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,6 +41,11 @@ const RegisterPage: React.FC = () => {
     
     if (!passwordsMatch) {
       setError("Passwords do not match");
+      return;
+    }
+    
+    if (!isPasswordStrong) {
+      setError("Password must be at least medium strength (use letters + numbers or letters + special characters)");
       return;
     }
     
@@ -86,7 +92,7 @@ const RegisterPage: React.FC = () => {
             required
           />
           <div className="text-sm text-gray-600 mt-1">
-            Recommended: letters + numbers + special characters (choose at least two)
+            Password must be at least medium strength: use letters + numbers or letters + special characters
           </div>
           {password && (
             <div className="mt-2">
@@ -97,8 +103,8 @@ const RegisterPage: React.FC = () => {
                   passwordStrength === 'medium' ? 'text-yellow-500' :
                   'text-green-500'
                 }`}>
-                  {passwordStrength === 'weak' ? 'Weak' :
-                   passwordStrength === 'medium' ? 'Medium' : 'Strong'}
+                  {passwordStrength === 'weak' ? 'Weak (Not allowed)' :
+                   passwordStrength === 'medium' ? 'Medium (Good)' : 'Strong (Excellent)'}
                 </span>
               </div>
             </div>

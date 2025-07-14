@@ -15,7 +15,7 @@ const UserLink: React.FC<UserLinkProps> = ({ id, username, name, avatarUrl, clas
   if (typeof name === 'string' && name.replace(/\s/g, '') !== '') {
     displayName = name;
   }
-  // 调试：输出传入的 name、username、最终显示名
+  // Debug: output passed name, username, and final display name
   // eslint-disable-next-line no-console
   console.log({ name, username, displayName });
   return (

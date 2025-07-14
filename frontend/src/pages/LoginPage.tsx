@@ -8,12 +8,14 @@ const LoginPage: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
     try {
       const data = await apiPost("/api/auth/login", { username, password });
       dispatch(setToken(data.token));
@@ -21,6 +23,8 @@ const LoginPage: React.FC = () => {
       navigate("/");
     } catch (err: any) {
       setError(err.message || "Login failed");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -45,7 +49,22 @@ const LoginPage: React.FC = () => {
           required
         />
         {error && <div className="text-red-500 mb-2">{error}</div>}
-        <button className="btn btn-primary w-full" type="submit">Login</button>
+        {isLoading && (
+          <div className="text-blue-500 text-sm mb-2 flex items-center">
+            <svg className="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Logging in, please wait...
+          </div>
+        )}
+        <button 
+          className={`btn w-full ${isLoading ? 'btn-disabled' : 'btn-primary'}`} 
+          type="submit"
+          disabled={isLoading}
+        >
+          {isLoading ? 'Logging In...' : 'Login'}
+        </button>
       </form>
     </div>
   );

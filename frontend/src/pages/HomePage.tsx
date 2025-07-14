@@ -69,16 +69,18 @@ const HomePage: React.FC = () => {
 
 
   return (
-    <div className="w-full max-w-7xl mx-auto mt-10 relative px-4">
-      <h2 className="text-3xl font-bold mb-6">All Events</h2>
-      <div className="mb-4 flex gap-2 items-center">
-        <span className="font-semibold">Sort by:</span>
-        <button className={`btn btn-xs ${sortType === 'time' ? 'btn-primary' : 'btn-outline'}`} onClick={() => setSortType('time')}>Time</button>
-        <button className={`btn btn-xs ${sortType === 'name' ? 'btn-primary' : 'btn-outline'}`} onClick={() => setSortType('name')}>Name</button>
-        <button className={`btn btn-xs ${sortType === 'maxAttendees' ? 'btn-primary' : 'btn-outline'}`} onClick={() => setSortType('maxAttendees')}>Max Attendees</button>
+    <div className="w-full max-w-7xl mx-auto mt-4 sm:mt-10 relative px-2 sm:px-4">
+      <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center sm:text-left">All Events</h2>
+      <div className="mb-4 flex flex-col sm:flex-row gap-2 items-start sm:items-center">
+        <span className="font-semibold text-sm sm:text-base">Sort by:</span>
+        <div className="flex gap-1 sm:gap-2 flex-wrap">
+          <button className={`btn btn-xs sm:btn-sm text-xs sm:text-sm ${sortType === 'time' ? 'btn-primary' : 'btn-outline'}`} onClick={() => setSortType('time')}>Time</button>
+          <button className={`btn btn-xs sm:btn-sm text-xs sm:text-sm ${sortType === 'name' ? 'btn-primary' : 'btn-outline'}`} onClick={() => setSortType('name')}>Name</button>
+          <button className={`btn btn-xs sm:btn-sm text-xs sm:text-sm ${sortType === 'maxAttendees' ? 'btn-primary' : 'btn-outline'}`} onClick={() => setSortType('maxAttendees')}>Max Attendees</button>
+        </div>
       </div>
-      {loading && <div>Loading...</div>}
-      {error && <div className="text-red-500">{error}</div>}
+      {loading && <div className="text-center text-sm sm:text-base">Loading...</div>}
+      {error && <div className="text-red-500 text-center text-sm sm:text-base">{error}</div>}
       <EventList events={sortedEvents} showEditButton={true} />
     </div>
   );

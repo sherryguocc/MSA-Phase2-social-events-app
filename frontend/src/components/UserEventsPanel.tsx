@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import EventList from "./EventList";
+import HorizontalEventList from "./HorizontalEventList";
 import { apiGet, apiPost } from "../utils/apiClient";
 
 interface EventItem {
@@ -95,52 +95,56 @@ const UserEventsPanel: React.FC<UserEventsPanelProps> = ({ userId, username, nam
   const isOwn = String(userId) === String(currentUserId);
   const displayName = name && name.trim() !== '' ? name : username || "this user";
   return (
-    <>
-      <div className="mt-8">
-        <h3 className="text-2xl font-semibold mb-4">{isOwn ? "My Events" : `Events created by ${displayName}`}</h3>
-        {loading ? (
-          <div className="text-center text-gray-500">Loading...</div>
-        ) : error ? (
-          <div className="text-center text-red-500">{error}</div>
-        ) : myEvents.length === 0 ? (
-          <div className="text-center text-gray-400">No events</div>
-        ) : (
-          <EventList events={myEvents} showEditButton={false} />
+    <div className="space-y-8 sm:space-y-12">
+      <section className="bg-white p-3 sm:p-6 rounded-xl shadow-sm border border-gray-200">
+        <HorizontalEventList 
+          events={myEvents} 
+          showEditButton={false} 
+          title={`📝 ${isOwn ? "My Events" : `Events created by ${displayName}`}`}
+        />
+        {loading && (
+          <div className="text-center text-gray-500 py-8">Loading...</div>
         )}
-      </div>
-      <div className="mt-8">
-        <h3 className="text-2xl font-semibold mb-4">{isOwn ? "Events I Joined" : `Events joined by ${displayName}`}</h3>
-        {loading ? (
-          <div className="text-center text-gray-500">Loading...</div>
-        ) : joinedEvents.length === 0 ? (
-          <div className="text-center text-gray-400">No joined events</div>
-        ) : (
-          <EventList events={joinedEvents} showEditButton={false} />
+        {error && (
+          <div className="text-center text-red-500 py-8">{error}</div>
         )}
-      </div>
-      <div className="mt-8">
-        <h3 className="text-2xl font-semibold mb-4">{isOwn ? "Events I'm Interested In" : `Events interested by ${displayName}`}</h3>
-        {loading ? (
-          <div className="text-center text-gray-500">Loading...</div>
-        ) : interestedEvents.length === 0 ? (
-          <div className="text-center text-gray-400">No interested events</div>
-        ) : (
-          <EventList events={interestedEvents} showEditButton={false} />
+      </section>
+
+      <section className="bg-white p-3 sm:p-6 rounded-xl shadow-sm border border-gray-200">
+        <HorizontalEventList 
+          events={joinedEvents} 
+          showEditButton={false} 
+          title={`✅ ${isOwn ? "Events I Joined" : `Events joined by ${displayName}`}`}
+        />
+        {loading && (
+          <div className="text-center text-gray-500 py-8">Loading...</div>
         )}
-      </div>
+      </section>
+
+      <section className="bg-white p-3 sm:p-6 rounded-xl shadow-sm border border-gray-200">
+        <HorizontalEventList 
+          events={interestedEvents} 
+          showEditButton={false} 
+          title={`⭐ ${isOwn ? "Events I'm Interested In" : `Events interested by ${displayName}`}`}
+        />
+        {loading && (
+          <div className="text-center text-gray-500 py-8">Loading...</div>
+        )}
+      </section>
+
       {isOwn && (
-        <div className="mt-8">
-          <h3 className="text-2xl font-semibold mb-4">Events I'm on the Waitlist</h3>
-          {loading ? (
-            <div className="text-center text-gray-500">Loading...</div>
-          ) : waitlistEvents.length === 0 ? (
-            <div className="text-center text-gray-400">No waitlist events</div>
-          ) : (
-            <EventList events={waitlistEvents} showEditButton={false} />
+        <section className="bg-white p-3 sm:p-6 rounded-xl shadow-sm border border-gray-200">
+          <HorizontalEventList 
+            events={waitlistEvents} 
+            showEditButton={false} 
+            title="⏳ Events I'm on the Waitlist"
+          />
+          {loading && (
+            <div className="text-center text-gray-500 py-8">Loading...</div>
           )}
-        </div>
+        </section>
       )}
-    </>
+    </div>
   );
 };
 
