@@ -67,7 +67,7 @@ const ProfilePage: React.FC = () => {
       {error && <div className="text-red-500 text-center mb-4">{error}</div>}
       <div className="max-w-7xl w-full mx-auto mt-4 sm:mt-10 space-y-6">
         {/* Profile Card - More responsive width */}
-        <div className="max-w-2xl lg:max-w-4xl xl:max-w-5xl mx-auto shadow-xl rounded-2xl bg-white/80 backdrop-blur-md border border-blue-100 p-4 sm:p-6 lg:p-8">
+        <div className="min-w-[300px] lg:min-w-[500px] max-w-2xl lg:max-w-4xl xl:max-w-5xl mx-auto shadow-xl rounded-2xl bg-white/80 backdrop-blur-md border border-blue-100 p-4 sm:p-6 lg:p-8">
           <h2 className="text-2xl sm:text-4xl font-extrabold mb-4 sm:mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-pink-400 drop-shadow-lg text-center">
             {isOwnProfile ? "My Profile" 
             : `${(user?.name && user.name.trim() !== "") ? user.name : user?.username || "User"}'s Profile`}</h2>
