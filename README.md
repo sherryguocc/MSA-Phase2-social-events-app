@@ -1,6 +1,4 @@
-# 🌐 SocialLink - A Social Event Networking App
-
-> Built for MSA Phase 2 | Software Stream  
+# 🌐 SocialLink - A Social Event Networking App# MSA Phase 2 | Software Stream  
 > By: Sherry Guo 
 > GitHub Repo: https://github.com/sherryguocc/MSA-Phase2-social-events-app
 
@@ -16,8 +14,10 @@ This project aligns with the **2025 MSA Phase 2 Theme: Networking**, by fosterin
 
 ## 🚀 Live Demo
 
-- 🔗 **Frontend**: [https://TBD](https://TBD.com)
-- 🔗 **Backend API**: [https://TBD.com](https://TBD.com)
+- 🔗 **Frontend**: [https://sociallink-frontend.onrender.com/](https://sociallink-frontend.onrender.com/)
+- 🔗 **Backend API**: Deployed on Render (connected automatically)
+
+> ⚠️ **Note for Evaluators**: This project is deployed on Render's free tier. If the website hasn't been accessed for a while, the initial startup may take 3-10 seconds to load. Please be patient during the first visit as the server needs to wake up from sleep mode.
 
 ---
 
@@ -25,11 +25,11 @@ This project aligns with the **2025 MSA Phase 2 Theme: Networking**, by fosterin
 
 | Layer      | Technology                        |
 |------------|-----------------------------------|
-| Frontend   | React + Redux Toolkit + Tailwind CSS |
+| Frontend   | React + Redux Toolkit + Tailwind CSS + DaisyUI |
 | Backend    | ASP.NET Core (.NET 8) + EF Core    |
 | Database   | SQLite (Development), Azure SQL (Production) |
 | Auth       | JWT Authentication                |
-| Deployment | Render (Frontend & Backend)       |
+| Deployment | Render (Frontend & Backend) - Live at https://sociallink-frontend.onrender.com/ |
 
 ---
 
@@ -45,12 +45,19 @@ This project aligns with the **2025 MSA Phase 2 Theme: Networking**, by fosterin
 
 ## 📦 Features Summary
 
-- 👥 User registration & login with JWT
-- 📝 Create event posts (title, description, location, time, min/max attendees)
-- 📋 View all events and details
-- 🔁 Mark as “Interested” or “Going”
-- 💬 Comment on events
-- 📄 Responsive UI with theme toggle
+
+- 👥 **User Management**: Registration & login with JWT authentication
+- 📝 **Event Creation**: Create detailed event posts (title, description, location, time, min/max attendees)
+- 📋 **Event Discovery**: View all events with sorting options and detailed event pages
+- 🔁 **Smart Participation**: Mark as "Interested" or "Joined" with intelligent waitlist management
+- 🎯 **Automatic Waitlist**: Users joining full events automatically enter waitlist queue
+- ⬆️ **Dynamic Promotion**: When joined users cancel, waitlist users automatically promoted in order
+- 💬 **Interactive Comments**: Threaded discussion system for event engagement
+- 🏷️ **Event Status Badges**: Visual indicators (Almost Full, Waitlist Only, Event Ended)
+- 👤 **Rich User Profiles**: Comprehensive profiles with avatars, bio, and social information
+- 📱 **Responsive Design**: Mobile-first UI with modern gradients and animations
+- 🎨 **Theme Toggle**: Dark/Light mode switching with persistent preferences
+- 🔄 **Real-time Updates**: Live participation counts and status changesilt for
 
 ---
 
@@ -97,15 +104,22 @@ project-root/
 ├── backend/
 │   ├── Controllers/
 │   ├── Models/
-│   ├── Data/
+│   ├── Data
+│   ├── DTOs
 │   ├── AppDbContext.cs
 │   ├── Program.cs
 │   └── Dockerfile
 │
 ├── frontend/
+│   ├── public/  # user Avatars and Site Logo
 │   ├── src/
-│   ├── components/
-│   ├── features/         # Redux slices
+│   │  ├── components/
+│   │  ├── utils/         # Redux slices
+│   │  ├── pages/
+│   │  ├── App.tsx
+│   │  ├── index.css
+│   │  ├── main.tsx
+│   │  ├── index.html
 │   ├── tailwind.config.js
 │   └── package.json
 ```
