@@ -32,8 +32,9 @@ const RegisterPage: React.FC = () => {
 
   const passwordStrength = getPasswordStrength(password);
   const passwordsMatch = password === confirmPassword;
+  const isPasswordLongEnough = password.length >= 8;
   const isPasswordStrong = passwordStrength === "medium" || passwordStrength === "strong";
-  const isFormValid = username.trim() && password && confirmPassword && passwordsMatch && isPasswordStrong && !isLoading;
+  const isFormValid = username.trim() && password && confirmPassword && passwordsMatch && isPasswordStrong && isPasswordLongEnough && !isLoading;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,6 +42,11 @@ const RegisterPage: React.FC = () => {
     
     if (!passwordsMatch) {
       setError("Passwords do not match");
+      return;
+    }
+    
+    if (!isPasswordLongEnough) {
+      setError("Password must be at least 8 characters long");
       return;
     }
     
@@ -63,8 +69,27 @@ const RegisterPage: React.FC = () => {
       
       alert("Registration successful! Welcome!");
       navigate("/");
-    } catch (err) {
-      setError("Registration failed. Please try again.");
+    } catch (err: any) {
+      // Enhanced error handling
+      let errorMessage = "Registration failed. Please try again.";
+      
+      if (err.response) {
+        // Check if the backend provided a specific error message
+        if (err.response.data && err.response.data.message) {
+          errorMessage = err.response.data.message;
+        } else if (err.response.status === 409) {
+          // HTTP 409 Conflict - usually means username already exists
+          errorMessage = "Username already exists. Please choose a different one.";
+        } else if (err.response.status === 400) {
+          // HTTP 400 Bad Request
+          errorMessage = "Invalid registration data. Please check your input.";
+        }
+      } else if (err.message) {
+        // Network or other errors
+        errorMessage = err.message;
+      }
+      
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -92,10 +117,18 @@ const RegisterPage: React.FC = () => {
             required
           />
           <div className="text-sm text-gray-600 mt-1">
-            Password must be at least medium strength: use letters + numbers or letters + special characters
+            Password must be at least 8 characters long and medium strength: use letters + numbers or letters + special characters
           </div>
           {password && (
             <div className="mt-2">
+              <div className="text-sm">
+                Password length: 
+                <span className={`ml-1 font-medium ${
+                  password.length >= 8 ? 'text-green-500' : 'text-red-500'
+                }`}>
+                  {password.length}/8 characters {password.length >= 8 ? '✓' : '(minimum required)'}
+                </span>
+              </div>
               <div className="text-sm">
                 Password strength: 
                 <span className={`ml-1 font-medium ${

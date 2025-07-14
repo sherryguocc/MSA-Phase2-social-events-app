@@ -97,7 +97,7 @@ const EventDetailPage: React.FC = () => {
 
   return (
     <>
-      <div className="max-w-4xl mx-auto mt-4 sm:mt-8 p-4 sm:p-6 lg:p-8 bg-white rounded-xl sm:rounded-2xl shadow-lg">
+      <div className="max-w-4xl mx-4 sm:mx-auto mt-4 sm:mt-8 p-4 sm:p-6 lg:p-8 bg-white rounded-xl sm:rounded-2xl shadow-lg">
         {/* Header Section */}
         <div className="relative mb-6 sm:mb-8">
           <div className="flex items-start justify-between mb-4">
@@ -128,7 +128,7 @@ const EventDetailPage: React.FC = () => {
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid lg:grid-cols-3 gap-6 lg:gap-8 mb-6 sm:mb-8">
+        <div className="grid lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-6 sm:mb-8">
           {/* Left Column - Event Details */}
           <div className="lg:col-span-2 space-y-4 sm:space-y-6">
             {/* Description */}

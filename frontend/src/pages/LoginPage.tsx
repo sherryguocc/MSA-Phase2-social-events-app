@@ -22,7 +22,29 @@ const LoginPage: React.FC = () => {
       dispatch(loginSuccess(data.user));
       navigate("/");
     } catch (err: any) {
-      setError(err.message || "Login failed");
+      // Enhanced error handling
+      let errorMessage = "Login failed. Please try again.";
+      
+      if (err.response) {
+        // Check if the backend provided a specific error message
+        if (err.response.data && err.response.data.message) {
+          errorMessage = err.response.data.message;
+        } else if (err.response.status === 401) {
+          // HTTP 401 Unauthorized - usually means invalid credentials
+          errorMessage = "Invalid username or password. Please check your credentials.";
+        } else if (err.response.status === 404) {
+          // HTTP 404 Not Found - user doesn't exist
+          errorMessage = "Username not found. Please check your username or register first.";
+        } else if (err.response.status === 400) {
+          // HTTP 400 Bad Request
+          errorMessage = "Invalid login data. Please check your input.";
+        }
+      } else if (err.message) {
+        // Network or other errors
+        errorMessage = err.message;
+      }
+      
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
