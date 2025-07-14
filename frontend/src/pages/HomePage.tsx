@@ -45,6 +45,7 @@ const HomePage: React.FC = () => {
   
   // Filter state
   const [activeFilters, setActiveFilters] = useState<Set<string>>(new Set());
+  const [timeFilter, setTimeFilter] = useState<string>('');
 
   // Handle sort button clicks with toggle functionality
   const handleSortClick = (newSortType: 'time' | 'name' | 'maxAttendees' | 'location' | 'organizer') => {
@@ -67,6 +68,45 @@ const HomePage: React.FC = () => {
       newFilters.add(filterType);
     }
     setActiveFilters(newFilters);
+  };
+
+  // Time filter helper functions
+  const getTimeFilterDateRange = (filter: string) => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    
+    switch (filter) {
+      case 'this-week': {
+        const startOfWeek = new Date(today);
+        startOfWeek.setDate(today.getDate() - today.getDay());
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6);
+        endOfWeek.setHours(23, 59, 59, 999);
+        return { start: startOfWeek, end: endOfWeek };
+      }
+      case 'next-week': {
+        const startOfNextWeek = new Date(today);
+        startOfNextWeek.setDate(today.getDate() + (7 - today.getDay()));
+        const endOfNextWeek = new Date(startOfNextWeek);
+        endOfNextWeek.setDate(startOfNextWeek.getDate() + 6);
+        endOfNextWeek.setHours(23, 59, 59, 999);
+        return { start: startOfNextWeek, end: endOfNextWeek };
+      }
+      case 'this-month': {
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+        endOfMonth.setHours(23, 59, 59, 999);
+        return { start: startOfMonth, end: endOfMonth };
+      }
+      case 'next-month': {
+        const startOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+        const endOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 2, 0);
+        endOfNextMonth.setHours(23, 59, 59, 999);
+        return { start: startOfNextMonth, end: endOfNextMonth };
+      }
+      default:
+        return null;
+    }
   };
 
   useEffect(() => {
@@ -97,36 +137,54 @@ const HomePage: React.FC = () => {
       if (!matchesSearch) return false;
     }
 
-    // Active filters
+    // Time filter
+    if (timeFilter) {
+      const timeRange = getTimeFilterDateRange(timeFilter);
+      if (timeRange) {
+        const eventDate = new Date(event.eventTime);
+        if (eventDate < timeRange.start || eventDate > timeRange.end) {
+          return false;
+        }
+      }
+    }
+
+    // Active filters - ALL selected filters must be satisfied (AND logic)
     if (activeFilters.size > 0) {
       const joinedCount = event.joinedCount || 0;
+      const now = new Date();
+      const eventDate = new Date(event.eventTime);
       
-      // Check if event matches any of the active filters
-      let matchesFilter = false;
-      
-      if (activeFilters.has('available')) {
-        // Events with available spots
-        if (joinedCount < event.maxAttendees) {
-          matchesFilter = true;
+      // Check each active filter - all must be satisfied
+      for (const filter of activeFilters) {
+        if (filter === 'upcoming-only') {
+          // Events that are in the future
+          if (eventDate < now) {
+            return false;
+          }
+        }
+        
+        if (filter === 'available') {
+          // Events with available spots
+          if (joinedCount >= event.maxAttendees) {
+            return false;
+          }
+        }
+        
+        if (filter === 'minimum-reached') {
+          // Events that have reached minimum attendees
+          if (joinedCount < event.minAttendees) {
+            return false;
+          }
+        }
+        
+        if (filter === 'almost-full') {
+          // Events that are almost full (80% or more of max capacity)
+          const fillPercentage = joinedCount / event.maxAttendees;
+          if (fillPercentage < 0.8) {
+            return false;
+          }
         }
       }
-      
-      if (activeFilters.has('minimum-reached')) {
-        // Events that have reached minimum attendees
-        if (joinedCount >= event.minAttendees) {
-          matchesFilter = true;
-        }
-      }
-      
-      if (activeFilters.has('almost-full')) {
-        // Events that are almost full (80% or more of max capacity)
-        const fillPercentage = joinedCount / event.maxAttendees;
-        if (fillPercentage >= 0.8) {
-          matchesFilter = true;
-        }
-      }
-      
-      if (!matchesFilter) return false;
     }
 
     return true;
@@ -201,40 +259,134 @@ const HomePage: React.FC = () => {
       <div className="mb-4">
         <div className="flex flex-col sm:flex-row gap-2 items-start sm:items-center mb-2">
           <span className="font-semibold text-sm sm:text-base">Filters:</span>
+          
+          {/* Time Filter Dropdown */}
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <select 
+                className="select select-bordered select-xs sm:select-sm text-xs sm:text-sm max-w-xs 
+                         bg-gradient-to-r from-base-100 to-base-200 border-2 border-base-300 
+                         focus:border-primary focus:outline-none transition-all duration-300
+                         hover:border-primary/50 hover:shadow-md
+                         appearance-none cursor-pointer
+                         pr-8 pl-3"
+                value={timeFilter}
+                onChange={(e) => setTimeFilter(e.target.value)}
+              >
+                <option value="">All Time</option>
+                <option value="this-week">This Week</option>
+                <option value="next-week">Next Week</option>
+                <option value="this-month">This Month</option>
+                <option value="next-month">Next Month</option>
+              </select>
+              {/* Custom dropdown arrow */}
+              <div className="absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                <svg className="w-3 h-3 text-base-content/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
+            
+            {timeFilter && (
+              <button
+                onClick={() => setTimeFilter('')}
+                className="btn btn-ghost btn-xs text-xs text-base-content/60 hover:text-base-content 
+                          hover:bg-base-200 rounded-full w-6 h-6 p-0 flex items-center justify-center
+                          transition-all duration-200 hover:scale-110"
+                title="Clear time filter"
+              >
+                ✕
+              </button>
+            )}
+          </div>
+          
+          {/* Status Filters */}
           <div className="flex gap-1 sm:gap-2 flex-wrap">
             <button 
-              className={`btn btn-xs sm:btn-sm text-xs sm:text-sm ${activeFilters.has('available') ? 'btn-success' : 'btn-outline'}`}
+              className={`btn btn-xs sm:btn-sm text-xs sm:text-sm transition-all duration-200 ${
+                activeFilters.has('upcoming-only') 
+                  ? '!bg-purple-500 !text-white !border-purple-400 shadow-lg shadow-purple-200 hover:!bg-purple-600' 
+                  : 'btn-outline btn-accent hover:btn-accent'
+              }`}
+              onClick={() => toggleFilter('upcoming-only')}
+            >
+              Upcoming {activeFilters.has('upcoming-only') && <span className="ml-1 font-bold">✓</span>}
+            </button>
+            <button 
+              className={`btn btn-xs sm:btn-sm text-xs sm:text-sm transition-all duration-200 ${
+                activeFilters.has('available') 
+                  ? '!bg-green-500 !text-white !border-green-400 shadow-lg shadow-green-200 hover:!bg-green-600' 
+                  : 'btn-outline btn-success hover:btn-success'
+              }`}
               onClick={() => toggleFilter('available')}
             >
-              🟢 Available Spots
+              🟢 Available {activeFilters.has('available') && <span className="ml-1 font-bold">✓</span>}
             </button>
             <button 
-              className={`btn btn-xs sm:btn-sm text-xs sm:text-sm ${activeFilters.has('minimum-reached') ? 'btn-info' : 'btn-outline'}`}
+              className={`btn btn-xs sm:btn-sm text-xs sm:text-sm transition-all duration-200 ${
+                activeFilters.has('minimum-reached') 
+                  ? '!bg-blue-500 !text-white !border-blue-400 shadow-lg shadow-blue-200 hover:!bg-blue-600' 
+                  : 'btn-outline btn-info hover:btn-info'
+              }`}
               onClick={() => toggleFilter('minimum-reached')}
             >
-              ✅ Min. Reached
+              ✅ Confirmed {activeFilters.has('minimum-reached') && <span className="ml-1 font-bold">✓</span>}
             </button>
             <button 
-              className={`btn btn-xs sm:btn-sm text-xs sm:text-sm ${activeFilters.has('almost-full') ? 'btn-warning' : 'btn-outline'}`}
+              className={`btn btn-xs sm:btn-sm text-xs sm:text-sm transition-all duration-200 ${
+                activeFilters.has('almost-full') 
+                  ? '!bg-orange-500 !text-white !border-orange-400 shadow-lg shadow-orange-200 hover:!bg-orange-600' 
+                  : 'btn-outline btn-warning hover:btn-warning'
+              }`}
               onClick={() => toggleFilter('almost-full')}
             >
-              🔥 Almost Full
+              🔥 Almost Full {activeFilters.has('almost-full') && <span className="ml-1 font-bold">✓</span>}
             </button>
           </div>
         </div>
-        {activeFilters.size > 0 && (
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-base-content/70">
-              {filteredEvents.length} event{filteredEvents.length !== 1 ? 's' : ''} match your filters
-            </span>
-            <button 
-              onClick={() => setActiveFilters(new Set())}
-              className="btn btn-ghost btn-xs text-xs text-base-content/60 hover:text-base-content"
-            >
-              Clear all filters
-            </button>
-          </div>
-        )}
+        {/* Fixed space for filter results - always present to prevent layout shift */}
+        <div className="h-6 flex items-center gap-2">
+          {(activeFilters.size > 0 || timeFilter) && (
+            <>
+              <span className="text-xs text-base-content/70">
+                {filteredEvents.length} event{filteredEvents.length !== 1 ? 's' : ''} match 
+                {timeFilter && (
+                  <span className="font-semibold ml-1">
+                    {timeFilter === 'this-week' && 'This Week'}
+                    {timeFilter === 'next-week' && 'Next Week'}
+                    {timeFilter === 'this-month' && 'This Month'}
+                    {timeFilter === 'next-month' && 'Next Month'}
+                  </span>
+                )}
+                {timeFilter && activeFilters.size > 0 && ' + '}
+                {activeFilters.size > 0 && (
+                  <span className="font-semibold">
+                    {Array.from(activeFilters).map(filter => {
+                      const filterNames = {
+                        'upcoming-only': 'Upcoming',
+                        'available': 'Available',
+                        'minimum-reached': 'Confirmed', 
+                        'almost-full': 'Almost Full'
+                      };
+                      return filterNames[filter as keyof typeof filterNames];
+                    }).join(' + ')}
+                  </span>
+                )}
+                {activeFilters.size > 1 && ' filters'}
+                {activeFilters.size === 1 && ' filter'}
+              </span>
+              <button 
+                onClick={() => {
+                  setActiveFilters(new Set());
+                  setTimeFilter('');
+                }}
+                className="btn btn-ghost btn-xs text-xs text-base-content/60 hover:text-base-content hover:bg-base-200 transition-colors"
+              >
+                Clear all
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Sort Controls */}

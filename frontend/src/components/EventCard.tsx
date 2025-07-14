@@ -72,7 +72,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, showEditButton = true }) =
              event.joinedCount < event.maxAttendees &&
              (event.maxAttendees - event.joinedCount) > 2 && (
               <div className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-green-500 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-semibold shadow-md">
-                Confirmed
+                Confirmed to run
               </div>
             )}
           </>
@@ -95,7 +95,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, showEditButton = true }) =
         
         {/* Description */}
         <div className="mb-4 sm:mb-6">
-          <p className="text-sm sm:text-base text-gray-600 leading-relaxed line-clamp-3 break-words whitespace-pre-line">
+          <p className="text-sm sm:text-base text-gray-600 leading-relaxed break-words whitespace-pre-line h-[4.5rem] sm:h-[4.8rem] overflow-hidden">
             {event.description}
           </p>
         </div>

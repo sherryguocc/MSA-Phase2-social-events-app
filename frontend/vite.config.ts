@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+// @ts-ignore - Ignore if @tailwindcss/vite is not available on this system
 import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
