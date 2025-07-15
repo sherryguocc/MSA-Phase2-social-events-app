@@ -290,11 +290,11 @@ const EventForm: React.FC<EventFormProps> = ({
             <button
               type="submit"
               disabled={isLoading}
-              className="btn btn-primary flex-1 text-sm sm:text-base font-semibold bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 border-0 shadow-lg hover:shadow-xl transition-all duration-200"
+              className="flex-1 py-3 px-4 text-sm sm:text-base font-semibold !text-white !bg-gradient-to-r !from-blue-500 !to-purple-600 hover:!from-blue-600 hover:!to-purple-700 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 !border-0"
             >
               {isLoading ? (
                 <>
-                  <span className="loading loading-spinner loading-sm"></span>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                   Processing...
                 </>
               ) : (
@@ -306,7 +306,7 @@ const EventForm: React.FC<EventFormProps> = ({
                 type="button"
                 onClick={onCancel}
                 disabled={isLoading}
-                className="btn btn-outline flex-1 text-sm sm:text-base font-semibold border-gray-300 hover:border-gray-400 hover:bg-gray-50 transition-all duration-200"
+                className="flex-1 py-3 px-4 text-sm sm:text-base font-semibold !text-gray-700 !bg-white !border-2 !border-gray-300 hover:!border-gray-400 hover:!bg-gray-50 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Cancel
               </button>

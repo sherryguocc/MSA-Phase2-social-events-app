@@ -10,4 +10,14 @@ export default {
     extend: {},
   },
   plugins: [daisyui],
+  daisyui: {
+    themes: [
+      "light",      // Light theme
+      "dark",       // Dark theme
+    ],
+    darkTheme: "dark", // Default dark theme
+    base: true,
+    styled: true,
+    utils: true,
+  },
 }

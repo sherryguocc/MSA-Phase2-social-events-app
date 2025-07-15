@@ -18,7 +18,7 @@ const EventEditButton: React.FC<EventEditButtonProps> = ({ eventId, createdById,
 
   return (
     <button
-      className={className || "btn btn-warning btn-sm ml-2"}
+      className={className || "px-3 py-1 text-sm font-medium !bg-yellow-500 !text-white rounded-lg hover:!bg-yellow-600 transition-colors duration-200 ml-2 !border-0"}
       onClick={e => {
         if (onClick) onClick(e);
         if (!e.defaultPrevented) navigate(`/edit-event/${eventId}`);

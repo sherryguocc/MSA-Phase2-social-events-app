@@ -1,14 +1,15 @@
 @import "tailwindcss";
 /* DaisyUI should be configured in tailwind.config.js, not here */
 
+/* Smooth theme transitions */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -18,13 +19,10 @@
   justify-content: center;
 }
 
+/* Remove hardcoded colors to let DaisyUI handle themes */
 a {
   font-weight: 500;
-  color: #646cff;
   text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
 }
 
 body {
@@ -38,29 +36,9 @@ h1 {
   line-height: 1.1;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-/* Custom Scrollbar Styles for Horizontal Event List */
+/* Custom Scrollbar Styles for Horizontal Event List - Use CSS variables for theming */
 .horizontal-scroll {
   scrollbar-width: thin;
-  scrollbar-color: #d1d5db #f3f4f6;
 }
 
 .horizontal-scroll::-webkit-scrollbar {
@@ -68,18 +46,12 @@ button:focus-visible {
 }
 
 .horizontal-scroll::-webkit-scrollbar-track {
-  background: #f3f4f6;
   border-radius: 4px;
 }
 
 .horizontal-scroll::-webkit-scrollbar-thumb {
-  background: #d1d5db;
   border-radius: 4px;
   transition: background-color 0.2s ease;
-}
-
-.horizontal-scroll::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
 }
 
 /* Line clamp utilities */
