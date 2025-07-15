@@ -67,15 +67,21 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(policy =>
     {
         policy.WithOrigins(
-                "https://sociallink-frontend.onrender.com",      // Production frontend (actual URL)
-                "https://sociallink-frontend-zb4n.onrender.com", // Backup URL (if changed)
+                "https://sociallink-frontend.onrender.com",      // Production frontend (confirmed URL)
                 "http://localhost:5173",                         // Local Vite dev server
                 "http://localhost:3000"                          // Alternative local port
             )
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .AllowCredentials();  // Add this for better compatibility
     });
 });
+
+// Add logging for CORS debugging
+Console.WriteLine("CORS configured for origins:");
+Console.WriteLine("- https://sociallink-frontend.onrender.com");
+Console.WriteLine("- http://localhost:5173");
+Console.WriteLine("- http://localhost:3000");
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -154,11 +160,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
 app.UseHttpsRedirection();
 
+// CORS should be placed early in the pipeline, before authentication
+app.UseCors();
+
 app.UseAuthentication();
-app.UseCors(); // CORS placed between authentication and authorization
 app.UseAuthorization();
 
 app.MapControllers();
