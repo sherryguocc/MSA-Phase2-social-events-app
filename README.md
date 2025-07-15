@@ -21,6 +21,20 @@ This project aligns with the **2025 MSA Phase 2 Theme: Networking**, by fosterin
 
 ---
 
+## 🚀 Deployment
+
+### Live Demo
+- **Frontend**: https://sociallink-frontend-zb4n.onrender.com/
+- **Backend API**: https://sociallink-backend-ujwt.onrender.com/
+
+### Deployment Notes
+- Both frontend and backend are deployed on Render
+- The frontend includes a `_redirects` file to handle SPA routing properly
+- Database is SQLite with Entity Framework migrations
+- CORS is configured for cross-origin requests
+
+---
+
 ## 🧰 Tech Stack
 
 | Layer      | Technology                        |
