@@ -178,9 +178,10 @@ const HomePage: React.FC = () => {
         }
         
         if (filter === 'almost-full') {
-          // Events that are almost full (80% or more of max capacity)
+          // Events that are almost full (80% or more of max capacity OR only 1 spot left)
           const fillPercentage = joinedCount / event.maxAttendees;
-          if (fillPercentage < 0.8) {
+          const spotsLeft = event.maxAttendees - joinedCount;
+          if (fillPercentage < 0.8 && spotsLeft !== 1) {
             return false;
           }
         }
