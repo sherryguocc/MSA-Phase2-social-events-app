@@ -34,6 +34,13 @@ builder.Services.AddDbContext<AppDbContext>(options =>
             });
         Console.WriteLine("Using SQL Server for Production");
     }
+    
+    // Configure warnings - suppress pending model changes warning in production
+    if (!builder.Environment.IsDevelopment())
+    {
+        options.ConfigureWarnings(warnings =>
+            warnings.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
+    }
 });
 
 // Configure JWT authentication
@@ -109,7 +116,35 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
+    try
+    {
+        db.Database.Migrate();
+        Console.WriteLine("Database migration completed successfully.");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Database migration failed: {ex.Message}");
+        
+        // In production, try to create the database if migration fails
+        if (!app.Environment.IsDevelopment())
+        {
+            Console.WriteLine("Attempting to ensure database is created...");
+            try
+            {
+                db.Database.EnsureCreated();
+                Console.WriteLine("Database creation completed successfully.");
+            }
+            catch (Exception createEx)
+            {
+                Console.WriteLine($"Database creation also failed: {createEx.Message}");
+                // Log the error but don't crash the application
+            }
+        }
+        else
+        {
+            throw; // Re-throw in development for debugging
+        }
+    }
 }
 
 if (app.Environment.IsDevelopment())

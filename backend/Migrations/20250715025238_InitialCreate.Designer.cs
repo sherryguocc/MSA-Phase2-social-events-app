@@ -11,8 +11,8 @@ using backend.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250714020930_InitialCreateSQLite")]
-    partial class InitialCreateSQLite
+    [Migration("20250715025238_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
