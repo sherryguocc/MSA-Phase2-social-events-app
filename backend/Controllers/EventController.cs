@@ -36,6 +36,7 @@ public class EventController : ControllerBase
                 ImageUrl = e.ImageUrl,
                 CreatedById = e.CreatedById,
                 CreatedByUsername = e.CreatedBy != null ? e.CreatedBy.Username : "Unknown",
+                CreatedByName = e.CreatedBy != null ? e.CreatedBy.Name : null,
                 CreatedByAvatarUrl = e.CreatedBy != null ? e.CreatedBy.AvatarUrl : null
             })
             .ToListAsync();
@@ -83,6 +84,7 @@ public class EventController : ControllerBase
                 ImageUrl = newEvent.ImageUrl,
                 CreatedById = userId,
                 CreatedByUsername = createdBy?.Username ?? "",
+                CreatedByName = createdBy?.Name,
                 CreatedByAvatarUrl = createdBy?.AvatarUrl
             };
             return Ok(result);
@@ -112,6 +114,7 @@ public class EventController : ControllerBase
                 ImageUrl = e.ImageUrl,
                 CreatedById = e.CreatedById,
                 CreatedByUsername = e.CreatedBy != null ? e.CreatedBy.Username : "Unknown",
+                CreatedByName = e.CreatedBy != null ? e.CreatedBy.Name : null,
                 CreatedByAvatarUrl = e.CreatedBy != null ? e.CreatedBy.AvatarUrl : null
             })
             .ToList();
@@ -160,6 +163,7 @@ public class EventController : ControllerBase
             ImageUrl = ev.ImageUrl,
             CreatedById = ev.CreatedById,
             CreatedByUsername = createdBy?.Username ?? "Unknown",
+            CreatedByName = createdBy?.Name,
             CreatedByAvatarUrl = createdBy?.AvatarUrl
         };
         return Ok(result);

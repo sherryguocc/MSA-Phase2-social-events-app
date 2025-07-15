@@ -21,7 +21,7 @@ public class ParticipationController : ControllerBase
         _context = context;
     }
 
-    // 用户加入活动（含waitlist逻辑）
+    // User joins event (including waitlist logic)
     [HttpPost("/api/events/{id}/join")]
     [Authorize]
     public IActionResult JoinEvent(int id)
@@ -33,11 +33,11 @@ public class ParticipationController : ControllerBase
         if (user == null) return NotFound("User not found");
         var ev = _context.Events.FirstOrDefault(e => e.Id == id);
         if (ev == null) return NotFound("Event not found");
-        // 检查是否已存在参与记录
+        // Check if participation record already exists
         var existing = _context.Participations.FirstOrDefault(p => p.EventId == id && p.UserId == userId);
         if (existing != null && existing.Status == "joined") return BadRequest("Already joined");
         if (existing != null && existing.Status == "waitlist") return BadRequest("Already in waitlist");
-        // 当前 joined 人数
+        // Current joined count
         int joinedCount = _context.Participations.Count(p => p.EventId == id && p.Status == "joined");
         if (joinedCount < ev.MaxAttendees)
         {
@@ -57,7 +57,7 @@ public class ParticipationController : ControllerBase
         return Ok(new { joined = true });
     }
 
-    // 用户取消参与
+    // User cancels participation
     [HttpPost("/api/events/{id}/cancel")]
     [Authorize]
     public IActionResult CancelParticipation(int id)
@@ -70,7 +70,7 @@ public class ParticipationController : ControllerBase
         bool wasJoined = part.Status == "joined";
         _context.Participations.Remove(part);
         _context.SaveChanges();
-        // waitlist晋升逻辑
+        // Waitlist promotion logic
         if (wasJoined)
         {
             var ev = _context.Events.FirstOrDefault(e => e.Id == id);
@@ -89,7 +89,7 @@ public class ParticipationController : ControllerBase
         return Ok(new { cancelled = true });
     }
 
-    // 标记感兴趣
+    // Mark as interested
     [HttpPost("/api/events/{id}/interest")]
     [Authorize]
     public IActionResult MarkInterest(int id)
@@ -111,7 +111,7 @@ public class ParticipationController : ControllerBase
         return Ok(new { interested = true });
     }
 
-    // 查询参与/感兴趣/候补用户
+    // Query participating/interested/waitlisted users
     [HttpGet("/api/events/{id}/participants")]
     public IActionResult GetParticipants(int id)
     {
@@ -140,7 +140,7 @@ public class ParticipationController : ControllerBase
         return Ok(users);
     }
 
-    // 查询用户参与/感兴趣/候补的所有活动
+    // Query all events user is participating/interested/waitlisted in
     [HttpGet("/api/users/{userId}/joined")]
     public IActionResult GetJoinedEvents(int userId)
     {

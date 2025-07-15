@@ -59,9 +59,13 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins("https://sociallink-frontend.onrender.com")
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+        policy.WithOrigins(
+                "https://sociallink-frontend-zb4n.onrender.com", // Production frontend (correct URL)
+                "http://localhost:5173",                         // Local Vite dev server
+                "http://localhost:3000"                          // Alternative local port
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod();
     });
 });
 

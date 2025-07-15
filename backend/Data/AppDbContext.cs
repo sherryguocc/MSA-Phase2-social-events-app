@@ -28,23 +28,23 @@ namespace backend.Data
                 .HasForeignKey(e => e.CreatedById)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // 移除所有 Event <-> User 多对多参与映射，全部用 Participation 表管理
+            // Remove all Event <-> User many-to-many participation mappings, manage everything through Participation table
 
-            // 评论自引用（父子评论）
+            // Comment self-reference (parent-child comments)
             modelBuilder.Entity<Comment>()
                 .HasOne(c => c.ParentComment)
                 .WithMany(c => c.Replies)
                 .HasForeignKey(c => c.ParentCommentId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // 评论与 Event
+            // Comment with Event
             modelBuilder.Entity<Comment>()
                 .HasOne(c => c.Event)
                 .WithMany(e => e.Comments)
                 .HasForeignKey(c => c.EventId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // 评论与 User
+            // Comment with User
             modelBuilder.Entity<Comment>()
                 .HasOne(c => c.User)
                 .WithMany(u => u.Comments)
