@@ -37,11 +37,21 @@ function AppContent() {
               </span>
             </a>
           </div>
-          {/* Right： login & Register button*/}
+          {/* Right： Theme toggle, login & Register button*/}
           {!isLoggedIn && (
             <div className="flex items-center gap-1 sm:gap-2">
-              <button className="btn btn-outline btn-xs sm:btn-sm text-xs sm:text-sm" onClick={() => navigate('/login')}>Login</button>
-              <button className="btn btn-primary btn-xs sm:btn-sm text-xs sm:text-sm" onClick={() => navigate('/register')}>Register</button>
+              <button 
+                className="px-3 py-2 text-xs sm:text-sm font-medium !bg-gray-100 !text-gray-800 rounded-lg hover:!bg-gray-200 transition-colors duration-200 !border-0" 
+                onClick={() => navigate('/login')}
+              >
+                Login
+              </button>
+              <button 
+                className="px-3 py-2 text-xs sm:text-sm font-medium !bg-gray-100 !text-gray-800 rounded-lg hover:!bg-gray-200 transition-colors duration-200 !border-0" 
+                onClick={() => navigate('/register')}
+              >
+                Register
+              </button>
             </div>
           )}
         </div>
@@ -67,11 +77,26 @@ function AppContent() {
                     </div>
                   </div>
                 )}
-                <button className="btn btn-outline btn-xs sm:btn-sm text-xs sm:text-sm" onClick={handleLogout}>Logout</button>
+                <button 
+                  className="px-3 py-2 text-xs sm:text-sm font-medium !bg-white !border-2 !border-red-400 !text-red-600 rounded-lg hover:!bg-red-50 hover:!border-red-500 transition-colors duration-200" 
+                  onClick={handleLogout}
+                >
+                  Logout
+                </button>
               </div>
               <div className="flex gap-1 sm:gap-2 flex-wrap justify-center sm:justify-end">
-                <button className="btn btn-outline btn-xs sm:btn-sm text-xs sm:text-sm" onClick={() => navigate('/my-events')}>My Events</button>
-                <button className="btn btn-outline btn-xs sm:btn-sm text-xs sm:text-sm" onClick={() => navigate('/create-event')}>Create Event</button>
+                <button 
+                  className="px-3 py-2 text-xs sm:text-sm font-medium !bg-gray-100 !text-gray-800 rounded-lg hover:!bg-gray-200 transition-colors duration-200 !border-0" 
+                  onClick={() => navigate('/my-events')}
+                >
+                  My Events
+                </button>
+                <button 
+                  className="px-3 py-2 text-xs sm:text-sm font-medium !bg-gray-100 !text-gray-800 rounded-lg hover:!bg-gray-200 transition-colors duration-200 !border-0" 
+                  onClick={() => navigate('/create-event')}
+                >
+                  Create Event
+                </button>
               </div>
             </div>
           </div>

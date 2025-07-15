@@ -280,7 +280,10 @@ const ProfilePage: React.FC = () => {
               )}
               {isOwnProfile && editMode ? (
                 <div className="mt-3 sm:mt-2 flex gap-2 justify-center">
-                  <button className="btn btn-primary btn-xs sm:btn-sm text-xs sm:text-sm" disabled={saving} onClick={async () => {
+                  <button 
+                    className="px-3 py-2 text-xs sm:text-sm font-medium !bg-gray-100 !text-gray-800 rounded-lg hover:!bg-gray-200 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed !border-0" 
+                    disabled={saving} 
+                    onClick={async () => {
                     setSaving(true);
                     setError("");
                     try {
@@ -304,7 +307,10 @@ const ProfilePage: React.FC = () => {
                       setSaving(false);
                     }
                   }}>Save</button>
-                  <button className="btn btn-outline btn-xs sm:btn-sm text-xs sm:text-sm" disabled={saving} onClick={() => {
+                  <button 
+                    className="px-3 py-2 text-xs sm:text-sm font-medium !bg-white !border-2 !border-gray-300 !text-gray-700 rounded-lg hover:!bg-gray-50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed" 
+                    disabled={saving} 
+                    onClick={() => {
                     setEditEmail(user?.email || "");
                     setEditBio(user?.bio || "");
                     setEditAvatar(user?.avatarUrl || "");
@@ -315,7 +321,7 @@ const ProfilePage: React.FC = () => {
                   }}>Cancel</button>
                 </div>
               ) : (
-                isOwnProfile && <button className="btn btn-outline btn-xs sm:btn-sm text-xs sm:text-sm mt-2" onClick={() => setEditMode(true)}>Edit</button>
+                isOwnProfile && <button className="px-3 py-2 text-xs sm:text-sm font-medium !bg-white !border-2 !border-gray-300 !text-gray-700 rounded-lg hover:!bg-gray-50 transition-colors duration-200 mt-2" onClick={() => setEditMode(true)}>Edit</button>
               )}
             </div>
           </div>

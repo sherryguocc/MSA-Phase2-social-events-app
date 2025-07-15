@@ -211,224 +211,379 @@ const HomePage: React.FC = () => {
 
 
   return (
-    <div className="w-full max-w-7xl mx-auto mt-4 sm:mt-10 relative px-2 sm:px-4">
+    <div className="w-full max-w-7xl mx-auto mt-4 sm:mt-10 relative px-2 sm:px-4 min-h-screen">
       <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center sm:text-left">All Events</h2>
       
       {/* Search Input */}
-      <div className="mb-4">
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Search events by title, description, location, or creator..."
-            className="input input-bordered w-full pl-10 pr-4 py-2 text-sm sm:text-base bg-gradient-to-r from-base-100 to-base-200 border-2 border-base-300 focus:border-primary focus:outline-none transition-all duration-300"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <svg
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-base-content/60"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+      <div className="mb-6">
+        <div className="relative group">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+          <div className="relative bg-gradient-to-r from-base-100 via-base-50 to-base-100 rounded-2xl border-2 border-base-300 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-primary/50">
+            <input
+              type="text"
+              placeholder="🔍 Search events by title, description, location, or creator..."
+              className="input w-full pl-12 pr-12 py-4 text-sm sm:text-base bg-transparent border-none focus:outline-none placeholder:text-base-content/50 font-medium"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
-          </svg>
-          {searchTerm && (
-            <button
-              onClick={() => setSearchTerm('')}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-base-content/60 hover:text-base-content transition-colors"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+              <svg
+                className={`w-5 h-5 transition-all duration-300 ${searchTerm ? 'text-primary scale-110' : 'text-base-content/40'}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
               </svg>
-            </button>
-          )}
+            </div>
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm('')}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1.5 rounded-full bg-base-200/80 hover:bg-error/20 text-base-content/60 hover:text-error transition-all duration-200 hover:scale-110 backdrop-blur-sm"
+                title="Clear search"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
+          </div>
         </div>
         {searchTerm && (
-          <div className="mt-2 text-sm text-base-content/70">
-            {filteredEvents.length} event{filteredEvents.length !== 1 ? 's' : ''} found for "{searchTerm}"
+          <div className="mt-3 flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary rounded-full border border-primary/20">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span className="font-medium">
+                {filteredEvents.length} event{filteredEvents.length !== 1 ? 's' : ''} found
+              </span>
+            </div>
+            <div className="text-base-content/60">
+              for "<span className="font-semibold text-base-content">{searchTerm}</span>"
+            </div>
           </div>
         )}
       </div>
 
       {/* Filter Controls */}
-      <div className="mb-4">
-        <div className="flex flex-col sm:flex-row gap-2 items-start sm:items-center mb-2">
-          <span className="font-semibold text-sm sm:text-base">Filters:</span>
+      <div className="mb-6 w-full">
+        <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center mb-3 w-full">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
+              <span className="font-bold text-base sm:text-lg bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                Filters
+              </span>
+            </div>
+          </div>
           
           {/* Time Filter Dropdown */}
-          <div className="flex items-center gap-2">
-            <div className="relative">
-              <select 
-                className="select select-bordered select-xs sm:select-sm text-xs sm:text-sm max-w-xs 
-                         bg-gradient-to-r from-base-100 to-base-200 border-2 border-base-300 
-                         focus:border-primary focus:outline-none transition-all duration-300
-                         hover:border-primary/50 hover:shadow-md
-                         appearance-none cursor-pointer
-                         pr-8 pl-3"
-                value={timeFilter}
-                onChange={(e) => setTimeFilter(e.target.value)}
-              >
-                <option value="">All Time</option>
-                <option value="this-week">This Week</option>
-                <option value="next-week">Next Week</option>
-                <option value="this-month">This Month</option>
-                <option value="next-month">Next Month</option>
-              </select>
-              {/* Custom dropdown arrow */}
-              <div className="absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                <svg className="w-3 h-3 text-base-content/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
+          <div className="flex items-center gap-3">
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-accent/20 to-secondary/20 rounded-xl blur-md opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+              <div className="relative flex items-center">
+                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 z-10">
+                  <svg className="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <select 
+                  className="select w-full pl-10 pr-10 py-2.5 text-sm sm:text-base font-medium
+                           bg-gradient-to-r from-base-100 via-base-50 to-base-100 
+                           border-2 border-accent/30 rounded-xl shadow-md
+                           focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20
+                           transition-all duration-300 hover:border-accent/50 hover:shadow-lg
+                           appearance-none cursor-pointer min-w-[160px]"
+                  value={timeFilter}
+                  onChange={(e) => setTimeFilter(e.target.value)}
+                >
+                  <option value="">🌟 All Time</option>
+                  <option value="this-week">📅 This Week</option>
+                  <option value="next-week">⏭️ Next Week</option>
+                  <option value="this-month">📆 This Month</option>
+                  <option value="next-month">🗓️ Next Month</option>
+                </select>
+                {/* Custom dropdown arrow */}
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                  <svg className="w-4 h-4 text-accent transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
               </div>
             </div>
-            
-            {timeFilter && (
-              <button
-                onClick={() => setTimeFilter('')}
-                className="btn btn-ghost btn-xs text-xs text-base-content/60 hover:text-base-content 
-                          hover:bg-base-200 rounded-full w-6 h-6 p-0 flex items-center justify-center
-                          transition-all duration-200 hover:scale-110"
-                title="Clear time filter"
-              >
-                ✕
-              </button>
-            )}
           </div>
           
           {/* Status Filters */}
-          <div className="flex gap-1 sm:gap-2 flex-wrap">
+          <div className="flex gap-2 flex-wrap">
             <button 
-              className={`btn btn-xs sm:btn-sm text-xs sm:text-sm transition-all duration-200 ${
+              className={`group flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 min-w-[120px] justify-center ${
                 activeFilters.has('upcoming-only') 
-                  ? '!bg-purple-500 !text-white !border-purple-400 shadow-lg shadow-purple-200 hover:!bg-purple-600' 
-                  : 'btn-outline btn-accent hover:btn-accent'
+                  ? 'bg-gradient-to-r from-primary to-primary/80 text-primary-content border-2 border-primary/50 shadow-lg shadow-primary/20 hover:shadow-xl transform hover:scale-105' 
+                  : 'bg-gradient-to-r from-base-100 to-base-200 text-primary border-2 border-primary/30 hover:from-primary/10 hover:to-primary/20 hover:border-primary/50 hover:shadow-md hover:scale-105'
               }`}
               onClick={() => toggleFilter('upcoming-only')}
             >
-              Upcoming {activeFilters.has('upcoming-only') && <span className="ml-1 font-bold">✓</span>}
+              <span className="text-lg">⏰</span>
+              <span>Upcoming</span>
+              <div className="w-2 h-2 flex-shrink-0">
+                {activeFilters.has('upcoming-only') && (
+                  <div className="w-2 h-2 bg-primary-content rounded-full animate-pulse"></div>
+                )}
+              </div>
             </button>
             <button 
-              className={`btn btn-xs sm:btn-sm text-xs sm:text-sm transition-all duration-200 ${
+              className={`group flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 min-w-[120px] justify-center ${
                 activeFilters.has('available') 
-                  ? '!bg-green-500 !text-white !border-green-400 shadow-lg shadow-green-200 hover:!bg-green-600' 
-                  : 'btn-outline btn-success hover:btn-success'
+                  ? 'bg-gradient-to-r from-secondary to-secondary/80 text-secondary-content border-2 border-secondary/50 shadow-lg shadow-secondary/20 hover:shadow-xl transform hover:scale-105' 
+                  : 'bg-gradient-to-r from-base-100 to-base-200 text-secondary border-2 border-secondary/30 hover:from-secondary/10 hover:to-secondary/20 hover:border-secondary/50 hover:shadow-md hover:scale-105'
               }`}
               onClick={() => toggleFilter('available')}
             >
-              🟢 Available {activeFilters.has('available') && <span className="ml-1 font-bold">✓</span>}
+              <span className="text-lg">🟢</span>
+              <span>Available</span>
+              <div className="w-2 h-2 flex-shrink-0">
+                {activeFilters.has('available') && (
+                  <div className="w-2 h-2 bg-secondary-content rounded-full animate-pulse"></div>
+                )}
+              </div>
             </button>
             <button 
-              className={`btn btn-xs sm:btn-sm text-xs sm:text-sm transition-all duration-200 ${
+              className={`group flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 min-w-[120px] justify-center ${
                 activeFilters.has('minimum-reached') 
-                  ? '!bg-blue-500 !text-white !border-blue-400 shadow-lg shadow-blue-200 hover:!bg-blue-600' 
-                  : 'btn-outline btn-info hover:btn-info'
+                  ? 'bg-gradient-to-r from-accent to-accent/80 text-accent-content border-2 border-accent/50 shadow-lg shadow-accent/20 hover:shadow-xl transform hover:scale-105' 
+                  : 'bg-gradient-to-r from-base-100 to-base-200 text-accent border-2 border-accent/30 hover:from-accent/10 hover:to-accent/20 hover:border-accent/50 hover:shadow-md hover:scale-105'
               }`}
               onClick={() => toggleFilter('minimum-reached')}
             >
-              ✅ Confirmed {activeFilters.has('minimum-reached') && <span className="ml-1 font-bold">✓</span>}
+              <span className="text-lg">✅</span>
+              <span>Confirmed</span>
+              <div className="w-2 h-2 flex-shrink-0">
+                {activeFilters.has('minimum-reached') && (
+                  <div className="w-2 h-2 bg-accent-content rounded-full animate-pulse"></div>
+                )}
+              </div>
             </button>
             <button 
-              className={`btn btn-xs sm:btn-sm text-xs sm:text-sm transition-all duration-200 ${
+              className={`group flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 min-w-[130px] justify-center ${
                 activeFilters.has('almost-full') 
-                  ? '!bg-orange-500 !text-white !border-orange-400 shadow-lg shadow-orange-200 hover:!bg-orange-600' 
-                  : 'btn-outline btn-warning hover:btn-warning'
+                  ? 'bg-gradient-to-r from-info to-info/80 text-info-content border-2 border-info/50 shadow-lg shadow-info/20 hover:shadow-xl transform hover:scale-105' 
+                  : 'bg-gradient-to-r from-base-100 to-base-200 text-info border-2 border-info/30 hover:from-info/10 hover:to-info/20 hover:border-info/50 hover:shadow-md hover:scale-105'
               }`}
               onClick={() => toggleFilter('almost-full')}
             >
-              🔥 Almost Full {activeFilters.has('almost-full') && <span className="ml-1 font-bold">✓</span>}
+              <span className="text-lg">🔥</span>
+              <span>Almost Full</span>
+              <div className="w-2 h-2 flex-shrink-0">
+                {activeFilters.has('almost-full') && (
+                  <div className="w-2 h-2 bg-info-content rounded-full animate-pulse"></div>
+                )}
+              </div>
             </button>
           </div>
         </div>
-        {/* Fixed space for filter results - always present to prevent layout shift */}
-        <div className="h-6 flex items-center gap-2">
+        
+        {/* Filter Results with Enhanced Styling */}
+        <div className="min-h-[3rem] w-full overflow-hidden">
           {(activeFilters.size > 0 || timeFilter) && (
-            <>
-              <span className="text-xs text-base-content/70">
-                {filteredEvents.length} event{filteredEvents.length !== 1 ? 's' : ''} match 
-                {timeFilter && (
-                  <span className="font-semibold ml-1">
+            <div className="flex items-start gap-2 flex-wrap w-full min-h-[3rem]">
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 border border-primary/20 rounded-xl flex-shrink-0">
+                <svg className="w-3.5 h-3.5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.99 1.99 0 013 12V7a4 4 0 014-4z" />
+                </svg>
+                <span className="text-xs font-semibold text-primary whitespace-nowrap">
+                  {filteredEvents.length} event{filteredEvents.length !== 1 ? 's' : ''} match
+                </span>
+              </div>
+              
+              {timeFilter && (
+                <div className="flex items-center gap-1 px-2 py-1.5 bg-accent/10 text-accent border border-accent/20 rounded-lg text-xs font-medium flex-shrink-0">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="whitespace-nowrap">
                     {timeFilter === 'this-week' && 'This Week'}
                     {timeFilter === 'next-week' && 'Next Week'}
                     {timeFilter === 'this-month' && 'This Month'}
                     {timeFilter === 'next-month' && 'Next Month'}
                   </span>
-                )}
-                {timeFilter && activeFilters.size > 0 && ' + '}
-                {activeFilters.size > 0 && (
-                  <span className="font-semibold">
-                    {Array.from(activeFilters).map(filter => {
-                      const filterNames = {
-                        'upcoming-only': 'Upcoming',
-                        'available': 'Available',
-                        'minimum-reached': 'Confirmed', 
-                        'almost-full': 'Almost Full'
-                      };
-                      return filterNames[filter as keyof typeof filterNames];
-                    }).join(' + ')}
-                  </span>
-                )}
-                {activeFilters.size > 1 && ' filters'}
-                {activeFilters.size === 1 && ' filter'}
-              </span>
+                </div>
+              )}
+              
+              {activeFilters.size > 0 && (
+                <div className="flex items-center gap-1 flex-wrap min-w-0 flex-1">
+                  {timeFilter && activeFilters.size > 0 && (
+                    <span className="text-base-content/40 font-medium text-xs">+</span>
+                  )}
+                  {Array.from(activeFilters).map((filter, index) => {
+                    const filterConfig = {
+                      'upcoming-only': { name: 'Upcoming', icon: '⏰' },
+                      'available': { name: 'Available', icon: '🟢' },
+                      'minimum-reached': { name: 'Confirmed', icon: '✅' },
+                      'almost-full': { name: 'Almost Full', icon: '🔥' }
+                    };
+                    const config = filterConfig[filter as keyof typeof filterConfig];
+                    return (
+                      <div key={filter} className="flex items-center gap-1 flex-shrink-0">
+                        {index > 0 && <span className="text-base-content/40 font-medium text-xs">+</span>}
+                        <div className="flex items-center gap-1 px-2 py-1.5 bg-base-200 text-base-content border border-base-300 rounded-lg text-xs font-medium whitespace-nowrap">
+                          <span className="text-xs">{config.icon}</span>
+                          <span>{config.name}</span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+              
               <button 
                 onClick={() => {
                   setActiveFilters(new Set());
                   setTimeFilter('');
                 }}
-                className="btn btn-ghost btn-xs text-xs text-base-content/60 hover:text-base-content hover:bg-base-200 transition-colors"
+                className="group flex items-center gap-1 px-2 py-1.5 bg-gradient-to-r from-base-200 to-base-300 
+                          text-base-content/70 border border-base-300 rounded-xl hover:from-error/10 hover:to-error/20 
+                          hover:text-error hover:border-error/30 transition-all duration-200 hover:scale-105 text-xs font-medium flex-shrink-0 ml-auto"
               >
-                Clear all
+                <svg className="w-3 h-3 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                <span className="whitespace-nowrap">Clear all</span>
               </button>
-            </>
+            </div>
           )}
         </div>
       </div>
 
       {/* Sort Controls */}
-      <div className="mb-4 flex flex-col sm:flex-row gap-2 items-start sm:items-center">
-        <span className="font-semibold text-sm sm:text-base">Sort by:</span>
-        <div className="flex gap-1 sm:gap-2 flex-wrap">
+      <div className="mb-6 flex flex-col lg:flex-row gap-4 items-start lg:items-center w-full">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-gradient-to-r from-secondary to-accent rounded-full"></div>
+            <span className="font-bold text-base sm:text-lg bg-gradient-to-r from-secondary to-accent bg-clip-text text-transparent">
+              Sort by
+            </span>
+          </div>
+        </div>
+        
+        <div className="flex gap-2 flex-wrap">
           <button 
-            className={`btn btn-xs sm:btn-sm text-xs sm:text-sm ${sortType === 'time' ? 'btn-primary' : 'btn-outline'}`} 
+            className={`group flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
+              sortType === 'time' 
+                ? 'bg-gradient-to-r from-primary to-primary/80 text-primary-content border-2 border-primary/50 shadow-lg shadow-primary/20 hover:shadow-xl transform hover:scale-105' 
+                : 'bg-gradient-to-r from-base-100 to-base-200 text-primary border-2 border-primary/30 hover:from-primary/10 hover:to-primary/20 hover:border-primary/50 hover:shadow-md hover:scale-105'
+            }`} 
             onClick={() => handleSortClick('time')}
           >
-            Time {sortType === 'time' && (sortOrder === 'asc' ? '↑' : '↓')}
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>Time</span>
+            {sortType === 'time' && (
+              <div className={`flex items-center justify-center w-5 h-5 rounded-full ${sortType === 'time' ? 'bg-primary-content/20' : 'bg-primary/20'} transition-transform duration-200`}>
+                <svg className={`w-3 h-3 transition-transform duration-200 ${sortOrder === 'desc' ? 'rotate-180' : ''} ${sortType === 'time' ? 'text-primary-content' : 'text-primary'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                </svg>
+              </div>
+            )}
           </button>
+          
           <button 
-            className={`btn btn-xs sm:btn-sm text-xs sm:text-sm ${sortType === 'name' ? 'btn-primary' : 'btn-outline'}`} 
+            className={`group flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
+              sortType === 'name' 
+                ? 'bg-gradient-to-r from-secondary to-secondary/80 text-secondary-content border-2 border-secondary/50 shadow-lg shadow-secondary/20 hover:shadow-xl transform hover:scale-105' 
+                : 'bg-gradient-to-r from-base-100 to-base-200 text-secondary border-2 border-secondary/30 hover:from-secondary/10 hover:to-secondary/20 hover:border-secondary/50 hover:shadow-md hover:scale-105'
+            }`} 
             onClick={() => handleSortClick('name')}
           >
-            Name {sortType === 'name' && (sortOrder === 'asc' ? '↑' : '↓')}
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+            </svg>
+            <span>Name</span>
+            {sortType === 'name' && (
+              <div className={`flex items-center justify-center w-5 h-5 rounded-full ${sortType === 'name' ? 'bg-secondary-content/20' : 'bg-secondary/20'} transition-transform duration-200`}>
+                <svg className={`w-3 h-3 transition-transform duration-200 ${sortOrder === 'desc' ? 'rotate-180' : ''} ${sortType === 'name' ? 'text-secondary-content' : 'text-secondary'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                </svg>
+              </div>
+            )}
           </button>
+          
           <button 
-            className={`btn btn-xs sm:btn-sm text-xs sm:text-sm ${sortType === 'maxAttendees' ? 'btn-primary' : 'btn-outline'}`} 
+            className={`group flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
+              sortType === 'maxAttendees' 
+                ? 'bg-gradient-to-r from-accent to-accent/80 text-accent-content border-2 border-accent/50 shadow-lg shadow-accent/20 hover:shadow-xl transform hover:scale-105' 
+                : 'bg-gradient-to-r from-base-100 to-base-200 text-accent border-2 border-accent/30 hover:from-accent/10 hover:to-accent/20 hover:border-accent/50 hover:shadow-md hover:scale-105'
+            }`} 
             onClick={() => handleSortClick('maxAttendees')}
           >
-            Max Attendees {sortType === 'maxAttendees' && (sortOrder === 'asc' ? '↑' : '↓')}
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            <span className="hidden sm:inline">Max Attendees</span>
+            <span className="sm:hidden">Max</span>
+            {sortType === 'maxAttendees' && (
+              <div className={`flex items-center justify-center w-5 h-5 rounded-full ${sortType === 'maxAttendees' ? 'bg-accent-content/20' : 'bg-accent/20'} transition-transform duration-200`}>
+                <svg className={`w-3 h-3 transition-transform duration-200 ${sortOrder === 'desc' ? 'rotate-180' : ''} ${sortType === 'maxAttendees' ? 'text-accent-content' : 'text-accent'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                </svg>
+              </div>
+            )}
           </button>
+          
           <button 
-            className={`btn btn-xs sm:btn-sm text-xs sm:text-sm ${sortType === 'location' ? 'btn-primary' : 'btn-outline'}`} 
+            className={`group flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
+              sortType === 'location' 
+                ? 'bg-gradient-to-r from-info to-info/80 text-info-content border-2 border-info/50 shadow-lg shadow-info/20 hover:shadow-xl transform hover:scale-105' 
+                : 'bg-gradient-to-r from-base-100 to-base-200 text-info border-2 border-info/30 hover:from-info/10 hover:to-info/20 hover:border-info/50 hover:shadow-md hover:scale-105'
+            }`} 
             onClick={() => handleSortClick('location')}
           >
-            Location {sortType === 'location' && (sortOrder === 'asc' ? '↑' : '↓')}
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span>Location</span>
+            {sortType === 'location' && (
+              <div className={`flex items-center justify-center w-5 h-5 rounded-full ${sortType === 'location' ? 'bg-info-content/20' : 'bg-info/20'} transition-transform duration-200`}>
+                <svg className={`w-3 h-3 transition-transform duration-200 ${sortOrder === 'desc' ? 'rotate-180' : ''} ${sortType === 'location' ? 'text-info-content' : 'text-info'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                </svg>
+              </div>
+            )}
           </button>
+          
           <button 
-            className={`btn btn-xs sm:btn-sm text-xs sm:text-sm ${sortType === 'organizer' ? 'btn-primary' : 'btn-outline'}`} 
+            className={`group flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
+              sortType === 'organizer' 
+                ? 'bg-gradient-to-r from-success to-success/80 text-success-content border-2 border-success/50 shadow-lg shadow-success/20 hover:shadow-xl transform hover:scale-105' 
+                : 'bg-gradient-to-r from-base-100 to-base-200 text-success border-2 border-success/30 hover:from-success/10 hover:to-success/20 hover:border-success/50 hover:shadow-md hover:scale-105'
+            }`} 
             onClick={() => handleSortClick('organizer')}
           >
-            Organizer {sortType === 'organizer' && (sortOrder === 'asc' ? '↑' : '↓')}
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            <span>Organizer</span>
+            {sortType === 'organizer' && (
+              <div className={`flex items-center justify-center w-5 h-5 rounded-full ${sortType === 'organizer' ? 'bg-success-content/20' : 'bg-success/20'} transition-transform duration-200`}>
+                <svg className={`w-3 h-3 transition-transform duration-200 ${sortOrder === 'desc' ? 'rotate-180' : ''} ${sortType === 'organizer' ? 'text-success-content' : 'text-success'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                </svg>
+              </div>
+            )}
           </button>
         </div>
       </div>
-      {loading && <div className="text-center text-sm sm:text-base">Loading...</div>}
-      {error && <div className="text-red-500 text-center text-sm sm:text-base">{error}</div>}
+      {loading && <div className="text-center text-sm sm:text-base min-h-[400px] flex items-center justify-center">Loading...</div>}
+      {error && <div className="text-red-500 text-center text-sm sm:text-base min-h-[400px] flex items-center justify-center">{error}</div>}
       {!loading && !error && sortedEvents.length === 0 && (
-        <div className="text-center py-12">
+        <div className="text-center py-12 min-h-[400px] flex flex-col items-center justify-center">
           <div className="text-6xl mb-4">🔍</div>
           <h3 className="text-xl font-semibold mb-2">
             {searchTerm ? 'No events found' : 'No events available'}
@@ -439,7 +594,7 @@ const HomePage: React.FC = () => {
                 Try adjusting your search terms or{' '}
                 <button 
                   onClick={() => setSearchTerm('')}
-                  className="link link-primary"
+                  className="px-2 py-1 text-sm font-medium !bg-gray-100 !text-gray-800 rounded hover:!bg-gray-200 transition-colors duration-200 !border-0"
                 >
                   clear search
                 </button>
@@ -452,7 +607,9 @@ const HomePage: React.FC = () => {
         </div>
       )}
       {!loading && !error && sortedEvents.length > 0 && (
-        <EventList events={sortedEvents} showEditButton={true} />
+        <div className="min-h-[400px]">
+          <EventList events={sortedEvents} showEditButton={true} />
+        </div>
       )}
     </div>
   );

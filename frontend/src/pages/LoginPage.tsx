@@ -81,7 +81,11 @@ const LoginPage: React.FC = () => {
           </div>
         )}
         <button 
-          className={`btn w-full ${isLoading ? 'btn-disabled' : 'btn-primary'}`} 
+          className={`w-full py-3 px-4 rounded-lg font-medium text-sm transition-colors duration-200 ${
+            isLoading 
+              ? '!bg-gray-300 !text-gray-500 cursor-not-allowed !border-0' 
+              : '!bg-gray-100 !text-gray-800 hover:!bg-gray-200 !border-0'
+          }`}
           type="submit"
           disabled={isLoading}
         >
