@@ -67,7 +67,8 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(policy =>
     {
         policy.WithOrigins(
-                "https://sociallink-frontend-zb4n.onrender.com", // Production frontend (correct URL)
+                "https://sociallink-frontend.onrender.com",      // Production frontend (actual URL)
+                "https://sociallink-frontend-zb4n.onrender.com", // Backup URL (if changed)
                 "http://localhost:5173",                         // Local Vite dev server
                 "http://localhost:3000"                          // Alternative local port
             )

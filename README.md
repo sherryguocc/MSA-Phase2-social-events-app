@@ -24,7 +24,7 @@ This project aligns with the **2025 MSA Phase 2 Theme: Networking**, by fosterin
 ## 🚀 Deployment
 
 ### Live Demo
-- **Frontend**: https://sociallink-frontend-zb4n.onrender.com/
+- **Frontend**: https://sociallink-frontend.onrender.com/
 - **Backend API**: https://sociallink-backend-ujwt.onrender.com/
 
 ### Deployment Notes
