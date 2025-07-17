@@ -63,20 +63,18 @@ const ProfilePage: React.FC = () => {
   // {error && <div className="text-red-500">{error}</div>}
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 px-2 sm:px-4">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 px-4 sm:px-6">
       {error && <div className="text-red-500 text-center mb-4">{error}</div>}
       <div className="max-w-7xl w-full mx-auto mt-4 sm:mt-10 space-y-6">
-        {/* Profile Card - More responsive width */}
-        <div className="min-w-[300px] lg:min-w-[500px] max-w-2xl lg:max-w-4xl xl:max-w-5xl mx-auto shadow-xl rounded-2xl bg-white/80 backdrop-blur-md border border-blue-100 p-4 sm:p-6 lg:p-8">
-          <h2 className="text-2xl sm:text-4xl font-extrabold mb-4 sm:mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-pink-400 drop-shadow-lg text-center">
+        {/* Profile Card - Mobile First Design */}
+        <div className="w-full max-w-4xl mx-auto shadow-xl rounded-2xl bg-white/80 backdrop-blur-md border border-blue-100 p-4 sm:p-6 lg:p-8">
+          <h2 className="text-xl sm:text-2xl lg:text-4xl font-extrabold mb-4 sm:mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-pink-400 drop-shadow-lg text-center">
             {isOwnProfile ? "My Profile" 
             : `${(user?.name && user.name.trim() !== "") ? user.name : user?.username || "User"}'s Profile`}</h2>
-          <div className="mb-4 sm:mb-6 p-4 sm:p-6 lg:p-8 bg-base-200 rounded-xl shadow-md flex flex-col items-center">
-            <div className={`flex flex-col items-center gap-3 sm:gap-4 mb-4 w-full ${
-              isOwnProfile 
-                ? 'max-w-lg lg:max-w-4xl xl:max-w-5xl' 
-                : 'max-w-md lg:max-w-3xl xl:max-w-4xl'
-            }`}>
+          
+          <div className="mb-4 sm:mb-6 p-4 sm:p-6 lg:p-8 bg-base-200 rounded-xl shadow-md">
+            {/* Avatar Section */}
+            <div className="flex flex-col items-center gap-3 sm:gap-4 mb-4 w-full">
               <div className="relative flex justify-center">
                 <img
                   src={user?.avatarUrl && user.avatarUrl.trim() !== '' ? user.avatarUrl : "/default-avatar.png"}
@@ -85,11 +83,13 @@ const ProfilePage: React.FC = () => {
                 />
                 <span className="absolute bottom-1 right-1 bg-gradient-to-r from-blue-400 to-purple-400 text-white text-xs px-2 py-0.5 rounded-full shadow">{isOwnProfile ? "You" : "User"}</span>
               </div>
-              <div className="flex flex-col items-center space-y-3 sm:space-y-4 w-full">
+              
+              {/* Profile Information - Mobile Vertical Stack */}
+              <div className="w-full max-w-2xl space-y-3 sm:space-y-4">
                 {/* Only show Username for own profile */}
                 {isOwnProfile && (
-                  <div className="text-sm sm:text-base text-left w-full bg-gradient-to-r from-purple-50 to-blue-50 p-3 rounded-lg border border-purple-200">
-                    <span className="font-semibold text-purple-700 flex items-center">
+                  <div className="text-sm sm:text-base bg-gradient-to-r from-purple-50 to-blue-50 p-3 rounded-lg border border-purple-200">
+                    <span className="font-semibold text-purple-700 flex items-center mb-1">
                       <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                       </svg>
@@ -99,7 +99,7 @@ const ProfilePage: React.FC = () => {
                   </div>
                 )}
                 
-                <div className="text-sm sm:text-base text-left w-full bg-gradient-to-r from-green-50 to-teal-50 p-3 rounded-lg border border-green-200">
+                <div className="text-sm sm:text-base bg-gradient-to-r from-green-50 to-teal-50 p-3 rounded-lg border border-green-200">
                   <span className="font-semibold text-green-700 flex items-center mb-1">
                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -127,7 +127,7 @@ const ProfilePage: React.FC = () => {
                   )}
                 </div>
                 
-                <div className="text-sm sm:text-base text-left w-full bg-gradient-to-r from-orange-50 to-yellow-50 p-3 rounded-lg border border-orange-200">
+                <div className="text-sm sm:text-base bg-gradient-to-r from-orange-50 to-yellow-50 p-3 rounded-lg border border-orange-200">
                   <span className="font-semibold text-orange-700 flex items-center mb-1">
                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -150,7 +150,7 @@ const ProfilePage: React.FC = () => {
                   )}
                 </div>
                 
-                <div className="text-sm sm:text-base text-left w-full bg-gradient-to-r from-pink-50 to-rose-50 p-3 rounded-lg border border-pink-200">
+                <div className="text-sm sm:text-base bg-gradient-to-r from-pink-50 to-rose-50 p-3 rounded-lg border border-pink-200">
                   <span className="font-semibold text-pink-700 flex items-center mb-1">
                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
@@ -173,7 +173,7 @@ const ProfilePage: React.FC = () => {
                   )}
                 </div>
                 
-                <div className="text-sm sm:text-base text-left w-full bg-gradient-to-r from-indigo-50 to-blue-50 p-3 rounded-lg border border-indigo-200">
+                <div className="text-sm sm:text-base bg-gradient-to-r from-indigo-50 to-blue-50 p-3 rounded-lg border border-indigo-200">
                   <span className="font-semibold text-indigo-700 flex items-center mb-1">
                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -196,7 +196,7 @@ const ProfilePage: React.FC = () => {
                   )}
                 </div>
                 
-                <div className="text-sm sm:text-base text-left w-full bg-gradient-to-r from-violet-50 to-purple-50 p-3 rounded-lg border border-violet-200">
+                <div className="text-sm sm:text-base bg-gradient-to-r from-violet-50 to-purple-50 p-3 rounded-lg border border-violet-200">
                   <span className="font-semibold text-violet-700 flex items-center mb-1">
                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
@@ -219,7 +219,8 @@ const ProfilePage: React.FC = () => {
                   )}
                 </div>
               </div>
-              {/* Avatar selector only in edit mode, not as a row */}
+              
+              {/* Avatar selector only in edit mode */}
               {isOwnProfile && editMode && (
                 <div className="mt-4 w-full bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-xl border border-blue-200">
                   <div className="text-center mb-3">
@@ -229,7 +230,7 @@ const ProfilePage: React.FC = () => {
                   {/* Preset avatars section */}
                   <div className="mb-4">
                     <div className="text-xs sm:text-sm font-medium text-gray-600 mb-2 text-left">📋 Select from preset avatars:</div>
-                    <div className="flex gap-2 flex-wrap justify-start">
+                    <div className="flex gap-2 flex-wrap justify-center sm:justify-start">
                       {presetAvatars.map(url => (
                         <img
                           key={url}
@@ -278,10 +279,12 @@ const ProfilePage: React.FC = () => {
                   )}
                 </div>
               )}
+              
+              {/* Action Buttons */}
               {isOwnProfile && editMode ? (
-                <div className="mt-3 sm:mt-2 flex gap-2 justify-center">
+                <div className="mt-4 flex flex-col sm:flex-row gap-2 justify-center">
                   <button 
-                    className="px-3 py-2 text-xs sm:text-sm font-medium !bg-gray-100 !text-gray-800 rounded-lg hover:!bg-gray-200 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed !border-0" 
+                    className="px-4 py-2 text-sm font-medium !bg-gray-100 !text-gray-800 rounded-lg hover:!bg-gray-200 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed !border-0" 
                     disabled={saving} 
                     onClick={async () => {
                     setSaving(true);
@@ -306,9 +309,11 @@ const ProfilePage: React.FC = () => {
                     } finally {
                       setSaving(false);
                     }
-                  }}>Save</button>
+                  }}>
+                    {saving ? "Saving..." : "Save"}
+                  </button>
                   <button 
-                    className="px-3 py-2 text-xs sm:text-sm font-medium !bg-white !border-2 !border-gray-300 !text-gray-700 rounded-lg hover:!bg-gray-50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed" 
+                    className="px-4 py-2 text-sm font-medium !bg-white !border-2 !border-gray-300 !text-gray-700 rounded-lg hover:!bg-gray-50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed" 
                     disabled={saving} 
                     onClick={() => {
                     setEditEmail(user?.email || "");
@@ -321,15 +326,22 @@ const ProfilePage: React.FC = () => {
                   }}>Cancel</button>
                 </div>
               ) : (
-                isOwnProfile && <button className="px-3 py-2 text-xs sm:text-sm font-medium !bg-white !border-2 !border-gray-300 !text-gray-700 rounded-lg hover:!bg-gray-50 transition-colors duration-200 mt-2" onClick={() => setEditMode(true)}>Edit</button>
+                isOwnProfile && (
+                  <button 
+                    className="mt-4 px-4 py-2 text-sm font-medium !bg-white !border-2 !border-gray-300 !text-gray-700 rounded-lg hover:!bg-gray-50 transition-colors duration-200" 
+                    onClick={() => setEditMode(true)}
+                  >
+                    Edit Profile
+                  </button>
+                )
               )}
             </div>
           </div>
         </div>
         
-        {/* Events Section - Full width */}
+        {/* Events Section - Mobile Full Width */}
         {!isOwnProfile && user && (
-          <div className="max-w-7xl mx-auto">
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6">
             <UserEventsPanel
               userId={user.id}
               username={user.username}

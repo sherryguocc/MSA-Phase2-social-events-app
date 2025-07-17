@@ -116,39 +116,45 @@ const MyEventPage: React.FC = () => {
   if (!user) return <div className="text-center p-4">Loading user info...</div>;
 
   return (
-    <div className="max-w-7xl mx-auto mt-4 sm:mt-10 px-2 sm:px-4">
+    <div className="max-w-7xl mx-auto mt-4 sm:mt-10 px-4 sm:px-6">
       {/* Header */}
       <div className="mb-6 sm:mb-8">
-        <h2 className="text-2xl sm:text-4xl font-bold text-gray-800 mb-2 text-center sm:text-left">My Events Dashboard</h2>
-        <p className="text-sm sm:text-base text-gray-600 text-center sm:text-left">Manage and view all your events in one place</p>
+        <h2 className="text-2xl sm:text-4xl font-bold text-gray-800 mb-2 text-center">My Events Dashboard</h2>
+        <p className="text-sm sm:text-base text-gray-600 text-center">Manage and view all your events in one place</p>
       </div>
       
-      {/* Navigation Pills */}
-      <div className="flex flex-wrap gap-2 sm:gap-3 mb-6 sm:mb-8 p-3 sm:p-4 bg-white rounded-xl shadow-sm border border-gray-200">
-        <button 
-          className="px-3 sm:px-4 py-2 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition-colors font-medium text-sm sm:text-base"
-          onClick={() => scrollToSection('created')}
-        >
-          📝 Created ({myEvents.length})
-        </button>
-        <button 
-          className="px-3 sm:px-4 py-2 bg-green-100 text-green-800 rounded-lg hover:bg-green-200 transition-colors font-medium text-sm sm:text-base"
-          onClick={() => scrollToSection('joined')}
-        >
-          ✅ Joined ({joinedEvents.length})
-        </button>
-        <button 
-          className="px-3 sm:px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg hover:bg-yellow-200 transition-colors font-medium text-sm sm:text-base"
-          onClick={() => scrollToSection('interested')}
-        >
-          ⭐ Interested ({interestedEvents.length})
-        </button>
-        <button 
-          className="px-3 sm:px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors font-medium text-sm sm:text-base"
-          onClick={() => scrollToSection('waitlist')}
-        >
-          ⏳ Waitlist ({waitlistEvents.length})
-        </button>
+      {/* Navigation Pills - Mobile Vertical Stack */}
+      <div className="mb-6 sm:mb-8 p-4 bg-white rounded-xl shadow-sm border border-gray-200">
+        <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 sm:gap-3">
+          <button 
+            className="px-3 sm:px-4 py-2 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition-colors font-medium text-xs sm:text-base text-center"
+            onClick={() => scrollToSection('created')}
+          >
+            <span className="block sm:inline">📝 Created</span>
+            <span className="block sm:inline sm:ml-1">({myEvents.length})</span>
+          </button>
+          <button 
+            className="px-3 sm:px-4 py-2 bg-green-100 text-green-800 rounded-lg hover:bg-green-200 transition-colors font-medium text-xs sm:text-base text-center"
+            onClick={() => scrollToSection('joined')}
+          >
+            <span className="block sm:inline">✅ Joined</span>
+            <span className="block sm:inline sm:ml-1">({joinedEvents.length})</span>
+          </button>
+          <button 
+            className="px-3 sm:px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg hover:bg-yellow-200 transition-colors font-medium text-xs sm:text-base text-center"
+            onClick={() => scrollToSection('interested')}
+          >
+            <span className="block sm:inline">⭐ Interested</span>
+            <span className="block sm:inline sm:ml-1">({interestedEvents.length})</span>
+          </button>
+          <button 
+            className="px-3 sm:px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors font-medium text-xs sm:text-base text-center col-span-2 sm:col-span-1"
+            onClick={() => scrollToSection('waitlist')}
+          >
+            <span className="block sm:inline">⏳ Waitlist</span>
+            <span className="block sm:inline sm:ml-1">({waitlistEvents.length})</span>
+          </button>
+        </div>
       </div>
 
       {/* Events Sections */}
