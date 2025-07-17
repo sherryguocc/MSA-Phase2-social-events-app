@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
+
 var builder = WebApplication.CreateBuilder(args);
 Console.WriteLine("EF is using: " + builder.Configuration.GetConnectionString("DefaultConnection"));
 Console.WriteLine("Using DB: " + builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -160,6 +161,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+if (app.Environment.IsDevelopment())
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        TestSeeder.SeedTestData(dbContext);
+    }
+}
+
+
 app.UseHttpsRedirection();
 
 // CORS should be placed early in the pipeline, before authentication
@@ -174,3 +185,4 @@ app.Run();
 
 // Make the implicit Program class public so that it can be referenced by tests
 public partial class Program { }
+
