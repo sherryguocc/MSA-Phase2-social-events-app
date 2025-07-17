@@ -50,7 +50,7 @@ This project aligns with the **2025 MSA Phase 2 Theme: Networking**, by fosterin
 ## 🧠 Advanced Features Implemented
 
 ✅ 1. **Redux Toolkit** for global state management (user sessions, event list, participation)  
-✅ 2. **Theme Switching**: Dark/Light mode with Tailwind and `localStorage`  
+✅ 2. **Unit Testing Components**: Comprehensive backend unit testing with xUnit framework covering models, data layer, and controller integration tests  
 ✅ 3. **Dockerized Backend** using multi-stage build Dockerfile  
 
 > Only these three features will be marked per MSA instructions.

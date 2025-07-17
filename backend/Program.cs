@@ -171,3 +171,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// Make the implicit Program class public so that it can be referenced by tests
+public partial class Program { }
