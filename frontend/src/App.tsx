@@ -102,7 +102,7 @@ function AppContent() {
           </div>
         )}
       </nav>
-      <div className="flex-1 w-full">
+      <div className="flex-1 justify-center w-full">
         <Routes>
           {/* Home page route */}
           <Route path="/" element={<HomePage />} />

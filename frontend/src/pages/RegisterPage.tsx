@@ -98,17 +98,18 @@ const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
-      <h2 className="text-2xl font-bold mb-4">Register</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          className="w-full mb-2 p-2 border rounded"
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={e => setUsername(e.target.value)}
-          required
-        />
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+      <div className="max-w-md sm:max-w-lg bg-white rounded-lg shadow-xl p-6 my-8">
+        <h2 className="text-2xl font-bold mb-4 text-center">Register</h2>
+        <form onSubmit={handleSubmit}>
+          <input
+            className="w-full mb-2 p-2 border rounded"
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={e => setUsername(e.target.value)}
+            required
+          />
         <div className="mb-2">
           <div className="relative">
             <input
@@ -219,6 +220,7 @@ const RegisterPage: React.FC = () => {
           {isLoading ? 'Creating Account...' : 'Register'}
         </button>
       </form>
+      </div>
     </div>
   );
 };
