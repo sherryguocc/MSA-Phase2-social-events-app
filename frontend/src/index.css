@@ -40,6 +40,14 @@ body {
 img {
   max-width: 100%;
   height: auto;
+  object-fit: cover;
+}
+
+/* Event card image consistency */
+.event-card-image {
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  width: 100%;
 }
 
 /* Ensure long text breaks properly */

@@ -22,7 +22,7 @@ interface EventListProps {
 
 const EventList: React.FC<EventListProps> = ({ events, showEditButton = true }) => {
   return (
-    <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
       {events.map(event => (
         <EventCard key={event.id} event={event} showEditButton={showEditButton} />
       ))}

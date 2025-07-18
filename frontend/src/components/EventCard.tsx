@@ -33,11 +33,11 @@ const EventCard: React.FC<EventCardProps> = ({ event, showEditButton = true }) =
       onClick={() => navigate(`/event/${event.id}`)}
     >
       {/* Hero Image with Overlay */}
-      <div className="relative">
+      <div className="relative h-48 sm:h-56 overflow-hidden">
         <img
           src={event.imageUrl && event.imageUrl.trim() !== '' ? event.imageUrl : '/default-event.jpg'}
           alt={event.title}
-          className="w-full h-40 sm:h-56 object-cover"
+          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
           onError={e => { (e.currentTarget as HTMLImageElement).onerror = null; (e.currentTarget as HTMLImageElement).src = '/default-event.jpg'; }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
