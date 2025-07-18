@@ -12,8 +12,15 @@ Console.WriteLine("EF is using: " + builder.Configuration.GetConnectionString("D
 Console.WriteLine("Using DB: " + builder.Configuration.GetConnectionString("DefaultConnection"));
 
 // Configure database based on environment
-builder.Services.AddDbContext<AppDbContext>(options =>
+builder.Services.AddDbContext<AppDbContext>(options => 
 {
+    if (builder.Environment.IsEnvironment("Testing"))
+    {
+        // Do not configure here; test project will override with InMemory
+        Console.WriteLine("Skipping DB configuration for Testing environment.");
+        return;
+    }
+
     if (builder.Environment.IsDevelopment())
     {
         // Use SQLite for development environment
@@ -22,7 +29,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     }
     else
     {
-        // Use SQL Server for production environment (connection string from Render environment variables)
+        // Use SQL Server for production environment
         options.UseSqlServer(
             builder.Configuration.GetConnectionString("DefaultConnection"),
             sqlOptions =>
@@ -34,15 +41,13 @@ builder.Services.AddDbContext<AppDbContext>(options =>
                 );
             });
         Console.WriteLine("Using SQL Server for Production");
-    }
-    
-    // Configure warnings - suppress pending model changes warning in production
-    if (!builder.Environment.IsDevelopment())
-    {
+
+        // Suppress warning
         options.ConfigureWarnings(warnings =>
             warnings.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
     }
 });
+
 
 // Configure JWT authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

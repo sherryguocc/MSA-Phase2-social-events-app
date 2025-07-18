@@ -50,6 +50,10 @@ public class EventController : ControllerBase
     {
         try
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             // Get user id from JWT token
             var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
             if (userIdClaim == null)
@@ -95,7 +99,36 @@ public class EventController : ControllerBase
         }
     }
     
+    [HttpGet("{id}")]
+    public IActionResult GetEventById(int id)
+    {
+        var ev = _context.Events
+            .Include(e => e.CreatedBy)
+            .FirstOrDefault(e => e.Id == id);
 
+        if (ev == null)
+        {
+            return NotFound(new { message = "Event not found." });
+        }
+
+        var dto = new EventDTO
+        {
+            Id = ev.Id,
+            Title = ev.Title,
+            Description = ev.Description,
+            Location = ev.Location,
+            EventTime = ev.EventTime,
+            MinAttendees = ev.MinAttendees,
+            MaxAttendees = ev.MaxAttendees,
+            ImageUrl = ev.ImageUrl,
+            CreatedById = ev.CreatedById,
+            CreatedByUsername = ev.CreatedBy?.Username ?? "Unknown",
+            CreatedByName = ev.CreatedBy?.Name,
+            CreatedByAvatarUrl = ev.CreatedBy?.AvatarUrl
+        };
+
+        return Ok(dto);
+    }
     [HttpGet("by-user/{userId}")]
     public IActionResult GetEventsByUser(int userId)
     {

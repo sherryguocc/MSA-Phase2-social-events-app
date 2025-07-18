@@ -121,7 +121,7 @@ const EventDetailPage: React.FC = () => {
           <img
             src={event.imageUrl && event.imageUrl.trim() !== '' ? event.imageUrl : '/default-event.jpg'}
             alt={event.title}
-            className="w-full h-40 sm:h-48 lg:h-56 object-cover rounded-lg sm:rounded-xl shadow-md"
+            className="w-full max-w-3xl mx-auto aspect-[16/9] overflow-hidden rounded-xl shadow-md"
             onError={e => { (e.currentTarget as HTMLImageElement).onerror = null; (e.currentTarget as HTMLImageElement).src = '/default-event.jpg'; }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-lg sm:rounded-xl"></div>

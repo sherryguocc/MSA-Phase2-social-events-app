@@ -7,11 +7,14 @@ using backend.DTOs;
 using backend.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace backend.Tests.Controllers;
 
 public class EventControllerTests : IClassFixture<TestWebApplicationFactory<Program>>
 {
+
     private readonly TestWebApplicationFactory<Program> _factory;
     private readonly HttpClient _client;
 
@@ -19,6 +22,12 @@ public class EventControllerTests : IClassFixture<TestWebApplicationFactory<Prog
     {
         _factory = factory;
         _client = _factory.CreateClient();
+
+        // Clear the Events table in the database to ensure tests are isolated
+        using var scope = _factory.Services.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        context.Events.RemoveRange(context.Events);
+        context.SaveChanges();
     }
 
     [Fact]

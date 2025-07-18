@@ -33,7 +33,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, showEditButton = true }) =
       onClick={() => navigate(`/event/${event.id}`)}
     >
       {/* Hero Image with Overlay */}
-      <div className="relative h-48 sm:h-56 overflow-hidden">
+      <div className="relative h-48 sm:h-auto sm:aspect-[16/9] overflow-hidden">
         <img
           src={event.imageUrl && event.imageUrl.trim() !== '' ? event.imageUrl : '/default-event.jpg'}
           alt={event.title}
