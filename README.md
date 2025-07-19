@@ -5,15 +5,16 @@
 ---
 ## Table of Contents
 
-- [🎯 Project Overview](#🎯-Project-Overview)
-- [🚀 Live Demo](#🚀-Live-Demo)
-- [🚀 Deployment](#🚀-Deployment)
-- [🧰 Tech Stack](#🧰-Tech-Stack)
-- [🧠 Advanced Features Implemented](#🧠-Advanced-Features-Implemented)
-- [📦 Features Summary](#📦-Features-Summarys)
-- [🔧 How to Run Locally](#🔧-How-to-Run-Locally)
-- [🌐 How It Aligns With the Theme: Networking](#🌐-How-It-Aligns-With-the-Theme:-Networking)
-- [💡 Special Design Considerations and Future Development Ideas](#💡-Special-Design-Considerations-and-Future-Development-Ideas)
+- [🎯 Project Overview](#-project-overview)
+- [🚀 Live Demo](#-live-demo)
+- [🚀 Deployment](#-deployment)
+- [🧰 Tech Stack](#-tech-stack)
+- [🧠 Advanced Features Implemented](#-advanced-features-implemented)
+- [📦 Features Summary](#-features-summary)
+- [🔧 How to Run Locally](#-how-to-run-locally)
+- [🔧 Project Structurey](#-project-structure) 
+- [🌐 How It Aligns With the Theme: Networking](#-how-it-aligns-with-the-theme-networking)
+- [💡 Special Design Considerations and Future Development Ideas](#-special-design-considerations-and-future-development-ideas)
 
 
 
