@@ -3,6 +3,19 @@
 > GitHub Repo: https://github.com/sherryguocc/MSA-Phase2-social-events-app
 
 ---
+## Table of Contents
+
+- [🎯 Project Overview](#🎯-Project-Overview)
+- [🚀 Live Demo](#🚀-Live-Demo)
+- [🚀 Deployment](#🚀-Deployment)
+- [🧰 Tech Stack](#🧰-Tech-Stack)
+- [🧠 Advanced Features Implemented](#🧠-Advanced-Features-Implemented)
+- [📦 Features Summary](#📦-Features-Summarys)
+- [🔧 How to Run Locally](#🔧-How-to-Run-Locally)
+- [🌐 How It Aligns With the Theme: Networking](#🌐-How-It-Aligns-With-the-Theme:-Networking)
+- [💡 Special Design Considerations and Future Development Ideas](#💡-Special-Design-Considerations-and-Future-Development-Ideas)
+
+
 
 ## 🎯 Project Overview
 
