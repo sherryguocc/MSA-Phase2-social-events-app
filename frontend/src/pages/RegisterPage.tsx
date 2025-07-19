@@ -84,7 +84,7 @@ const RegisterPage: React.FC = () => {
           errorMessage = "Username already exists. Please choose a different one.";
         } else if (err.response.status === 400) {
           // HTTP 400 Bad Request
-          errorMessage = "Invalid registration data. Please check your input.";
+          errorMessage = "Username already exists. Please choose a different one.";
         }
       } else if (err.message) {
         // Network or other errors

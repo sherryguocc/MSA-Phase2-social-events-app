@@ -14,8 +14,13 @@ export async function apiPost(path: string, data: any, options: RequestInit = {}
     headers: { "Content-Type": "application/json", ...(options.headers || {}) },
     body: JSON.stringify(data),
   });
-  if (!res.ok) throw new Error("API Error");
-  return res.json();
+  // Handle response data parsing
+  const responseData = await res.json().catch(() => ({}));
+
+  if (!res.ok){
+    throw new Error(responseData.message ||"API Error");
+  }
+  return responseData;
 }
 
 
