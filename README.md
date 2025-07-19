@@ -14,24 +14,28 @@ This project aligns with the **2025 MSA Phase 2 Theme: Networking**, by fosterin
 
 ## 🚀 Live Demo
 
-- 🔗 **Frontend**: [https://sociallink-frontend.onrender.com/](https://sociallink-frontend.onrender.com/)
-- 🔗 **Backend API**: Deployed on Render (connected automatically)
+🎥 [Watch Demo (5 min max)](https://TBD.com)
 
-> ⚠️ **Note for Evaluators**: This project is deployed on Render's free tier. If the website hasn't been accessed for a while, the initial startup may take 3-10 seconds to load. Please be patient during the first visit as the server needs to wake up from sleep mode.
+- [ ] ✅ Project introduction
+- [ ] ✅ Highlight of interes
+- [ ] ✅ Demo of UI and core features
+- [ ] ✅ Checklist of Advanced Features
 
 ---
 
 ## 🚀 Deployment
 
-### Live Demo
-- **Frontend**: https://sociallink-frontend.onrender.com/
-- **Backend API**: https://sociallink-backend-ujwt.onrender.com/
+- 🔗 **Frontend**: [https://sociallink-frontend.onrender.com/](https://sociallink-frontend.onrender.com/)
+- 🔗 **Backend API**: [https://sociallink-backend-ujwt.onrender.com](https://sociallink-backend-ujwt.onrender.com) Deployed on Render (connected automatically)
+
+> ⚠️ **Note for Evaluators**: This project is deployed on Render's free tier. If the website hasn't been accessed for a while, the initial startup may take 3-10 seconds to load. Please be patient during the first visit as the server needs to wake up from sleep mode.
 
 ### Deployment Notes
-- Both frontend and backend are deployed on Render
-- The frontend includes a `_redirects` file to handle SPA routing properly
-- Database is SQLite with Entity Framework migrations
-- CORS is configured for cross-origin requests
+- Frontend is deployed on Render.
+- Backend is containerized with Docker and deployed on Render.
+- The frontend includes a `_redirects` file to handle SPA routing properly.
+- The backend connects to Azure SQL in production, with database schema managed via Entity Framework migrations.
+- CORS is configured to allow cross-origin requests from the frontend.
 
 ---
 
@@ -40,18 +44,18 @@ This project aligns with the **2025 MSA Phase 2 Theme: Networking**, by fosterin
 | Layer      | Technology                        |
 |------------|-----------------------------------|
 | Frontend   | React + Redux Toolkit + Tailwind CSS + DaisyUI |
-| Backend    | ASP.NET Core (.NET 8) + EF Core    |
+| Backend    | ASP.NET Core (.NET 8) + EF Core + Docker   |
 | Database   | SQLite (Development), Azure SQL (Production) |
 | Auth       | JWT Authentication                |
-| Deployment | Render (Frontend & Backend) - Live at https://sociallink-frontend.onrender.com/ |
+| Deployment | Render (Frontend & Backend)
 
 ---
 
 ## 🧠 Advanced Features Implemented
 
-✅ 1. **Redux Toolkit** for global state management (user sessions, event list, participation)  
-✅ 2. **Unit Testing Components**: Comprehensive backend unit testing with xUnit framework covering models, data layer, and controller integration tests  
-✅ 3. **Dockerized Backend** using multi-stage build Dockerfile  
+✅ 1. **Redux Toolkit** for managing user authentication state across the app (e.g., login session).
+✅ 2. **Unit Testing**: Core backend functionalities are covered with unit and integration tests using the xUnit framework, including key models and controller logic.
+✅ 3. **Dockerized Backend** The backend is containerized using a multi-stage Dockerfile to streamline build and deployment; the frontend is deployed as static files.
 
 > Only these three features will be marked per MSA instructions.
 
@@ -72,17 +76,8 @@ This project aligns with the **2025 MSA Phase 2 Theme: Networking**, by fosterin
 - 📱 **Responsive Design**: Mobile-first UI with modern gradients and animations
 - 🎨 **Theme Toggle**: Dark/Light mode switching with persistent preferences
 - 🔄 **Real-time Updates**: Live participation counts and status changesilt for
-
----
-
-## 🎬 Demo Video
-
-🎥 [Watch Demo (5 min max)](https://TBD.com)
-
-- [ ] ✅ Project introduction
-- [ ] ✅ Highlight of interes
-- [ ] ✅ Demo of UI and core features
-- [ ] ✅ Checklist of Advanced Features
+- ⭐ **Interest Bookmarking**: Users can click “Interested” to save events they’re considering, which appear in their My Events page under the “Interested” tab alongside created and joined events
+- 🔍 **Profile-Based Social Discovery**: Users can click on any avatar—whether in event listings, comment sections, or participant lists—to view rich profiles and explore events others have created or joined, encouraging social connection
 
 ---
 
@@ -96,7 +91,6 @@ dotnet ef database update  # Creates local.db
 dotnet run
 ```
 
-
 ---
 
 ### 2. Frontend
@@ -107,7 +101,7 @@ npm install
 npm start
 ```
 
-> The frontend runs at http://localhost:3000 and connects to the backend API at http://localhost:5000 by default.
+> The frontend runs at http://localhost:5173 and connects to the backend API at http://localhost:5256 by default.
 
 ---
 
