@@ -148,3 +148,46 @@ project-root/
 - Interact through participation and comments
 
 - Strengthen social ties through event-driven collaboration
+---
+
+
+## 💡 Special Design Considerations and Future Development Ideas
+**🔧 Current Design Choices**
+- Username-Based Registration:
+Users register with a unique username only, without requiring an email address. This allows users to manage different types of events with separate accounts if they wish—something that would be restricted if email uniqueness were enforced.
+
+- No Private Messaging for Now:
+All questions and answers are kept public to ensure others can benefit from shared knowledge. A private messaging feature may be considered in future iterations based on user demand.
+
+- No Image Upload for Cost Control:
+Currently, user and event avatars are set via URL links. To control hosting costs, no cloud image storage is implemented.
+
+- No Event Deletion by Users:
+To maintain a sense of community activity, users cannot delete events once created. This avoids scenarios where full events are removed, making the site appear inactive. However, users can edit event details if there are typos or changes. If deletion is absolutely necessary, users can contact the admin.
+
+- Comment Deletion Only:
+Comments are short and cannot be edited after posting. To correct mistakes, users can delete and re-submit the comment instead.
+
+**🔮 Planned Features**
+- Forgot Password Feature:
+Users will be able to reset their password via email. To use this feature, they must first update their email in their profile and verify it via a code. One email can be linked to multiple usernames, but when recovering a password, both email and username must be entered. If the username is forgotten, entering the email will return a list of associated usernames.
+
+- Private Messaging:
+Will be considered if there is significant user demand.
+
+- Repeat Events:
+Users will be able to create up to 5 identical events with different times, useful for:
+
+Recurring activities (e.g. badminton every Tuesday)
+
+Gathering availability: if an event needs a minimum number of attendees, organizers can offer two time slots and hold the one that fills up first.
+
+- Comment Images and Event Photo Gallery:
+Future updates may allow users to attach images to comments or upload multiple photos for each event (carousel style).
+
+- Advanced Event Categorization:
+Events will be grouped into broad and sub-categories (e.g., Sports → Outdoor, Ball Games, Water Sports). This will improve discoverability, especially when there are a large number of events.
+
+- Enhanced Filtering:
+The homepage filter tools will become more advanced, allowing users to easily search for events based on categories and interests.
+
