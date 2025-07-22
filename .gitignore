@@ -17,3 +17,4 @@ obj/
 *.user
 *.cache
 *.suo
+**/bin/Debug/

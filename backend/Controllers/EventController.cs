@@ -129,6 +129,45 @@ public class EventController : ControllerBase
 
         return Ok(dto);
     }
+
+    [HttpDelete("{id}")]
+    [Microsoft.AspNetCore.Authorization.Authorize]
+    public IActionResult DeleteEvent(int id)
+    {
+        var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+        if (userIdClaim == null)
+        {
+            return Unauthorized("User ID not found in token.");
+        }
+
+        int userId = int.Parse(userIdClaim.Value);
+
+        var ev = _context.Events.FirstOrDefault(e => e.Id == id);
+        if (ev == null)
+        {
+            return NotFound(new { message = "Event not found." });
+        }
+
+        const int AdminUserId = 1; // set the user Sherry(id==1) as the admin 
+
+        bool isAdmin = userId == AdminUserId;
+
+        if (ev.CreatedById != userId && !isAdmin)
+        {
+            return Forbid("Only the creator or admin can delete this event.");
+        }
+
+        // Check if there are any participations for this event
+        var participations = _context.Participations.Where(p => p.EventId == id).ToList();
+        if (participations.Any())
+        {
+            return BadRequest(new { message = "Cannot delete event with existing participations." });
+        }
+        _context.Events.Remove(ev);
+        _context.SaveChanges();
+
+        return Ok(new { message = "Event deleted successfully." });
+    }
     [HttpGet("by-user/{userId}")]
     public IActionResult GetEventsByUser(int userId)
     {
