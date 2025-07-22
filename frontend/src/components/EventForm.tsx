@@ -124,7 +124,18 @@ const EventForm: React.FC<EventFormProps> = ({
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold mb-4 sm:mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-pink-400 drop-shadow-lg">
           {title}
         </h2>
-
+        <div className="ml-2 sm:ml-3">
+          <p className="text-xs sm:text-sm text-amber-800">
+            <strong className="font-semibold">📝 Event Deletion Policy:</strong> To prevent misuse of website resources and encourage thoughtful event creation, users cannot delete events. If you really need to delete an event, please contact the administrator at{' '}
+            <a 
+              href="mailto:sherryguocc@gmail.com" 
+              className="font-medium text-amber-900 underline hover:text-amber-700 transition-colors"
+            >
+              sherryguocc@gmail.com
+            </a>
+            .
+          </p>
+        </div>
         {error && (
           <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
             {error}
