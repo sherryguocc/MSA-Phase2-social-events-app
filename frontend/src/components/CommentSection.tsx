@@ -259,7 +259,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ eventId }) => {
             </svg>
             Add a Comment
           </h4>
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <input
               className="flex-1 px-4 py-3 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
               value={newComment}
