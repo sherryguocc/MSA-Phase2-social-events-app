@@ -143,9 +143,9 @@ const CommentSection: React.FC<CommentSectionProps> = ({ eventId }) => {
           {/* Reply Actions */}
           {level === 0 && (replyTo === c.id ? (
             <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-              <div className="flex gap-3">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <input
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                  className="w-full flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                   value={replyContent}
                   onChange={e => setReplyContent(e.target.value)}
                   disabled={posting}
@@ -153,7 +153,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ eventId }) => {
                   maxLength={500}
                 />
                 <button 
-                  className="px-4 py-2 rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-medium text-white"
+                  className="w-full px-4 py-2 rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-medium text-white"
                   style={{ backgroundColor: posting || !replyContent.trim() ? '#9ca3af' : '#4f46e5' }}
                   disabled={posting || !replyContent.trim()} 
                   onClick={() => handleReply(c.id)}
