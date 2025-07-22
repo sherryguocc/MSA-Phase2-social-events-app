@@ -97,7 +97,7 @@ const EventDetailPage: React.FC = () => {
 
   return (
     <>
-      <div className="max-w-4xl mx-2 sm:mx-4 lg:mx-auto mt-4 sm:mt-8 p-3 sm:p-6 lg:p-8 bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden">
+      <div className="w-full max-w-screen-md xl:max-w-4xl 2xl:max-w-5xl mx-auto p-4 sm:p-6 lg:p-8 bg-white rounded-xl shadow-lg overflow-hidden">
         {/* Header Section */}
         <div className="relative mb-6 sm:mb-8">
           <div className="flex items-start justify-between mb-4">
@@ -117,13 +117,15 @@ const EventDetailPage: React.FC = () => {
         </div>
 
         {/* Hero Image */}
-        <div className="relative mb-6 sm:mb-8">
-          <img
+        <div className="relative mb-6 sm:mb-8 px-4">
+          <div className="w-full max-w-screen-lg mx-auto relative">
+            <img 
             src={event.imageUrl && event.imageUrl.trim() !== '' ? event.imageUrl : '/default-event.jpg'}
             alt={event.title}
-            className="w-full max-w-3xl mx-auto aspect-[16/9] overflow-hidden rounded-xl shadow-md"
+            className="w-full aspect-[16/9] object-cover rounded-xl shadow-md sm:rounded-2xl"
             onError={e => { (e.currentTarget as HTMLImageElement).onerror = null; (e.currentTarget as HTMLImageElement).src = '/default-event.jpg'; }}
           />
+          </div>
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-lg sm:rounded-xl"></div>
         </div>
 

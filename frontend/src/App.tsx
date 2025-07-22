@@ -26,7 +26,7 @@ function AppContent() {
   return (
     <>
       {/* Navigation Bar: always show logo and title, right content switches based on login status */}
-      <nav className="w-full flex flex-col gap-0 p-2 sm:p-4 bg-base-100 shadow">
+      <nav className="sticky top-0 z-50 w-full flex flex-col gap-0 p-2 sm:p-4 bg-base-100 shadow backdrop-blur bg-opacity-90 border-b border-gray-200">
         <div className="flex items-center w-full">
           {/* Left: Home with logo and title */}
           <div className="flex-1 flex items-center min-w-0">
