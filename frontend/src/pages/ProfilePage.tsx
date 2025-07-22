@@ -5,6 +5,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import UserEventsPanel from "../components/UserEventsPanel";
 import { loginSuccess } from "../store/userSlice";
 import { apiGet, apiPut } from "../utils/apiClient";
+import ChangePasswordForm from "../components/ChangePasswordForm";
+
 
 
 const ProfilePage: React.FC = () => {
@@ -29,6 +31,8 @@ const ProfilePage: React.FC = () => {
   ];
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [showChangePassword, setShowChangePassword] = useState(false);
+
 
   // Determine if viewing own profile
   const isOwnProfile = !userId || (reduxUser && userId && String(reduxUser.id) === userId);
@@ -335,6 +339,22 @@ const ProfilePage: React.FC = () => {
                   </button>
                 )
               )}
+
+              {isOwnProfile && !editMode && (
+              <div className="mt-6">
+                <button 
+                  className="mt-4 px-4 py-2 text-sm font-medium !bg-white !border-2 !border-gray-300 !text-gray-700 rounded-lg hover:!bg-gray-50 transition-colors duration-200"
+                  onClick={() => setShowChangePassword(!showChangePassword)}
+                >
+                  {showChangePassword ? "Hide Password Change" : "Change Password"}
+                </button>
+                {showChangePassword && (
+                  <div className="bg-white border border-gray-200 p-4 rounded-xl shadow-md">
+                    <ChangePasswordForm />
+                  </div>
+                )}
+              </div>
+            )}
             </div>
           </div>
         </div>

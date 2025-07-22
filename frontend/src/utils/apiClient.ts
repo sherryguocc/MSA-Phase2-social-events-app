@@ -19,6 +19,9 @@ export async function apiPost(path: string, data: any, options: RequestInit = {}
 
   if (!res.ok){
     throw new Error(responseData.message ||"API Error");
+    (Error as any).status = res.status;
+    (Error as any).data = responseData;
+    return res.json();
   }
   return responseData;
 }

@@ -135,4 +135,60 @@ public class UserController : ControllerBase
         };
         return Ok(result);
     }
+
+    [Authorize]
+    [HttpPut("{id}/password")]
+    public IActionResult ChangePassword(int id, [FromBody] ChangePasswordDto dto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        // Only allow user to change their own password
+        if (dto.CurrentPassword == dto.NewPassword)
+        {
+            return BadRequest(new { message = "New password cannot be the same as current password." });
+        }
+        var userIdStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (!int.TryParse(userIdStr, out var userId) || userId != id)
+            return Forbid();
+
+        var user = _context.Users.FirstOrDefault(u => u.Id == id);
+        if (user == null)
+            return NotFound(new { message = "User not found." });
+
+        if (!BCrypt.Net.BCrypt.Verify(dto.CurrentPassword, user.PasswordHash))
+        {
+            return BadRequest(new { message = "Current password is incorrect." });
+        }
+        if (!IsPasswordStrong(dto.NewPassword))
+        {
+            return BadRequest(new { message = "New password is too weak. It must contain at least 8 characters and include a combination of letters and numbers or special characters." });
+        }
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+        _context.SaveChanges();
+
+        return Ok(new { message = "Password updated successfully." });
+    }
+    
+    private static bool IsPasswordStrong(string password)
+    {
+        if (string.IsNullOrWhiteSpace(password) || password.Length < 8)
+            return false;
+
+        var hasLetter = password.Any(char.IsLetter);
+        var hasDigit = password.Any(char.IsDigit);
+        var hasSpecial = password.Any(ch => !char.IsLetterOrDigit(ch));
+
+        int strength = 0;
+        if (hasLetter) strength++;
+        if (hasDigit) strength++;
+        if (hasSpecial) strength++;
+
+        return strength >= 2; // at least two of the three criteria must be met
+    }
+
+
 }
+

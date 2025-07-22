@@ -199,3 +199,6 @@ Events will be grouped into broad and sub-categories (e.g., Sports → Outdoor, 
 - Enhanced Filtering:
 The homepage filter tools will become more advanced, allowing users to easily search for events based on categories and interests.
 
+- Notification Feature:
+When events meet minimum attendees, the organizer will receive a notification via email. 
+When user was moved from waitlist to attendees, the user will receive a notification via email.
