@@ -181,10 +181,22 @@ app.UseHttpsRedirection();
 // CORS should be placed early in the pipeline, before authentication
 app.UseCors();
 
+// Serve static files (frontend)
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
+// Routing & fallback for SPA
+app.UseRouting();
+
+// Authentication and Authorization middleware
+// Ensure these are called after UseRouting and before UseEndpoints
 app.UseAuthentication();
 app.UseAuthorization();
 
+
+// Endpoint routing
 app.MapControllers();
+app.MapFallbackToFile("index.html");
 
 app.Run();
 
