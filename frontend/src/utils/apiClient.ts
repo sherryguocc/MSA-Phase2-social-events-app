@@ -2,10 +2,21 @@
 const baseUrl = import.meta.env.VITE_API_BASE || "";
 
 export async function apiGet(path: string, options: RequestInit = {}) {
-  const res = await fetch(`${baseUrl}${path}`, options);
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${baseUrl}${path}`, {
+    ...options,
+    headers: {
+      ...(options.headers || {}),
+      Authorization: token ? `Bearer ${token}` : "",
+      "Content-Type": "application/json",
+    },
+  });
+
   if (!res.ok) throw new Error("API Error");
   return res.json();
 }
+
 
 export async function apiPost(path: string, data: any, options: RequestInit = {}) {
   const res = await fetch(`${baseUrl}${path}`, {
@@ -19,9 +30,6 @@ export async function apiPost(path: string, data: any, options: RequestInit = {}
 
   if (!res.ok){
     throw new Error(responseData.message ||"API Error");
-    (Error as any).status = res.status;
-    (Error as any).data = responseData;
-    return res.json();
   }
   return responseData;
 }

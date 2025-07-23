@@ -1,10 +1,10 @@
-// ASP.NET Core controller for CRUD operations on Event model using AppDbContext and EF Core.
-// ASP.NET Core controller for CRUD operations on Event model using AppDbContext and EF Core.
 using Microsoft.AspNetCore.Mvc;
 using backend.Data;
 using backend.Models;
 using backend.DTOs;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace backend.Controllers;
 
@@ -20,6 +20,7 @@ public class EventController : ControllerBase
     }
 
     [HttpGet("dto")]
+    [AllowAnonymous]
     public async Task<ActionResult<IEnumerable<EventDTO>>> GetEvents()
     {
         var events = await _context.Events

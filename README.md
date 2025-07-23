@@ -168,6 +168,8 @@ project-root/
 - Interact through participation and comments
 
 - Strengthen social ties through event-driven collaboration
+
+- While many platforms stop at online interaction, this app bridges that final step—from online to offline networking—by making real-world gatherings the core of the experience.
 ---
 
 
