@@ -28,12 +28,13 @@ This project aligns with the **2025 MSA Phase 2 Theme: Networking**, by fosterin
 
 ## 🚀 Live Demo
 
-🎥 [Watch Demo (5 min max)](https://TBD.com)
+🎥 [Watch Demo (5 min)](https://www.bilibili.com/video/BV1WP8czeEVo/)
 
-- [ ] ✅ Project introduction
-- [ ] ✅ Highlight of interes
-- [ ] ✅ Demo of UI and core features
+- [ ] ✅ Project Introduction
+- [ ] ✅ Purpose of Building This Web App
+- [ ] ✅ Key Features
 - [ ] ✅ Checklist of Advanced Features
+- [ ] ✅ Future Plans for This Project
 
 ---
 
@@ -186,6 +187,8 @@ Currently, user and event avatars are set via URL links. To control hosting cost
 
 - No Event Deletion by Users:
 To maintain a sense of community activity, users cannot delete events once created. This avoids scenarios where full events are removed, making the site appear inactive. However, users can edit event details if there are typos or changes. If deletion is absolutely necessary, users can contact the admin.
+And I have set a super admin, which userID=1, and it has the right to delete any event.
+![Delete Event Page](https://raw.githubusercontent.com/sherryguocc/MSA-Phase2-social-events-app/main/screenshot/Adminpage.png)
 
 - Comment Deletion Only:
 Comments are short and cannot be edited after posting. To correct mistakes, users can delete and re-submit the comment instead.
