@@ -89,11 +89,11 @@ This project aligns with the **2025 MSA Phase 2 Theme: Networking**, by fosterin
 - 🏷️ **Event Status Badges**: Visual indicators (Almost Full, Waitlist Only, Event Ended)
 - 👤 **Rich User Profiles**: Comprehensive profiles with avatars, bio, and social information
 - 📱 **Responsive Design**: Mobile-first UI with modern gradients and animations
-- 🎨 **Theme Toggle**: Dark/Light mode switching with persistent preferences
 - 🔄 **Real-time Updates**: Live participation counts and status changesilt for
 - ⭐ **Interest Bookmarking**: Users can click “Interested” to save events they’re considering, which appear in their My Events page under the “Interested” tab alongside created and joined events
 - 🔍 **Profile-Based Social Discovery**: Users can click on any avatar—whether in event listings, comment sections, or participant lists—to view rich profiles and explore events others have created or joined, encouraging social connection
-
+- 🛠️ Event Management by Creators: Users can manage and edit events they have created
+-🛡️ Super Admin Privileges: The user with id = 1 is designated as the super admin and has permission to delete any event
 ---
 
 ## 🔧 How to Run Locally
