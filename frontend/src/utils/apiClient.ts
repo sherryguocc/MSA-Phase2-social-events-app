@@ -57,12 +57,26 @@ export async function apiPut(path: string, data: any, options: RequestInit = {})
 
 
 export async function apiDelete(path: string, options: RequestInit = {}) {
-  const res = await fetch(`${baseUrl}${path}`, {
-    method: "DELETE",
-    ...(options || {}),
-    headers: { ...(options.headers || {}) },
-  });
-  if (!res.ok) throw new Error("DELETE request failed");
-  return true;
-}
+  const token = localStorage.getItem("token");
 
+  const fullUrl = `${baseUrl.replace(/\/$/, "")}/${path.replace(/^\//, "")}`;
+  console.log("🧨 DELETE request to:", fullUrl);
+
+  const res = await fetch(fullUrl, {
+    ...options,
+    method: "DELETE",
+    headers: {
+      ...(options.headers || {}),
+      Authorization: token ? `Bearer ${token}` : "",
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    console.error("❌ Delete error:", res.status, text);
+    throw new Error(text || "API Error");
+  }
+
+  return res.json().catch(() => ({})); // in case backend returns empty
+}
