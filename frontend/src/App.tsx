@@ -11,6 +11,7 @@ import ScrollToTopButton from './components/ScrollToTopButton';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from './store';
 import { clearToken } from './store/userSlice';
+import AdminEventPage from "./pages/AdminEventPage";
 
 
 function AppContent() {
@@ -98,6 +99,14 @@ function AppContent() {
                 >
                   Create Event
                 </button>
+                {reduxUser?.id === 1 && (
+                  <button
+                    className="px-3 py-2 text-xs sm:text-sm font-medium !bg-purple-100 !text-purple-800 rounded-lg hover:!bg-purple-200 transition-colors duration-200 !border-0"
+                    onClick={() => navigate('/manage-events')}
+                  >
+                    Manage Events
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -123,6 +132,8 @@ function AppContent() {
           <Route path="/edit-event/:id" element={<EditEventPage />} />
           {/* Event Detail page route */}
           <Route path="/event/:id" element={<EventDetailPage />} />
+          {/*Page for admin to manage events */}
+          <Route path="/manage-events" element={<AdminEventPage />} />
         </Routes>
       </div>
       <ScrollToTopButton />
