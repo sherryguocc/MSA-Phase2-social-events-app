@@ -25,23 +25,34 @@ export default function AdminEventPage() {
   const isAdmin = userInfo?.id === 1; 
 
   useEffect(() => {
-    if (!token || !isAdmin) {
-      navigate("/"); // Redirect if not logged in or not admin
-      return;
+  if (!token || !isAdmin) {
+    console.warn("⛔ Unauthorized access: redirecting");
+    navigate("/");
+    return;
+  }
+
+  const fetchEvents = async () => {
+    try {
+      console.log("🚀 Fetching events as admin...");
+      const data = await apiGet("/event/dto");
+      console.log("✅ Fetched events:", data);
+      setEvents(data);
+    } catch (err) {
+      console.error("❌ Failed to fetch in AdminEventPage:", err);
+      setError("Failed to fetch events.");
+    } finally {
+      setLoading(false);
     }
+  };
 
-    const fetchEvents = async () => {
-      try {
-        const data = await apiGet("/event/dto");
-        setEvents(data);
-      } catch (err) {
-        setError("Failed to fetch events.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  fetchEvents();
+}, [token, isAdmin, navigate]);
 
-    fetchEvents();
+  useEffect(() => {
+    if (!token || !isAdmin) {
+      console.warn("⛔ Unauthorized access: redirecting");
+      navigate("/");
+    }
   }, [token, isAdmin, navigate]);
 
   const handleDelete = async (id: number) => {

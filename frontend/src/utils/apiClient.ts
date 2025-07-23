@@ -3,6 +3,8 @@ const baseUrl = import.meta.env.VITE_API_BASE || "";
 
 export async function apiGet(path: string, options: RequestInit = {}) {
   const token = localStorage.getItem("token");
+  console.log("🔍 apiGet request to:", path);
+  console.log("🔑 token:", token);
 
   const res = await fetch(`${baseUrl}${path}`, {
     ...options,
@@ -13,7 +15,14 @@ export async function apiGet(path: string, options: RequestInit = {}) {
     },
   });
 
-  if (!res.ok) throw new Error("API Error");
+  console.log("📦 response status:", res.status);
+
+  if (!res.ok) {
+    const text = await res.text();
+    console.error("❌ Fetch error:", text);
+    throw new Error("API Error");
+  }
+
   return res.json();
 }
 
