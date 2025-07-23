@@ -69,9 +69,9 @@ This project aligns with the **2025 MSA Phase 2 Theme: Networking**, by fosterin
 
 ## 🧠 Advanced Features Implemented
 
-✅ 1. **Redux Toolkit** for managing user authentication state across the app (e.g., login session).
-✅ 2. **Unit Testing**: Core backend functionalities are covered with unit and integration tests using the xUnit framework, including key models and controller logic.
-✅ 3. **Dockerized Backend** The backend is containerized using a multi-stage Dockerfile to streamline build and deployment; the frontend is deployed as static files.
+- ✅ 1. **Redux Toolkit** for managing user authentication state across the app (e.g., login session).
+- ✅ 2. **Unit Testing**: Core backend functionalities are covered with unit and integration tests using the xUnit framework, including key models and controller logic.
+- ✅ 3. **Dockerized Site** The entire site is containerized using a multi-stage Dockerfile to streamline build and deployment.
 
 > Only these three features will be marked per MSA instructions.
 
