@@ -85,7 +85,9 @@ export default function AdminEventPage() {
             <div>
               <p className="font-semibold">{event.title}</p>
               <p className="text-sm text-gray-500">
-                Created by: {event.createdBy.username} (ID: {event.createdBy.id})
+                Created by: {event.createdBy
+                ? `Created by: ${event.createdBy.username} (ID: ${event.createdBy.id})`
+                : "Created by: Unknown"}
               </p>
             </div>
             <button
