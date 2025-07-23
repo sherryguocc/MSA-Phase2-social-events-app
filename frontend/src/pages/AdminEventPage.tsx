@@ -34,7 +34,7 @@ export default function AdminEventPage() {
   const fetchEvents = async () => {
     try {
       console.log("🚀 Fetching events as admin...");
-      const data = await apiGet("/event/dto");
+      const data = await apiGet("api/event/dto");
       console.log("✅ Fetched events:", data);
       setEvents(data);
     } catch (err) {
