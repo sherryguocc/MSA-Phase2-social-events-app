@@ -60,7 +60,7 @@ export default function AdminEventPage() {
     if (!confirmDelete) return;
 
     try {
-      await apiDelete(`/event/${id}`);
+      await apiDelete(`/api/event/${id}`);
       setEvents(prev => prev.filter(e => e.id !== id));
       alert("Event deleted.");
     } catch (err: any) {
