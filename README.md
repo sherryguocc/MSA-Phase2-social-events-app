@@ -38,18 +38,19 @@ This project aligns with the **2025 MSA Phase 2 Theme: Networking**, by fosterin
 ---
 
 ## 🚀 Deployment
+- 🔗 **New Unified Deployment**: [https://sociallink-backend-ujwt.onrender.com](https://sociallink-backend-ujwt.onrender.com)
+> ✅ This is the **current live deployment** with both frontend and backend hosted together in a single Dockerized Render app.
 
-- 🔗 **Frontend**: [https://sociallink-frontend.onrender.com/](https://sociallink-frontend.onrender.com/)
-- 🔗 **Backend API**: [https://sociallink-backend-ujwt.onrender.com](https://sociallink-backend-ujwt.onrender.com) Deployed on Render (connected automatically)
+- 🔗 **Old Frontend**: [https://sociallink-frontend.onrender.com/](https://sociallink-frontend.onrender.com/)~~ *(Deprecated)*
+- 🔗 **Old Backend API**: [https://sociallink-backend-ujwt.onrender.com](https://sociallink-backend-ujwt.onrender.com)~~ *(Separate frontend/backend setup is now deprecated due to redirect issues with SPA routing)*
 
 > ⚠️ **Note for Evaluators**: This project is deployed on Render's free tier. If the website hasn't been accessed for a while, the initial startup may take 3-10 seconds to load. Please be patient during the first visit as the server needs to wake up from sleep mode.
 
 ### Deployment Notes
-- Frontend is deployed on Render.
-- Backend is containerized with Docker and deployed on Render.
-- The frontend includes a `_redirects` file to handle SPA routing properly.
-- The backend connects to Azure SQL in production, with database schema managed via Entity Framework migrations.
-- CORS is configured to allow cross-origin requests from the frontend.
+- The entire project (frontend + backend) is now containerized with Docker and deployed as a unified app on Render.
+- The frontend is served from the backend server (in a Docker image), eliminating cross-origin issues and SPA redirect problems.
+- The backend connects to **Azure SQL** in production, with schema managed via **EF Core migrations**.
+- CORS configuration is no longer needed in production due to same-origin deployment.
 
 ---
 
@@ -61,7 +62,7 @@ This project aligns with the **2025 MSA Phase 2 Theme: Networking**, by fosterin
 | Backend    | ASP.NET Core (.NET 8) + EF Core + Docker   |
 | Database   | SQLite (Development), Azure SQL (Production) |
 | Auth       | JWT Authentication                |
-| Deployment | Render (Frontend & Backend)
+| Deployment | Render (Dockerized unified deployment) |
 
 ---
 
@@ -119,6 +120,16 @@ npm start
 
 ---
 
+### 🐳 Dockerized Run (Optional)
+
+You can also run the whole project with Docker Compose:
+
+```bash
+docker compose up --build
+```
+
+---
+
 ## 🔧 Project Structure
 
 ```plaintext
@@ -129,8 +140,7 @@ project-root/
 │   ├── Data
 │   ├── DTOs
 │   ├── AppDbContext.cs
-│   ├── Program.cs
-│   └── Dockerfile
+│   └── Program.cs
 │
 ├── frontend/
 │   ├── public/  # user Avatars and Site Logo
@@ -144,6 +154,8 @@ project-root/
 │   │  ├── index.html
 │   ├── tailwind.config.js
 │   └── package.json
+│  
+└── Dockerfile
 ```
 ---
 
@@ -202,3 +214,4 @@ The homepage filter tools will become more advanced, allowing users to easily se
 - Notification Feature:
 When events meet minimum attendees, the organizer will receive a notification via email. 
 When user was moved from waitlist to attendees, the user will receive a notification via email.
+ 
