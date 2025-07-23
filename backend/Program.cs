@@ -176,7 +176,7 @@ if (app.Environment.IsDevelopment())
 }
 
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection(); Not needed for new deployment strategy
 
 // CORS should be placed early in the pipeline, before authentication
 app.UseCors();
