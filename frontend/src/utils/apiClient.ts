@@ -28,7 +28,7 @@ export async function apiGet(path: string, options: RequestInit = {}) {
 
 
 export async function apiPost(path: string, data: any, options: RequestInit = {}) {
-  const res = await fetch(`${baseUrl}${path}`, {
+  const res = await fetch(`${baseUrl.replace(/\/$/, "")}/${path.replace(/^\//, "")}`, {
     method: "POST",
     ...options,
     headers: { "Content-Type": "application/json", ...(options.headers || {}) },
