@@ -158,12 +158,6 @@ public class EventController : ControllerBase
             return Forbid("Only the creator or admin can delete this event.");
         }
 
-        // Check if there are any participations for this event
-        var participations = _context.Participations.Where(p => p.EventId == id).ToList();
-        if (participations.Any())
-        {
-            return BadRequest(new { message = "Cannot delete event with existing participations." });
-        }
         _context.Events.Remove(ev);
         _context.SaveChanges();
 
