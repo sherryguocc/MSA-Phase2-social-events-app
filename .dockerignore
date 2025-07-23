@@ -1,0 +1,26 @@
+# .dockerignore
+.git
+.gitignore
+
+# Node.js dependencies
+**/node_modules
+**/dist
+**/.parcel-cache
+**/.vite
+
+# Logs
+**/logs
+*.log
+*.DS_Store
+.vscode
+.idea
+.env
+
+# Build artifacts
+**/bin
+**/obj
+
+# Temporary files
+**/tmp
+Dockerfile*
+.dockerignore
